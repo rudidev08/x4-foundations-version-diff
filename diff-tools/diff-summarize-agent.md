@@ -4,7 +4,7 @@ Consolidate multi-part domain analysis results into single summary files, combin
 
 ## Version Selection
 
-Read `$V1` and `$V2` from `diff/_versions.md`. If the file does not exist, tell the user to run `/diff-analyze` first.
+Read `$V1` and `$V2` from `diff/_versions_to_compare.md`. If the file does not exist, tell the user to run `/diff-analyze` first.
 
 ## Prerequisites
 

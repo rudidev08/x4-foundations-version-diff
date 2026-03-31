@@ -32,13 +32,7 @@ python3 diff-tools/cat_extract.py /path/to/X4/Foundations source/9.00B4
 python3 diff-tools/version_diff.py 9.00B3 9.00B4
 ```
 
-### 3. Prepare batches for LLM analysis (optional)
-
-```sh
-python3 diff-tools/prepare_diff_analysis.py 9.00B3 9.00B4
-```
-
-### 4. Run LLM agent pipeline (optional)
+### 3. Run LLM agent pipeline (optional)
 
 Requires [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Run the three agent prompts in order:
 

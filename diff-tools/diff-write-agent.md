@@ -4,7 +4,7 @@ Synthesize domain analysis results into a single thematic changelog using subage
 
 ## Version Selection
 
-Read `$V1` and `$V2` from `diff/_versions.md` (created by `/diff-analyze`). If the file does not exist, tell the user to run `/diff-analyze` first.
+Read `$V1` and `$V2` from `diff/_versions_to_compare.md` (created by `/diff-analyze`). If the file does not exist, tell the user to run `/diff-analyze` first.
 
 ## Prerequisites
 

@@ -4,16 +4,16 @@ Generate per-file diffs between two X4 source versions, batch them by domain, an
 
 ## Version Selection
 
-Check if `diff/_versions.md` exists. If it does, read `$V1` and `$V2` from it and skip to Prerequisites.
+Check if `diff/_versions_to_compare.md` exists. If it does, read `$V1` and `$V2` from it and skip to Prerequisites.
 
-If it does not exist, ask the user which versions to compare. List the available directories under `source/` so they can pick. Once confirmed, write `diff/_versions.md`:
+If it does not exist, ask the user which versions to compare. List the available directories under `source/` so they can pick. Once confirmed, write `diff/_versions_to_compare.md`:
 
 ```
-old: $V1
-new: $V2
+OLD_VERSION=$V1
+NEW_VERSION=$V2
 ```
 
-Only this agent creates or updates `diff/_versions.md`.
+Only this agent creates or updates `diff/_versions_to_compare.md`.
 
 ## Prerequisites
 Source directories must exist at `source/$V1/` and `source/$V2/`.
