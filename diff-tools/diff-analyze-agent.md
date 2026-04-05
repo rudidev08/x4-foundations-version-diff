@@ -19,15 +19,14 @@ The prepare script (Steps 1–3) handles all pending pairs at once, skipping any
 ## Prerequisites
 Source directories must exist at `source/$V1/` and `source/$V2/`.
 
-**Before launching any subagents**, prompt the user: "This workflow uses background agents that need write access. Please make sure edit mode is on (press Enter to continue)." Use AskUserQuestion and wait for their response before proceeding. Background agents cannot prompt for permissions interactively — if writes are not pre-approved, they will silently fail.
+**Write failure = abort.** If any subagent fails because it could not write its output file (permission denied, tool rejected, or file missing after completion), stop the entire process immediately. Do not continue to the next task. Notify the user that either the skill's `allowed-tools` permissions need updating or edit mode needs to be enabled.
 
 ## Shell Scripts
 
 Shell scripts in `diff-tools/` handle all workflow operations:
 - `bash diff-tools/analyze-prepare.sh` — Steps 1-3 for all pending pairs (generate diffs, prepare batches, init tasks). Reports total remaining tasks.
-- `bash diff-tools/task-next.sh analyze V1 V2` — Get next task as JSON: `{task_id, label, prompt_type, batch_files, remaining, output}`
+- `bash diff-tools/task-next.sh analyze V1 V2 [N]` — Get next task(s) as JSON. Without N: single object `{task_id, label, prompt_type, batch_files, remaining, output}`. With N: `{batch: [{task_id, label, prompt_type, batch_files, output}, ...], remaining}`. Use N when launching multiple agents in parallel.
 - `bash diff-tools/task-done.sh analyze V1 V2 TASK_ID [OUTPUT]` — Verify output exists + mark task complete, JSON: `{marked, remaining}`
-- `python3 diff-tools/task-batch.py analyze V1 V2 N` — Get N pending tasks at once as JSON: `{batch: [{task_id, label, prompt_type, batch_files, output}, ...], remaining}`. Use this instead of task-next.sh when launching multiple agents in parallel.
 - `bash diff-tools/finish-pair.sh analyze V1 V2` — Delete progress tracker + create completion flag
 
 ## Steps

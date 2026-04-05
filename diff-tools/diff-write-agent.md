@@ -18,13 +18,13 @@ The following must exist:
 - `diff/$V1-$V2/_analysis/*.md` — individual domain analysis files (produced by `/diff-analyze`)
 - `diff/$V1-$V2/_summary/*.md` — consolidated summaries for multi-part domains (produced by `/diff-summarize`)
 
-**Before launching any subagents**, prompt the user: "This workflow uses background agents that need write access. Please make sure edit mode is on (press Enter to continue)." Use AskUserQuestion and wait for their response before proceeding. Background agents cannot prompt for permissions interactively — if writes are not pre-approved, they will silently fail.
+**Write failure = abort.** If any subagent fails because it could not write its output file (permission denied, tool rejected, or file missing after completion), stop the entire process immediately. Do not continue to the next task. Notify the user that either the skill's `allowed-tools` permissions need updating or edit mode needs to be enabled.
 
 ## Shell Scripts
 
 Shell scripts in `diff-tools/` handle all workflow operations:
 - `bash diff-tools/write-prepare.sh` — Step 1 for all pending pairs (check prerequisites, init tasks). Reports total remaining tasks.
-- `bash diff-tools/task-next.sh write V1 V2` — Get next section as JSON: `{section_id, label, focus, files, remaining, output}`
+- `bash diff-tools/task-next.sh write V1 V2 [N]` — Get next section(s) as JSON. Without N: single object `{section_id, label, focus, files, remaining, output}`. With N: `{batch: [...], remaining}`. Use N when launching multiple agents in parallel.
 - `bash diff-tools/task-done.sh write V1 V2 SECTION [OUTPUT]` — Verify output exists + mark section complete, JSON: `{marked, remaining}`
 - `bash diff-tools/finish-pair.sh write V1 V2` — Assemble final changelog + cleanup + create completion flag
 

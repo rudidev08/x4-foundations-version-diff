@@ -17,13 +17,13 @@ The prepare script (Step 1) handles all pending pairs at once, skipping complete
 The following must exist (produced by `/diff-analyze`):
 - `diff/$V1-$V2/_analysis/*.md` — individual domain analysis files
 
-**Before launching any subagents**, prompt the user: "This workflow uses background agents that need write access. Please make sure edit mode is on (press Enter to continue)." Use AskUserQuestion and wait for their response before proceeding. Background agents cannot prompt for permissions interactively — if writes are not pre-approved, they will silently fail.
+**Write failure = abort.** If any subagent fails because it could not write its output file (permission denied, tool rejected, or file missing after completion), stop the entire process immediately. Do not continue to the next task. Notify the user that either the skill's `allowed-tools` permissions need updating or edit mode needs to be enabled.
 
 ## Shell Scripts
 
 Shell scripts in `diff-tools/` handle all workflow operations:
 - `bash diff-tools/summarize-prepare.sh` — Step 1 for all pending pairs (check prerequisites, init tasks). Auto-creates flag for pairs with nothing to summarize. Reports total remaining tasks.
-- `bash diff-tools/task-next.sh summarize V1 V2` — Get next domain as JSON: `{domain, type, file_count, files, remaining, output}` (hierarchical domains also include `chunks` and `total_chunks`)
+- `bash diff-tools/task-next.sh summarize V1 V2 [N]` — Get next domain(s) as JSON. Without N: single object `{domain, type, file_count, files, remaining, output}` (hierarchical domains also include `chunks` and `total_chunks`). With N: `{batch: [...], remaining}`. Use N when launching multiple agents in parallel.
 - `bash diff-tools/task-done.sh summarize V1 V2 DOMAIN [OUTPUT]` — Verify output exists + mark domain complete, JSON: `{marked, remaining}`
 - `bash diff-tools/finish-pair.sh summarize V1 V2` — Cleanup intermediate files + create completion flag
 

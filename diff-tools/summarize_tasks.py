@@ -122,31 +122,18 @@ def cmd_status(args):
     print(json.dumps(progress_status(read_progress(paths["progress"]), "next_domain")))
 
 
-def cmd_next(args):
-    paths = get_paths(args.v1, args.v2)
-    if not paths["progress"].exists():
-        print(json.dumps({"error": "No progress file. Run init first."}))
-        return
-
-    tasks = read_progress(paths["progress"])
-    next_domain = next((tid for checked, tid in tasks if not checked), None)
-
-    if next_domain is None:
-        print(json.dumps({"done": True}))
-        return
-
-    groups = discover_groups(paths["analysis"])
-    files = groups.get(next_domain, [])
+def _build_domain_info(domain, groups, paths):
+    """Build full info dict for a single domain."""
+    files = groups.get(domain, [])
     file_paths = [str(f) for f in files]
     dtype = classify_domain(len(files))
 
     result = {
-        "domain": next_domain,
+        "domain": domain,
         "type": dtype,
         "file_count": len(files),
         "files": file_paths,
-        "remaining": sum(1 for checked, _ in tasks if not checked),
-        "output": str(paths["summary"] / f"{next_domain}.md"),
+        "output": str(paths["summary"] / f"{domain}.md"),
     }
 
     if dtype == "hierarchical":
@@ -156,14 +143,40 @@ def cmd_next(args):
                 "index": i + 1,
                 "files": chunk,
                 "intermediate_output": str(
-                    paths["intermediate"] / f"{next_domain}--chunk{i + 1}.md"
+                    paths["intermediate"] / f"{domain}--chunk{i + 1}.md"
                 ),
             }
             for i, chunk in enumerate(chunks)
         ]
         result["total_chunks"] = len(chunks)
 
-    print(json.dumps(result))
+    return result
+
+
+def cmd_next(args):
+    count = args.count or 1
+    paths = get_paths(args.v1, args.v2)
+    if not paths["progress"].exists():
+        print(json.dumps({"error": "No progress file. Run init first."}))
+        return
+
+    tasks = read_progress(paths["progress"])
+    pending_ids = [tid for checked, tid in tasks if not checked]
+    remaining = len(pending_ids)
+
+    if not pending_ids:
+        print(json.dumps({"done": True}))
+        return
+
+    groups = discover_groups(paths["analysis"])
+
+    if count == 1:
+        result = _build_domain_info(pending_ids[0], groups, paths)
+        result["remaining"] = remaining
+        print(json.dumps(result))
+    else:
+        batch = [_build_domain_info(d, groups, paths) for d in pending_ids[:count]]
+        print(json.dumps({"batch": batch, "remaining": remaining}))
 
 
 def cmd_done(args):
@@ -201,6 +214,7 @@ def main():
     p = sub.add_parser("next", help="Get next domain info as JSON")
     p.add_argument("v1")
     p.add_argument("v2")
+    p.add_argument("--count", type=int, default=1, help="Number of domains to return (default: 1)")
 
     p = sub.add_parser("done", help="Mark domain complete")
     p.add_argument("v1")

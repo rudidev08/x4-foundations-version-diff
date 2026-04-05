@@ -134,6 +134,7 @@ def cmd_status(args):
 
 
 def cmd_next(args):
+    count = args.count or 1
     paths = get_paths(args.v1, args.v2)
     if not paths["progress"].exists():
         print(json.dumps({"error": "No progress file. Run init first."}))
@@ -142,19 +143,30 @@ def cmd_next(args):
     tasks = read_progress(paths["progress"])
     manifest = read_manifest(paths)
 
-    next_id = next((tid for checked, tid in tasks if not checked), None)
-    if next_id is None:
+    pending_ids = [tid for checked, tid in tasks if not checked]
+    remaining = len(pending_ids)
+
+    if not pending_ids:
         print(json.dumps({"done": True}))
         return
 
-    info = get_task_info(next_id, manifest, paths)
-    if info is None:
-        print(json.dumps({"error": f"Task not found in manifest: {next_id}"}))
-        return
-
-    info["remaining"] = sum(1 for checked, _ in tasks if not checked)
-    info["output"] = str(paths["analysis"] / f"{next_id}.md")
-    print(json.dumps(info))
+    if count == 1:
+        info = get_task_info(pending_ids[0], manifest, paths)
+        if info is None:
+            print(json.dumps({"error": f"Task not found in manifest: {pending_ids[0]}"}))
+            return
+        info["remaining"] = remaining
+        info["output"] = str(paths["analysis"] / f"{pending_ids[0]}.md")
+        print(json.dumps(info))
+    else:
+        batch = []
+        for tid in pending_ids[:count]:
+            info = get_task_info(tid, manifest, paths)
+            if info is None:
+                continue
+            info["output"] = str(paths["analysis"] / f"{tid}.md")
+            batch.append(info)
+        print(json.dumps({"batch": batch, "remaining": remaining}))
 
 
 def cmd_done(args):
@@ -177,6 +189,7 @@ def main():
     p = sub.add_parser("next", help="Get next task info as JSON")
     p.add_argument("v1")
     p.add_argument("v2")
+    p.add_argument("--count", type=int, default=1, help="Number of tasks to return (default: 1)")
 
     p = sub.add_parser("done", help="Mark task complete")
     p.add_argument("v1")

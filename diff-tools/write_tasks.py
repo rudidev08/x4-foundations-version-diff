@@ -195,39 +195,45 @@ def cmd_status(args):
     print(json.dumps(progress_status(read_progress(paths["progress"]), "next_section")))
 
 
+def _build_section_info(section_id, eligible, paths):
+    """Build full info dict for a single section."""
+    section = next((s for s in SECTIONS if s["id"] == section_id), None)
+    if section is None:
+        return {"error": f"Unknown section: {section_id}"}
+    files = filter_files_for_section(eligible, section)
+    return {
+        "section_id": section["id"],
+        "label": section["label"],
+        "focus": section["focus"],
+        "files": files,
+        "output": str(paths["sections"] / f"{section['id']}.md"),
+    }
+
+
 def cmd_next(args):
+    count = args.count or 1
     paths = get_paths(args.v1, args.v2)
     if not paths["progress"].exists():
         print(json.dumps({"error": "No progress file. Run init first."}))
         return
 
     tasks = read_progress(paths["progress"])
-    next_id = next((tid for checked, tid in tasks if not checked), None)
+    pending_ids = [tid for checked, tid in tasks if not checked]
+    remaining = len(pending_ids)
 
-    if next_id is None:
+    if not pending_ids:
         print(json.dumps({"done": True}))
         return
 
-    section = next((s for s in SECTIONS if s["id"] == next_id), None)
-    if section is None:
-        print(json.dumps({"error": f"Unknown section: {next_id}"}))
-        return
-
     eligible, _ = get_eligible_files(paths)
-    files = filter_files_for_section(eligible, section)
 
-    print(
-        json.dumps(
-            {
-                "section_id": section["id"],
-                "label": section["label"],
-                "focus": section["focus"],
-                "files": files,
-                "remaining": sum(1 for checked, _ in tasks if not checked),
-                "output": str(paths["sections"] / f"{section['id']}.md"),
-            }
-        )
-    )
+    if count == 1:
+        result = _build_section_info(pending_ids[0], eligible, paths)
+        result["remaining"] = remaining
+        print(json.dumps(result))
+    else:
+        batch = [_build_section_info(sid, eligible, paths) for sid in pending_ids[:count]]
+        print(json.dumps({"batch": batch, "remaining": remaining}))
 
 
 def cmd_done(args):
@@ -301,6 +307,7 @@ def main():
     p = sub.add_parser("next", help="Get next section info as JSON")
     p.add_argument("v1")
     p.add_argument("v2")
+    p.add_argument("--count", type=int, default=1, help="Number of sections to return (default: 1)")
 
     p = sub.add_parser("done", help="Mark section complete")
     p.add_argument("v1")

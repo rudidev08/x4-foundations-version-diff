@@ -6,6 +6,10 @@ If unsure about something, or considering doing extra work beyond what was expli
 
 **Only add content that is explicitly defined in game source code.** Do not guess or assume additions based on descriptions, lore, or inferences. If something isn't in the code, don't include it.
 
+## Localization
+
+Only English localization (`l044`) matters. If `l044` is unchanged between versions, the diff pipeline correctly produces no `t/` diffs or localization analysis — this is expected, not a bug.
+
 ## Version Naming
 
 Source directories under `source/` use short version codes. In the version number, **B** = Beta, **H** = Hotfix (e.g., `9.00B1` = 9.00 Beta 1, `8.00H4` = 8.00 Hotfix 4).
