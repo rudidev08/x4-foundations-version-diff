@@ -2,9 +2,15 @@
 
 Consolidate multi-part domain analysis results into single summary files, combining redundant data while preserving all information.
 
+**Important:** Always use the provided shell scripts in `diff-tools/` for workflow operations. Do not write ad-hoc bash commands or loops to replace script functionality. If a needed capability is missing, suggest creating a new script rather than improvising.
+
 ## Version Selection
 
-Read `$V1` and `$V2` from `diff/_versions_to_compare.md`. If the file does not exist, tell the user to run `/diff-analyze` first.
+Read `diff/_versions_to_compare.md`. Each non-empty line is a version pair in the format `{OLD}-{NEW}` (e.g., `8.00H4-9.00B1`). Parse `$V1` (old) and `$V2` (new) from each line. If the file does not exist, tell the user to run `/diff-analyze` first.
+
+## Multi-Version Iteration
+
+The prepare script (Step 1) handles all pending pairs at once, skipping completed pairs and those missing analysis prerequisites. After preparation, process each remaining pair's tasks sequentially (Step 2). After completing a pair's tasks, run the finish script (Step 3) and move to the next pair. When all pairs are done, report completion.
 
 ## Prerequisites
 
@@ -13,91 +19,60 @@ The following must exist (produced by `/diff-analyze`):
 
 **Before launching any subagents**, prompt the user: "This workflow uses background agents that need write access. Please make sure edit mode is on (press Enter to continue)." Use AskUserQuestion and wait for their response before proceeding. Background agents cannot prompt for permissions interactively — if writes are not pre-approved, they will silently fail.
 
-## Progress Tracking
+## Shell Scripts
 
-This workflow uses a progress file at `diff/$V1-$V2/_summary/_progress.md` to track state. **Before doing anything**, check if this file exists. If it does, read it and resume from the first unchecked task. If it doesn't, create it during Step 2.
-
-After completing each domain summary, mark it `[x]` in the progress file immediately. This ensures context loss is recoverable.
+Shell scripts in `diff-tools/` handle all workflow operations:
+- `bash diff-tools/summarize-prepare.sh` — Step 1 for all pending pairs (check prerequisites, init tasks). Auto-creates flag for pairs with nothing to summarize. Reports total remaining tasks.
+- `bash diff-tools/task-next.sh summarize V1 V2` — Get next domain as JSON: `{domain, type, file_count, files, remaining, output}` (hierarchical domains also include `chunks` and `total_chunks`)
+- `bash diff-tools/task-done.sh summarize V1 V2 DOMAIN [OUTPUT]` — Verify output exists + mark domain complete, JSON: `{marked, remaining}`
+- `bash diff-tools/finish-pair.sh summarize V1 V2` — Cleanup intermediate files + create completion flag
 
 ## Steps
 
-### Step 1: Discover and group result files
+### Step 1: Prepare all pairs
 
-List all `.md` files in `diff/$V1-$V2/_analysis/`. Group them by **domain root** — the filename with `--partN` suffixes stripped. The part suffix pattern is `--part` followed by one or more digits at the end of the filename (before `.md`).
-
-Examples:
-- `libraries--part1.md` through `libraries--part35.md` → group `libraries` (35 files)
-- `aiscripts--part1.md` through `aiscripts--part13.md` → group `aiscripts` (13 files)
-- `extensions--ego_dlc_boron--libraries--part1.md` through `--part5.md` → group `extensions--ego_dlc_boron--libraries` (5 files)
-- `localization_mechanics.md` → single file, skip
-
-**Filtering rules:**
-- **Only process groups with 2 or more files.** Single-file domains are already self-contained and have no redundancy to consolidate.
-- **Skip files in `_batches/` subdirectory** — these are diff input files, not analysis results.
-- **Skip `_progress.md`** — this is the analyze agent's progress tracker.
-
-### Step 2: Build progress file
-
-Create the progress file at `diff/$V1-$V2/_summary/_progress.md`:
-
+Run:
 ```
-# Summarize Progress: $V1 → $V2
-
-## Domains
-- [ ] libraries (35 files, hierarchical)
-- [ ] aiscripts (13 files, hierarchical)
-- [ ] assets--props (10 files, hierarchical)
-- [ ] md (5 files, single-pass)
-...
+bash diff-tools/summarize-prepare.sh
 ```
 
-Classify each domain:
-- **hierarchical** — more than 8 files in the group
-- **single-pass** — 2 to 8 files in the group
+This processes all pending version pairs: checks prerequisites, initializes summarize task lists, and auto-creates completion flags for pairs with nothing to summarize. Already-completed pairs are skipped. The output reports total remaining tasks across all pairs.
 
-Sort domains by file count descending (largest groups first).
+### Step 2: Summarize domains
 
-### Step 3: Summarize domains
+**Batch count is asked once before processing the first version pair.** The prepare script already reported the total remaining tasks. Ask the user once using AskUserQuestion how many to process, offering options like "5", "10", "25", and "All (N)". This count applies across all version pairs — do not ask again between pairs.
 
-Process unchecked domains in **user-sized batches**:
+Then process tasks **one at a time**, working through each version pair sequentially:
 
-1. Count the remaining unchecked domains and report the number remaining, then ask how many to launch next (e.g., "N domains remaining. How many to launch in the next batch?").
-2. Take the next N unchecked domains from the progress file
-3. For **single-pass** domains, launch one subagent per domain (all in parallel)
-4. For **hierarchical** domains, process one at a time within the batch (pass 1 must complete before pass 2)
-5. Wait for all to complete
-6. If any failed (quota exhaustion, errors), **stop immediately** — do not launch more. Tell the user which domains failed and that they can resume later.
-7. If all N succeeded, mark them `[x]` in the progress file, then repeat from step 1
+1. Run `bash diff-tools/task-next.sh summarize $V1 $V2` to get the next domain's info
+2. If `{"done": true}` for this pair, proceed to Step 3 for this pair, then continue with the next pair's tasks
+3. Report which domain is being processed and how many remain (e.g., "Processing: libraries (N remaining)")
+4. Process using the appropriate method based on the `type` field:
 
-**Batching guidance for hierarchical domains:** Each hierarchical domain requires multiple sequential subagent launches (chunk pass then merge pass). To avoid complexity, process at most 2 hierarchical domains per batch. Single-pass domains can all run in parallel within a batch.
+#### Single-pass domains (`type: "single-pass"`)
 
-#### Single-pass domains (2–8 files)
+Launch one **opus** model subagent that reads all files listed in `files` and writes the summary to the `output` path. Use the **Consolidation Prompt** below.
 
-Launch one **opus** model subagent that reads all files in the group and writes the summary directly to `diff/$V1-$V2/_summary/{domain_root}.md`.
+#### Hierarchical domains (`type: "hierarchical"`)
 
-Use the **Consolidation Prompt** below.
+The `next` output includes a `chunks` array with pre-computed file groupings.
 
-#### Hierarchical domains (> 8 files)
+**Pass 1 — Chunk summaries:** Process chunks **one at a time sequentially**. For each chunk, launch an **opus** subagent that reads the chunk's `files` and writes to the chunk's `intermediate_output` path. Use the **Consolidation Prompt**. After each chunk completes, verify the output file exists before launching the next. If a chunk fails, stop and ask the user what to do.
 
-**Pass 1 — Chunk summaries:**
+**Pass 2 — Final merge:** After ALL chunks complete, launch one **opus** subagent that reads all intermediate chunk summaries and writes the final summary to the `output` path. Use the **Merge Prompt**. After the final summary is written, delete the intermediate chunk files for that domain.
 
-Split the group's files into chunks of up to 8 files each, ordered by part number. Launch one **opus** subagent per chunk (all chunks in parallel). Each produces an intermediate summary at `diff/$V1-$V2/_summary/_intermediate/{domain_root}--chunk{N}.md`.
+5. **If any subagent failed** (quota exhaustion, errors, unexpected output), **stop immediately**. Report the error and wait for the user
+6. If it succeeded, run `bash diff-tools/task-done.sh summarize $V1 $V2 DOMAIN OUTPUT` (verifies output exists + marks complete)
+7. If the batch limit is reached, stop and report. Otherwise repeat from step 1
 
-Use the **Consolidation Prompt** below for each chunk.
+### Step 3: Cleanup
 
-**Pass 2 — Final merge:**
+After all domains are marked `[x]`, run:
+```
+bash diff-tools/finish-pair.sh summarize $V1 $V2
+```
 
-After ALL chunks for a domain complete, launch one **opus** subagent that reads all intermediate chunk summaries and produces the final summary at `diff/$V1-$V2/_summary/{domain_root}.md`.
-
-Use the **Merge Prompt** below.
-
-After the final summary is written successfully, delete the intermediate chunk files for that domain.
-
-### Step 4: Cleanup
-
-After all domains are marked `[x]`:
-- Delete `diff/$V1-$V2/_summary/_intermediate/` directory (if it exists)
-- Delete `diff/$V1-$V2/_summary/_progress.md`
+This cleans up intermediate files and creates the completion flag. Proceed to the next uncompleted version pair, or report that all pairs are complete.
 
 ## Prompts
 
@@ -108,9 +83,9 @@ Used for both single-pass domains and hierarchical pass-1 chunks.
 ```
 Read the following domain analysis result files completely and consolidate them into a single unified summary. These files were produced by analyzing game diffs between version $V1 and $V2. They may contain redundant or overlapping entries because the source diffs were split into arbitrary size-based parts.
 
-Domain: {domain_root}
+Domain: {domain}
 Files to read:
-{list of full file paths, one per line}
+{files, one per line}
 
 Consolidation rules:
 - **Combine duplicate entries**: If the same game object, mechanic, or change appears in multiple files, merge into one entry with ALL relevant details from every source
@@ -142,10 +117,10 @@ Read ALL files completely before writing. Do not start writing until you have re
 Used for hierarchical pass-2 final merge.
 
 ```
-Read the following intermediate chunk summaries for domain "{domain_root}" and merge them into one final consolidated summary. These chunks were produced by summarizing subsets of the original analysis files for game diff $V1 → $V2. There may still be redundancy across chunks where the same change was captured in overlapping parts.
+Read the following intermediate chunk summaries for domain "{domain}" and merge them into one final consolidated summary. These chunks were produced by summarizing subsets of the original analysis files for game diff $V1 → $V2. There may still be redundancy across chunks where the same change was captured in overlapping parts.
 
 Files to read:
-{list of chunk summary file paths, one per line}
+{chunk summary file paths, one per line}
 
 Apply the same consolidation rules:
 - Combine duplicate entries across chunks into single entries with all details

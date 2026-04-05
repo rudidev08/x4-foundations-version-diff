@@ -2,85 +2,75 @@
 
 Generate per-file diffs between two X4 source versions, batch them by domain, and analyze each domain with subagents.
 
+**Important:** Always use the provided shell scripts in `diff-tools/` for workflow operations. Do not write ad-hoc bash commands or loops to replace script functionality. If a needed capability is missing, suggest creating a new script rather than improvising.
+
 ## Version Selection
 
-Check if `diff/_versions_to_compare.md` exists. If it does, read `$V1` and `$V2` from it and skip to Prerequisites.
+Read `diff/_versions_to_compare.md`. Each non-empty line is a version pair in the format `{OLD}-{NEW}` (e.g., `8.00H4-9.00B1`). Parse `$V1` (old) as the part before the `-` separator and `$V2` (new) as the part after.
 
-If it does not exist, ask the user which versions to compare. List the available directories under `source/` so they can pick. Once confirmed, write `diff/_versions_to_compare.md`:
-
-```
-OLD_VERSION=$V1
-NEW_VERSION=$V2
-```
+If the file does not exist, ask the user which versions to compare. List the available directories under `source/` so they can pick. Once confirmed, write `diff/_versions_to_compare.md` with one pair per line in the `{OLD}-{NEW}` format.
 
 Only this agent creates or updates `diff/_versions_to_compare.md`.
+
+## Multi-Version Iteration
+
+The prepare script (Steps 1–3) handles all pending pairs at once, skipping any with `_completed_analyze` flags. After preparation, process each remaining pair's tasks sequentially (Step 4). After completing a pair's tasks, run the finish script (Step 5) and move to the next pair. When all pairs are done, report completion.
 
 ## Prerequisites
 Source directories must exist at `source/$V1/` and `source/$V2/`.
 
 **Before launching any subagents**, prompt the user: "This workflow uses background agents that need write access. Please make sure edit mode is on (press Enter to continue)." Use AskUserQuestion and wait for their response before proceeding. Background agents cannot prompt for permissions interactively — if writes are not pre-approved, they will silently fail.
 
-## Progress Tracking
+## Shell Scripts
 
-This workflow uses a progress file at `diff/$V1-$V2/_analysis/_progress.md` to track state. **Before doing anything**, check if this file exists. If it does, read it and resume from the first unchecked task. If it doesn't, create it during Step 3.
-
-The progress file uses checkbox format:
-```
-- [x] libraries — done
-- [ ] aiscripts — pending
-```
-
-After completing each analysis task, mark it `[x]` in the progress file immediately. This ensures context loss is recoverable.
+Shell scripts in `diff-tools/` handle all workflow operations:
+- `bash diff-tools/analyze-prepare.sh` — Steps 1-3 for all pending pairs (generate diffs, prepare batches, init tasks). Reports total remaining tasks.
+- `bash diff-tools/task-next.sh analyze V1 V2` — Get next task as JSON: `{task_id, label, prompt_type, batch_files, remaining, output}`
+- `bash diff-tools/task-done.sh analyze V1 V2 TASK_ID [OUTPUT]` — Verify output exists + mark task complete, JSON: `{marked, remaining}`
+- `python3 diff-tools/task-batch.py analyze V1 V2 N` — Get N pending tasks at once as JSON: `{batch: [{task_id, label, prompt_type, batch_files, output}, ...], remaining}`. Use this instead of task-next.sh when launching multiple agents in parallel.
+- `bash diff-tools/finish-pair.sh analyze V1 V2` — Delete progress tracker + create completion flag
 
 ## Steps
 
-### Step 1: Generate per-file diffs
-Run `python3 diff-tools/prepare_diff_analysis.py $V1 $V2` if batches don't already exist.
+### Steps 1–3: Prepare all pairs
 
-If diffs don't exist yet, first run `python3 diff-tools/version_diff.py $V1 $V2` to generate per-file unified diffs at `diff/$V1-$V2/`.
+Run:
+```
+bash diff-tools/analyze-prepare.sh
+```
 
-### Step 2: Prepare batches
-Run `python3 diff-tools/prepare_diff_analysis.py $V1 $V2` to group diffs by domain and create concatenated batch files at `diff/$V1-$V2/_analysis/_batches/` with a `manifest.json`.
-
-### Step 3: Build task list and progress file
-
-Read `diff/$V1-$V2/_analysis/_batches/manifest.json`. Create **one analysis task per batch file**, using the batch filename without the `.diff` extension as the task ID (e.g., `libraries--part1`, `extensions--ego_dlc_terran--assets--props`).
-
-**Special case — Localization:** If `t.diff` exists in the manifest, do NOT create a standalone `t` or `index` task. Instead create two localization tasks:
-- `localization_mechanics` — will read `t.diff` + `index.diff` (if it exists) using the Localization Mechanics prompt
-- `localization_lore` — will read `t.diff` using the Localization Story & Lore prompt
-
-If `index.diff` exists but `t.diff` does not, create a standalone `index` task with the general prompt.
-
-Write the progress file at `diff/$V1-$V2/_analysis/_progress.md` with one `- [ ] {task_id}` checkbox per task. Generate the list dynamically from the manifest — the number of tasks varies per diff.
+This processes all pending version pairs: generates per-file diffs, prepares analysis batches, and initializes task lists. Already-completed pairs are skipped. The output reports total remaining tasks across all pairs.
 
 ### Step 4: Analyze domains
 
-Process unchecked tasks in **user-sized batches**:
+**Batch count is asked once before processing the first version pair.** The prepare script already reported the total remaining tasks. Ask the user once using AskUserQuestion how many to process, offering options like "5", "10", "25", and "All (N)". This count applies across all version pairs — do not ask again between pairs.
 
-1. Count the remaining unchecked tasks and report the number remaining, then ask how many to launch next (e.g., "N tasks remaining. How many to launch in the next batch?").
-2. Take the next N unchecked tasks from the progress file
-3. Launch all N as background subagents simultaneously
-4. Wait for all N to complete
-5. If any failed (quota exhaustion, errors), **stop immediately** — do not launch more. Tell the user which tasks failed and that they can resume later.
-6. If all N succeeded, mark them `[x]` in the progress file, then repeat from step 1
+Then process tasks **one at a time**, working through each version pair sequentially:
 
-For each unchecked task, determine the batch file(s) and prompt to use:
+1. Run `bash diff-tools/task-next.sh analyze $V1 $V2` to get the next task's info
+2. If `{"done": true}` for this pair, proceed to Step 5 for this pair, then continue with the next pair's tasks
+3. Report which task is being launched and how many remain (e.g., "Launching: libraries--part1 (N remaining)")
+4. Launch one **opus** model background subagent with the appropriate prompt (see below), using the `batch_files`, `label`, and `prompt_type` from the JSON output
+5. Wait for it to complete
+6. **If it failed** (quota exhaustion, errors, unexpected output), **stop immediately**. Report the error to the user and wait for them to tell you what to do
+7. If it succeeded, run `bash diff-tools/task-done.sh analyze $V1 $V2 TASK_ID OUTPUT` (verifies output exists + marks complete)
+8. If the batch limit is reached, stop and report. Otherwise repeat from step 1
 
-- **`localization_mechanics`** → read `t.diff` and `index.diff` from `_analysis/_batches/`, use the **Localization Mechanics** prompt
-- **`localization_lore`** → read `t.diff` from `_analysis/_batches/`, use the **Localization Story & Lore** prompt
-- **All other tasks** → read `{task_id}.diff` from `_analysis/_batches/`, use the **general analysis** prompt with domain label from `manifest.json`
+#### Prompt Selection
 
-Launch an **opus** model subagent with the appropriate prompt from the sections below. Save the analysis output to `diff/$V1-$V2/_analysis/{task_id}.md`. Mark the task `[x]` in the progress file immediately after saving.
+The `prompt_type` field from `next` determines which prompt to use:
+- `"general"` → General Analysis Prompt
+- `"localization_mechanics"` → Localization Mechanics Prompt
+- `"localization_lore"` → Localization Story & Lore Prompt
 
 #### General Analysis Prompt
 
 ```
 Analyze the following X4 Foundations game diff files for gameplay-relevant changes between version $V1 and $V2. Read each batch file listed below completely.
 
-Domain: {domain_label}
+Domain: {label}
 Files to read:
-{list of full batch file paths}
+{batch_files, one per line}
 
 For each change found, classify its impact:
 - **Critical / High Impact**: Changes that alter combat balance, economy flow, new game mechanics, ship stats, weapon behavior, AI behavior, mission structure
@@ -112,9 +102,9 @@ Important:
 ```
 Analyze the following X4 Foundations localization and index diff files for MECHANICS-related text changes between version $V1 and $V2. Read each batch file listed below completely.
 
-Domain: {domain_label}
+Domain: {label}
 Files to read:
-{list of full batch file paths}
+{batch_files, one per line}
 
 Focus on the **English localization files** (`l044`). For index files, note new or removed macro/component entries.
 
@@ -162,9 +152,9 @@ Important:
 ```
 Analyze the following X4 Foundations localization diff files for STORY and LORE text changes between version $V1 and $V2. Read each batch file listed below completely.
 
-Domain: {domain_label}
+Domain: {label}
 Files to read:
-{list of full batch file paths}
+{batch_files, one per line}
 
 Focus on the **English localization files** (`l044`). Ignore index files for this task.
 
@@ -214,10 +204,12 @@ Important:
 
 ### Step 5: Cleanup
 
-After all analysis tasks are marked `[x]`, delete the progress tracker:
-- `diff/$V1-$V2/_analysis/_progress.md`
+After all analysis tasks are marked `[x]`, run:
+```
+bash diff-tools/finish-pair.sh analyze $V1 $V2
+```
 
-Keep `diff/$V1-$V2/_analysis/` — it is needed by `/diff-summarize` and `/diff-write`.
+This deletes the progress tracker and creates the completion flag. The `_analysis/` directory is preserved for `/diff-summarize` and `/diff-write`. Proceed to the next uncompleted version pair, or report that all pairs are complete.
 
 ## Formatting Rules
 

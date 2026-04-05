@@ -2,9 +2,15 @@
 
 Synthesize domain analysis results into a single thematic changelog using subagents per section.
 
+**Important:** Always use the provided shell scripts in `diff-tools/` for workflow operations. Do not write ad-hoc bash commands or loops to replace script functionality. If a needed capability is missing, suggest creating a new script rather than improvising.
+
 ## Version Selection
 
-Read `$V1` and `$V2` from `diff/_versions_to_compare.md` (created by `/diff-analyze`). If the file does not exist, tell the user to run `/diff-analyze` first.
+Read `diff/_versions_to_compare.md`. Each non-empty line is a version pair in the format `{OLD}-{NEW}` (e.g., `8.00H4-9.00B1`). Parse `$V1` (old) and `$V2` (new) from each line. If the file does not exist, tell the user to run `/diff-analyze` first.
+
+## Multi-Version Iteration
+
+The prepare script (Step 1) handles all pending pairs at once, skipping completed pairs and those missing prerequisites (analyze/summarize). After preparation, process each remaining pair's tasks sequentially (Step 2). After completing a pair's sections and deduplication (Step 3), run the finish script (Steps 4–5) and move to the next pair. When all pairs are done, report completion.
 
 ## Prerequisites
 
@@ -14,106 +20,67 @@ The following must exist:
 
 **Before launching any subagents**, prompt the user: "This workflow uses background agents that need write access. Please make sure edit mode is on (press Enter to continue)." Use AskUserQuestion and wait for their response before proceeding. Background agents cannot prompt for permissions interactively — if writes are not pre-approved, they will silently fail.
 
-## Progress Tracking
+## Shell Scripts
 
-This workflow uses a progress file at `diff/$V1-$V2/_write_progress.md` to track state. **Before doing anything**, check if this file exists. If it does, read it and resume from the first unchecked task. If it doesn't, create it during Step 1.
-
-After completing each section, mark it `[x]` in the progress file immediately. This ensures context loss is recoverable.
+Shell scripts in `diff-tools/` handle all workflow operations:
+- `bash diff-tools/write-prepare.sh` — Step 1 for all pending pairs (check prerequisites, init tasks). Reports total remaining tasks.
+- `bash diff-tools/task-next.sh write V1 V2` — Get next section as JSON: `{section_id, label, focus, files, remaining, output}`
+- `bash diff-tools/task-done.sh write V1 V2 SECTION [OUTPUT]` — Verify output exists + mark section complete, JSON: `{marked, remaining}`
+- `bash diff-tools/finish-pair.sh write V1 V2` — Assemble final changelog + cleanup + create completion flag
 
 ## Sections
 
-Each section defines its id, label, focus, and domain prefixes for routing analysis results. Domain prefixes match result filenames using `--` as the path separator (e.g., prefix `extensions` matches `extensions--ego_dlc_split--libraries.md`). A prefix of `*` means read all result files.
+The `next` command returns sections in this order, with pre-filtered file lists:
 
-1. `combat` — Combat System
-   Focus: Shields, weapons, missiles, turrets, AI targeting, weapon heat, disruption mechanics
-   Domains: `libraries`, `aiscripts`, `assets--props`, `assets--units`, `md`, `extensions`
+1. `combat` — Combat System (shields, weapons, missiles, turrets, AI targeting, weapon heat, disruption mechanics)
+2. `new_mechanics` — New Game Systems (new attributes, new gameplay features, new AI behaviors)
+3. `economy_trade` — Economy & Trade (ware pricing, production recipes, trade AI, resource flow)
+4. `missions` — Mission System (mission logic, subscriptions, rewards, faction goals)
+5. `ui` — UI & Interface (menus, HUD, panels, Lua scripts, notifications)
+6. `ship_balance` — Ship Balance (hull, mass, thrust, inertia, drag, crew, storage, engine stats, physics)
+7. `dlc` — DLC-Specific (content unique to specific DLCs that doesn't fit other sections)
+8. `new_content` — New Content (new ships, wares, stations, story, characters, missions)
+9. `bug_fixes` — Bug Fixes (corrected values, fixed logic, resolved issues)
+10. `miscellaneous` — Miscellaneous (anything not covered by other sections)
 
-2. `new_mechanics` — New Game Systems
-   Focus: New attributes, new gameplay features, new AI behaviors
-   Domains: `libraries`, `aiscripts`, `md`, `maps`, `localization_mechanics`, `extensions`
-
-3. `economy_trade` — Economy & Trade
-   Focus: Ware pricing, production recipes, trade AI, resource flow
-   Domains: `libraries`, `aiscripts`, `md`, `assets--structures`, `extensions`
-
-4. `missions` — Mission System
-   Focus: Mission logic, subscriptions, rewards, faction goals
-   Domains: `md`, `localization_mechanics`, `extensions`
-
-5. `ui` — UI & Interface
-   Focus: Menus, HUD, panels, Lua scripts, notifications
-   Domains: `ui`, `localization_mechanics`
-
-6. `ship_balance` — Ship Balance
-   Focus: Hull, mass, thrust, inertia, drag, crew, storage, engine stats, physics
-   Domains: `libraries`, `assets--units`, `assets--props`, `extensions`
-
-7. `dlc` — DLC-Specific
-   Focus: Content unique to specific DLCs that doesn't fit other sections. General balance changes (shield stats, weapon stats) that happen to be in DLC files belong in the relevant thematic section, not here.
-   Domains: `extensions`
-
-8. `new_content` — New Content
-   Focus: New ships, wares, stations, story, characters, missions
-   Domains: `*`
-
-9. `bug_fixes` — Bug Fixes
-   Focus: Corrected values, fixed logic, resolved issues
-   Domains: `*`
-
-10. `miscellaneous` — Miscellaneous
-    Focus: Anything not covered by other sections
-    Domains: `*`
+The script automatically routes result files: multi-part domains use `_summary/` consolidated files, single-file domains use `_analysis/` files directly. Sections with domain `*` receive all eligible files.
 
 ## Steps
 
-### Step 1: Build progress file
+### Step 1: Prepare all pairs
 
-Create the output directory `diff/$V1-$V2/_sections/` and the progress file at `diff/$V1-$V2/_write_progress.md`:
+Run:
 ```
-# Write Progress: $V1 → $V2
+bash diff-tools/write-prepare.sh
+```
 
-## Sections
-- [ ] combat
-- [ ] new_mechanics
-- [ ] economy_trade
-- [ ] missions
-- [ ] ui
-- [ ] ship_balance
-- [ ] dlc
-- [ ] new_content
-- [ ] bug_fixes
-- [ ] miscellaneous
-```
+This processes all pending version pairs: checks prerequisites (analysis complete, summaries exist for multi-part domains) and initializes task lists. Already-completed pairs are skipped. The output reports total remaining tasks across all pairs.
 
 ### Step 2: Write sections
 
-Process unchecked sections in **user-sized batches**:
+**Batch count is asked once before processing the first version pair.** The prepare script already reported the total remaining tasks. Ask the user once using AskUserQuestion how many to process, offering options like "5", "10", and "All (N)". This count applies across all version pairs — do not ask again between pairs.
 
-1. Count the remaining unchecked sections and report the number remaining, then ask how many to launch next (e.g., "N sections remaining. How many to launch in the next batch?").
-2. Take the next N unchecked sections from the progress file
-3. Launch all N as background subagents simultaneously
-4. Wait for all N to complete
-5. If any failed (quota exhaustion, errors), **stop immediately** — do not launch more. Tell the user which sections failed and that they can resume later.
-6. If all N succeeded, mark them `[x]` in the progress file, then repeat from step 1
+Then process tasks **one at a time**, working through each version pair sequentially:
 
-For each unchecked section, determine which result files to include:
+1. Run `bash diff-tools/task-next.sh write $V1 $V2` to get the next section's info
+2. If `{"done": true}` for this pair, proceed to Step 3 for this pair, then continue with the next pair's tasks
+3. Report which section is being launched and how many remain (e.g., "Launching: combat (N remaining)")
+4. Launch one **opus** model background subagent with the Section Writing Prompt below, using `label`, `focus`, and `files` from the JSON output
+5. Wait for it to complete
+6. **If it failed** (quota exhaustion, errors, unexpected output), **stop immediately**. Report the error and wait for the user
+7. If it succeeded, run `bash diff-tools/task-done.sh write $V1 $V2 SECTION_ID OUTPUT` (verifies output exists + marks complete)
+8. If the batch limit is reached, stop and report. Otherwise repeat from step 1
 
-1. List all `.md` files in `diff/$V1-$V2/_analysis/` (exclude `_batches/` subdirectory and `_progress.md`)
-2. Identify multi-part domains: any domain with `--partN.md` files (e.g., `libraries--part1.md`, `libraries--part2.md`). For these, use ONLY the corresponding `diff/$V1-$V2/_summary/{domain_root}.md` file. Never include individual `--partN.md` files. If a multi-part domain has no file in `_summary/`, stop and tell the user to run `/diff-summarize` first.
-3. For single-file domains (no `--partN` suffix), use the file directly from `_analysis/`
-4. If the section's domains list is `*`, include all eligible result files (summaries from `_summary/` + single-file domains from `_analysis/`)
-5. Otherwise, include only eligible result files whose name (without `.md` extension) starts with one of the section's domain prefixes
-
-Launch an **opus** model subagent with the filtered file list:
+#### Section Writing Prompt
 
 ```
 Read the following analysis result files and synthesize everything relevant to the theme into a single cohesive changelog section.
 
-Theme: {section_label}
-Focus: {section_focus}
+Theme: {label}
+Focus: {focus}
 
 Files to read:
-{list of full result file paths}
+{files, one per line}
 
 Guidelines:
 - Read every listed file completely before writing
@@ -126,10 +93,6 @@ Guidelines:
 - NEVER use markdown tables. Use inline bullet lists: `Item: old → new detail | detail | detail`
 ```
 
-Save each section to `diff/$V1-$V2/_sections/{section_id}.md`.
-
-Mark the section `[x]` in the progress file immediately after saving.
-
 ### Step 3: Deduplicate sections
 
 After all sections are marked `[x]`, read every section file from `diff/$V1-$V2/_sections/` and identify items that appear in more than one section (same underlying change described separately). For each duplicate:
@@ -138,24 +101,14 @@ After all sections are marked `[x]`, read every section file from `diff/$V1-$V2/
 2. **Remove the item entirely from all non-primary sections.** Do not leave cross-references, stubs, or "see other section" notes — just delete it. If removing an item leaves a subsection header with no content, remove the header too.
 3. **Save each modified section file** back to `diff/$V1-$V2/_sections/`.
 
-### Step 4: Assemble changelog
+### Steps 4–5: Assemble and cleanup
 
-Read all section files from `diff/$V1-$V2/_sections/` **in the order listed above** and concatenate them into a single file at `diff-results/diff-$V1-$V2.md`.
-
-Add a header:
+After deduplication, run:
 ```
-# X4 Foundations Changelog: $V1 → $V2
+bash diff-tools/finish-pair.sh write $V1 $V2
 ```
 
-Only include sections that have actual content — skip any section whose file contains only "No changes."
-
-### Step 5: Cleanup
-
-Delete the progress file and sections directory:
-- `diff/$V1-$V2/_write_progress.md`
-- `diff/$V1-$V2/_sections/`
-
-Keep `diff/$V1-$V2/_analysis/` and `diff/$V1-$V2/_summary/` — they are needed by `/diff-verify`.
+This assembles all section files into the final changelog at `diff-results/diff-$V1-$V2.md` (skipping any containing only "No changes."), cleans up the progress file and sections directory, and creates the completion flag. The `_analysis/` and `_summary/` directories are preserved. Proceed to the next uncompleted version pair, or report that all pairs are complete.
 
 ## Formatting Rules
 
