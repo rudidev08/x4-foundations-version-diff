@@ -1,5 +1,11 @@
 # X4 Foundations Source Repository
 
+## Bash Commands
+
+Do not use shell brace expansion (`{a,b,c}`) in Bash commands — it breaks Claude Code's permission matcher even when the command prefix is allowed. Write each argument separately instead.
+
+Always use relative paths in Bash commands (e.g., `python3 diff-tools/pipeline.py`, not absolute paths) — absolute paths break the permission matcher.
+
 ## LLM Guidelines
 
 If unsure about something, or considering doing extra work beyond what was explicitly requested, **ask first**.

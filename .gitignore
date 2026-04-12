@@ -18,6 +18,11 @@ Desktop.ini
 # Local/private overrides
 *.local.*
 *.local/
+.env
+
+# Python
+__pycache__/
+*.pyc
 
 # Claude Code
 .claude/settings.local.json
