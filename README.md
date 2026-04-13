@@ -1,67 +1,89 @@
-# X4 Foundations Version Diff Tools
+# X4 Diff Pipeline
 
-Generate diffs between X4 Foundations source versions and produce changelogs with LLM assistance.
+Generates a changelog between two versions of X4: Foundations by diffing the
+extracted game source and running the diffs through an LLM.
 
-## Quick Start — Running a Diff with an LLM
+## Prerequisites
 
-Once source files are extracted (see below), paste this to your LLM:
+- Python 3.10+
+- An LLM CLI that accepts a prompt on stdin and writes the response to stdout
+  (the default is the `claude` CLI with Opus)
+- Two extracted game versions in `source/{version}/` (use `tools/extract.py`
+  if you need to extract from `.cat`/`.dat` archives)
 
-> Read `diff-tools/INSTRUCTIONS.md` and run the full diff pipeline for versions `9.00B4` to `9.00B5`.
-
-Replace the version numbers with whatever pair you're comparing. The LLM handles everything — reading diffs, writing analysis, and assembling the final changelog.
-
-## Requirements
-
-- Python 3.12+
-- [X4 Foundations](https://www.egosoft.com/games/x4/info_en.php) (you need the game files)
-- Any LLM with ~32k+ context (Claude, GPT, Qwen, Llama, etc.) — the pipeline uses standard unified diff format that all models handle well
-
-## Configuration
-
-The pipeline tags outputs with a model name so you can compare results from different LLMs side by side (each gets its own run directory under `diff/V1-V2/_runs/`).
-
-To set the model name, copy `.env.example` to `.env` and edit it:
+## Quick start
 
 ```sh
-cp .env.example .env
+cp .env.example .env                          # fill in LLM_CLI and LLM_MODEL
+python3 tools/pipeline.py 9.00B4 9.00B5 -j 5  # run pipeline with 5 concurrent LLM calls
 ```
 
-If `.env` doesn't exist when you run `setup.sh`, it creates one with `LLM_MODEL=default`. You can change it anytime — set it to whatever identifies your model, e.g. `qwen3.5-27b`, `claude-sonnet`, `llama-70b`.
+Final output: `diff-results/{v1}-{v2}-{model}.md`.
 
-## Usage
+## What the pipeline does
 
-### 1. Extract source files
-
-```sh
-python3 diff-tools/cat_extract.py /path/to/X4/Foundations source/9.00B4 --all-folders
-python3 diff-tools/cat_extract.py /path/to/X4/Foundations source/9.00B5 --all-folders
+```
+python3 tools/pipeline.py V1 V2 [-j N] [--mock]
 ```
 
-Use `--all-folders` to extract assets, UI, and other directories needed by the diff pipeline. Without it, only core data (libraries, aiscripts, md, maps, index, t) is extracted.
+- `V1`, `V2` — folder names under `source/`
+- `-j N` — concurrent LLM calls for the parallel steps (default 1, recommended 5)
+- `--mock` — replace LLM calls with stub output; useful for exercising
+  orchestration, resume, and retry logic without spending quota
 
-### 2. Run the pipeline
+Pipeline stages:
 
-```sh
-python3 diff-tools/pipeline.py prepare 9.00B4 9.00B5
-python3 diff-tools/pipeline.py next 9.00B4 9.00B5      # get prompt for next task
-# ... do the work (feed prompt to LLM, write output file) ...
-python3 diff-tools/pipeline.py done 9.00B4 9.00B5      # mark complete
-# ... repeat next/done until all phases finish (analyze → summarize → write → dedup) ...
-python3 diff-tools/pipeline.py assemble 9.00B4 9.00B5  # build final changelog
-python3 diff-tools/pipeline.py status 9.00B4 9.00B5    # check progress
-python3 diff-tools/pipeline.py reset 9.00B4 9.00B5 [phase]  # redo a phase
+1. **Raw diff** — `tools/diff.py` writes per-file unified diffs to `diff/raw/{pair}/`
+2. **Pin settings** — `diff/models/{model}/settings.json` locks the chunk size for this model
+3. **Chunk** — group diffs by domain, split to chunk size, write `diff/models/{model}/{pair}/chunks/`
+4. **Analyze** — one LLM call per chunk (parallel) → `analysis/`
+5. **Per-domain concat** — deterministic concat of multi-part analyses → `analysis-by-domain/`
+6. **Topic synthesis** — one LLM call per topic (parallel) → `topics/`
+7. **Dedup** — heuristic pre-filter surfaces candidate pairs; LLM decides (parallel, JSON); serial apply → `topics-deduped/`
+8. **Assemble** — deterministic concat with TOC → `diff-results/{pair}-{model}.md`
+
+## Resume semantics
+
+- File existence is the checkpoint. Rerun `python3 tools/pipeline.py V1 V2` to pick up exactly where a prior run stopped.
+- Within a run, tasks retry up to 3× on transient errors or bad output. After 3, a `*.failed` sibling file is written and that single task is blocked for the rest of the run (others continue).
+- Between runs, `*.failed` markers rotate: `.failed → .failed.previous → .failed.previous.1` ... up to `.previous.4`. A fresh invocation always gives blocked tasks a new retry budget. Tasks at `.previous.4` (5+ failed runs) trigger a loud warning.
+- Changing `LLM_CHUNK_SIZE` in `.env` after the first run does NOT re-chunk. To reset: `rm -rf diff/models/{model}/{pair}/`.
+
+## Directory layout
+
+```
+tools/                       Python scripts
+  diff.py                    Generate raw diffs between two versions
+  extract.py                 Extract .cat/.dat game archives
+  pipeline.py                Main orchestrator
+  llm.py                     Subprocess + retry + validation
+  prompts.py                 Prompt templates + topic definitions
+  chunking.py                Domain classification + hunk splitting
+
+source/{version}/            Extracted game data (gitignored)
+diff/                        Pipeline working state (gitignored)
+  raw/{pair}/                Per-file unified diffs, model-agnostic
+  models/{model}/
+    settings.json            Pinned config for this model
+    {pair}/
+      chunks/                Domain-grouped diff batches
+      analysis/              Per-chunk LLM analyses
+      analysis-by-domain/    Consolidated per-domain (deterministic concat)
+      topics/                Per-topic syntheses
+      dedup-decisions/       JSON deletion plans
+      topics-deduped/        After dedup apply
+
+diff-results/{pair}-{model}.md   Final deliverable
 ```
 
-### 3. Output
+## Cleanup
 
-Final changelog lands in `diff-results/diff-9.00B4-9.00B5-{LLM_MODEL}.md`.
+Once you're happy with a result, the per-model working directory is safe to
+delete: `rm -rf diff/models/{model}/{pair}/`. The final `diff-results/...md` is
+the only artifact that needs to survive.
 
-## Structure
+## Further reading
 
-- `diff-tools/pipeline.py` — Orchestrator (prepare, track progress, render prompts, assemble)
-- `diff-tools/version_diff.py` — Generates per-file unified diffs between versions
-- `diff-tools/cat_extract.py` — Extracts text files from X4's `.cat/.dat` archives
-- `diff-tools/INSTRUCTIONS.md` — LLM prompt reference
-- `source/` — Extracted game data by version (not in repo)
-- `diff/` — Generated diffs and intermediate analysis
-- `diff-results/` — Final changelogs
+- `plan.md` — design document covering principles, flow, and open tradeoffs
+- `CLAUDE.md` — guide to the X4 source tree for anyone (including LLMs)
+  working with this codebase

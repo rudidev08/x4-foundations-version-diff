@@ -69,7 +69,7 @@ def find_cat_files(sourcedir: Path, recursive: bool = True,
 
 def extract_cat_files(sourcedir: Path, destdir: Path,
                       include: list[str] | None = None,
-                      file_filter: str = r'^.*(xml|xsd|html|js|css|lua)$',
+                      file_filter: str = r'^.*\.(xml|xsd|html|js|css|lua)$',
                       recursive: bool = True) -> None:
     """Extract matching files from .cat/.dat archive pairs."""
     pattern = re.compile(file_filter)
@@ -108,16 +108,19 @@ def extract_cat_files(sourcedir: Path, destdir: Path,
                 # Filepath can contain spaces, so split from the right
                 parts = line.rsplit(" ", 3)
                 if len(parts) != 4:
-                    print(f"  Warning: malformed line: {line[:50]}...")
-                    continue
+                    # Without a valid size we can't advance the .dat read head,
+                    # so every subsequent entry would read at the wrong offset.
+                    # Abort this archive rather than silently corrupt the rest.
+                    print(f"  Error: malformed line: {line[:50]}...; aborting archive to prevent corruption")
+                    break
 
                 filepath, size_str, _timestamp, _filehash = parts
 
                 try:
                     size = int(size_str)
                 except ValueError:
-                    print(f"  Warning: invalid size '{size_str}' for {filepath}")
-                    continue
+                    print(f"  Error: invalid size '{size_str}' for {filepath}; aborting archive to prevent corruption")
+                    break
 
                 if pattern.match(filepath) and is_path_allowed(filepath):
                     out_file = destdir / cat_rel_dir / filepath
@@ -125,6 +128,9 @@ def extract_cat_files(sourcedir: Path, destdir: Path,
 
                     try:
                         data = dat_fh.read(size)
+                        if len(data) != size:
+                            print(f"  Error: short read on {filepath} ({len(data)}/{size} bytes); aborting archive")
+                            break
                         out_file.write_bytes(data)
                         extracted += 1
                     except IOError as e:
@@ -157,7 +163,7 @@ def main():
     )
     parser.add_argument(
         "-f", "--filter",
-        default=r'^.*(xml|xsd|html|js|css|lua)$',
+        default=r'^.*\.(xml|xsd|html|js|css|lua)$',
         help='Regex filter for files to extract (default: xml,xsd,html,js,css,lua). Use ".*" for all.',
     )
     parser.add_argument(

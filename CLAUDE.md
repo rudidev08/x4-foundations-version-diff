@@ -4,7 +4,7 @@
 
 Do not use shell brace expansion (`{a,b,c}`) in Bash commands — it breaks Claude Code's permission matcher even when the command prefix is allowed. Write each argument separately instead.
 
-Always use relative paths in Bash commands (e.g., `python3 diff-tools/pipeline.py`, not absolute paths) — absolute paths break the permission matcher.
+Always use relative paths in Bash commands (e.g., `python3 tools/pipeline.py`, not absolute paths) — absolute paths break the permission matcher.
 
 ## LLM Guidelines
 
@@ -27,7 +27,7 @@ Source directories under `source/` use short version codes. In the version numbe
 Extracted game data files used as the authoritative reference.
 
 - Each version directory contains extracted data (libraries, maps, aiscripts, etc.)
-- DLC content lives under `source/{version}/extensions/ego_dlc_*`. Each DLC mirrors the base game structure (assets/, libraries/, md/, maps/, index/). DLCs:
+- DLC content lives under `source/{version}/extensions/ego_dlc_*`. Most DLCs mirror the base game structure (assets/, libraries/, md/, maps/, index/, cutscenes/); `ego_dlc_ventures` is the exception — it has no `maps/` or `cutscenes/` and adds `t/`, `ui/`, and a top-level `ui.xml`. DLCs:
   - `ego_dlc_split` — Cradle of Humanity (Split faction, ships, stations)
   - `ego_dlc_terran` — Cradle of Humanity (Terran/Yaki/ATF factions, Solar System sectors)
   - `ego_dlc_boron` — Kingdom End (Boron faction, terraforming mechanics)
@@ -77,8 +77,8 @@ Extracted game data files used as the authoritative reference.
 - `libraries/` — Static data definitions: wares, ships, parameters, jobs
 - `t/` — Localization text files (16 languages). Files named `0001-lXXX.xml` where XXX is a language code (e.g., l044=English, l007=Russian, l049=German). Text IDs are hierarchical: `<language>` → `<page id="NNNN">` → `<t id="N">` where page IDs group by category (1001=Interface, 1002=Player Choices, etc.)
 - `maps/` — Sector/zone/cluster layout data. `xu_ep2_universe/` is the main playable game map. Hierarchy: Galaxy → Clusters → Sectors → Zones, defined across `galaxy.xml`, `clusters.xml`, `sectors.xml`, `zones.xml`, `zonehighways.xml`, `sechighways.xml`. Other subdirectories are testing/demo universes (demo_universe, blackgalaxy, effectuniverse) or utility (editor, mainmenuscene, unittests)
-- `shadergl/` — OpenGL shader parameter definitions in `high_spec/`: `default.xml` (base PBR material properties) and `enforced.xml` (runtime-mutable parameters for glow, animation, planet rendering, dynamic effects)
-- `assets/` — Game object definitions using two-file architecture: component files (geometry, lights, connections) + macro files (gameplay properties, stats). Naming: `[type]_[faction]_[size]_[role]_[variant]` (e.g., `ship_arg_s_fighter_01`). Faction codes: `arg` (Argon), `par` (Paranid), `tel` (Teladi), `xen` (Xenon), `kha` (Kha'ak), `spl` (Split), `gen` (generic). Sizes: `xs/s/m/l/xl`
+- `shadergl/` — OpenGL shader parameter definitions: `default.xml` (base PBR material properties) and `enforced.xml` (runtime-mutable parameters for glow, animation, planet rendering, dynamic effects) at top level; `ogl/` holds per-pass render shader configs (color grading, depth, godrays, copy/gamma variants)
+- `assets/` — Game object definitions using two-file architecture: component files (geometry, lights, connections) + macro files (gameplay properties, stats). Naming: `[type]_[faction]_[size]_[role]_[variant]` (e.g., `ship_arg_s_fighter_01`). Faction codes: `arg` (Argon), `par` (Paranid), `tel` (Teladi), `xen` (Xenon), `kha` (Kha'ak), `spl` (Split), `gen` (generic), `ter` (Terran), `bor` (Boron), `atf` (ATF), `pir` (Pirate), `yak` (Yaki), `tfm` (Terraformer). Sizes: `xs/s/m/l/xl` (environments also use `xxl`)
   - `units/` — Ship/drone definitions by size class (size_xs through size_xl). Components define geometry; macros contain actual ship stats: hull HP, mass, inertia, drag, thrust, jerk, crew capacity, missile storage, software slots, steering curves. Covers fighters, corvettes, destroyers, carriers, miners, drones, spacesuits
   - `structures/` — Station module definitions: production factories (40+ ware types), habitats, defense modules, docking bays, storage containers, connection pieces, landmarks. Macros contain hull HP, workforce capacity, cargo limits, production recipes, build permissions
   - `props/` — Equipment and world objects (1050 files): engines (with thrust/boost/travel stats), weapons/turrets (rotation speed, reload, bullet refs), shields (by faction/size/mark), gates, highway elements, storage lockboxes, docking bays, scanners, satellites, interactive objects. Engine macros are authoritative for propulsion stats
@@ -134,4 +134,3 @@ Extracted game data files used as the authoritative reference.
 - **Pricing:** Wares have min/avg/max in `wares.xml`; equipment at wharfs/equipment docks is priced by resource cost (`buildprice`) with a `buildpricefactor` multiplier based on build queue size; NPC stations vary 0.9x–1.15x
 - **AI behavior:** `aiscripts/order.*.xml` are assignable orders; `aiscripts/interrupt.*.xml` handle reactive behaviors; `move.*.xml` handles navigation/pathfinding; `fight.*.xml` handles combat by target class; `lib.*.xml` provides shared utilities
 - **Localization:** Text referenced by page+ID (e.g., page 1001, id 5) across `t/0001-lXXX.xml` language files; scripts use `{1001,5}` style references
-
