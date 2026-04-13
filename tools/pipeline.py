@@ -786,6 +786,9 @@ def main():
                         help="Skip real LLM_CLI calls; write stub outputs instead")
     parser.add_argument("--no-banner", action="store_true",
                         help="Skip the 5s model banner countdown")
+    parser.add_argument("-y", "--yes", action="store_true",
+                        help="Skip the preview-approval gate on the first 3 LLM outputs. "
+                             "Preview is otherwise on by default when stdin is a TTY.")
     args = parser.parse_args()
 
     env = load_env()
@@ -804,6 +807,11 @@ def main():
             sys.exit("-t must be a positive integer")
         llm.set_budget(args.t)
         log(f"[budget] session cap: {args.t} LLM calls")
+
+    preview_enabled = not args.yes and not args.mock and sys.stdin.isatty()
+    llm.set_preview(preview_enabled)
+    if preview_enabled:
+        log(f"[preview] first {llm.PREVIEW_CALL_COUNT} LLM outputs will be shown for approval (pass -y to skip)")
 
     print_model_banner(env, countdown=0 if args.no_banner or args.mock else 5)
 
@@ -826,6 +834,14 @@ def main():
     manifest = step3_chunk(raw_dir, chunks_dir, env["LLM_CHUNK_SIZE_KB"])
 
     def stop_on_failure(step_label: str, failed: int) -> None:
+        if llm.auth_failed():
+            log("")
+            log(f"[{step_label}] STOP — LLM auth failed (see earlier message). Re-auth and re-run.")
+            sys.exit(1)
+        if llm.preview_aborted():
+            log("")
+            log(f"[{step_label}] STOP — preview rejected. Preview outputs were deleted; re-run when ready.")
+            sys.exit(1)
         if not failed:
             return
         used, limit = llm.budget_snapshot()
