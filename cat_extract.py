@@ -2,12 +2,14 @@
 """Extract X4 Foundations .cat/.dat archives.
 
 Usage:
-    python3 diff-tools/cat_extract.py /path/to/X4/Foundations ./output
-    python3 diff-tools/cat_extract.py /path/to/X4/Foundations ./output -f ".*"
-    python3 diff-tools/cat_extract.py /path/to/X4/Foundations ./output --no-recursive
+    python3 cat_extract.py /path/to/X4/Foundations ./output --all-folders
+    python3 cat_extract.py /path/to/X4/Foundations ./output -f ".*"
+    python3 cat_extract.py /path/to/X4/Foundations ./output --no-recursive
 
 Recursively searches subdirectories by default, so DLC files under
 extensions/ego_dlc_*/ are found and extracted into their own subfolders.
+
+The changelog pipeline expects this extractor to be run with --all-folders.
 
 Based on alexparlett's gist, with fixes for Linux paths containing dots.
 """
@@ -19,6 +21,31 @@ import os
 import re
 import sys
 from pathlib import Path
+
+
+def _atomic_write_bytes(target: Path, payload: bytes) -> None:
+    """Write payload to target atomically: write a sibling .tmp then rename.
+
+    A keyboard interrupt mid-extraction can leave a .tmp behind; the next
+    run silently overwrites it. The point is to keep partial files from
+    being mistaken for completed extractions by anything downstream.
+    """
+    tmp = target.with_suffix(target.suffix + ".tmp")
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o644)
+    try:
+        view = memoryview(payload)
+        while view:
+            written = os.write(fd, view)
+            if written <= 0:
+                raise OSError(
+                    f"short write to {tmp} "
+                    f"({len(payload) - len(view)}/{len(payload)} bytes)"
+                )
+            view = view[written:]
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    os.rename(tmp, target)
 
 # Only extract files from these top-level folders (plus root-level files).
 # Set to None to extract all folders.
@@ -131,7 +158,7 @@ def extract_cat_files(sourcedir: Path, destdir: Path,
                         if len(data) != size:
                             print(f"  Error: short read on {filepath} ({len(data)}/{size} bytes); aborting archive")
                             break
-                        out_file.write_bytes(data)
+                        _atomic_write_bytes(out_file, data)
                         extracted += 1
                     except IOError as e:
                         print(f"  Error writing {out_file}: {e}")
@@ -172,7 +199,7 @@ def main():
     )
     parser.add_argument(
         "--all-folders", action="store_true",
-        help="Extract from all folders, bypassing ALLOWED_FOLDERS filter",
+        help="Extract from all folders, bypassing ALLOWED_FOLDERS filter. Expected for pipeline inputs.",
     )
 
     args = parser.parse_args()

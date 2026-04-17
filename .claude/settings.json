@@ -1,10 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python3 diff-tools/*)",
+      "Bash(python3 src/*)",
       "Bash(grep *)",
       "Bash(wc *)",
       "Bash(ls *)"
     ]
-  }
+  },
+  "effortLevel": "max"
 }

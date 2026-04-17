@@ -1,0 +1,1483 @@
+{
+  "last_scanned_at": "2026-04-16T22:09:19Z",
+  "scanned_sources": [
+    "x4-data/9.00B5"
+  ],
+  "entries": [
+    {
+      "file": "extensions/ego_dlc_boron/libraries/character_macros.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/constructionplans.xml",
+      "entity_tag": "plan",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/effects.xml",
+      "entity_tag": "effect",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/icons.xml",
+      "entity_tag": "icon",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/influenceconfigurations.xml",
+      "entity_tag": "influencelist",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/loadouts.xml",
+      "entity_tag": "loadout",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/mapdefaults.xml",
+      "entity_tag": "dataset",
+      "id_attribute": "macro"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/missiongroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/modulegroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/people.xml",
+      "entity_tag": "people",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/region_definitions.xml",
+      "entity_tag": "region",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/roomgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/rooms.xml",
+      "entity_tag": "room",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/shipgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/libraries/ships.xml",
+      "entity_tag": "ship",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/maps/xu_ep2_universe/dlc_boron_clusters.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/maps/xu_ep2_universe/dlc_boron_sechighways.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/maps/xu_ep2_universe/dlc_boron_sectors.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/maps/xu_ep2_universe/dlc_boron_zonehighways.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_boron/maps/xu_ep2_universe/dlc_boron_zones.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_01/libraries/character_macros.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_01/libraries/effects.xml",
+      "entity_tag": "effect",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_01/libraries/icons.xml",
+      "entity_tag": "icon",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_01/libraries/loadouts.xml",
+      "entity_tag": "loadout",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_01/libraries/mapdefaults.xml",
+      "entity_tag": "dataset",
+      "id_attribute": "macro"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_01/libraries/region_definitions.xml",
+      "entity_tag": "region",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_01/libraries/shipgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_01/libraries/ships.xml",
+      "entity_tag": "ship",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_01/maps/xu_ep2_universe/dlc_mini_01_zones.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_02/libraries/character_macros.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_02/libraries/effects.xml",
+      "entity_tag": "effect",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_02/libraries/icons.xml",
+      "entity_tag": "icon",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_02/libraries/influenceconfigurations.xml",
+      "entity_tag": "influencelist",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_02/libraries/loadouts.xml",
+      "entity_tag": "loadout",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_02/libraries/mapdefaults.xml",
+      "entity_tag": "dataset",
+      "id_attribute": "macro"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_02/libraries/region_definitions.xml",
+      "entity_tag": "region",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_02/libraries/shipgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_mini_02/maps/xu_ep2_universe/dlc_mini_02_zones.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/character_macros.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/constructionplans.xml",
+      "entity_tag": "plan",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/drops.xml",
+      "entity_tag": "droplist",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/effects.xml",
+      "entity_tag": "effect",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/icons.xml",
+      "entity_tag": "icon",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/jobs.xml",
+      "entity_tag": "job",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/loadouts.xml",
+      "entity_tag": "loadout",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/mapdefaults.xml",
+      "entity_tag": "dataset",
+      "id_attribute": "macro"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/missiongroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/modulegroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/modules.xml",
+      "entity_tag": "module",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/people.xml",
+      "entity_tag": "people",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/region_definitions.xml",
+      "entity_tag": "region",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/shipgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/ships.xml",
+      "entity_tag": "ship",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/stationgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/libraries/stations.xml",
+      "entity_tag": "station",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/maps/xu_ep2_universe/dlc_pirate_clusters.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/maps/xu_ep2_universe/dlc_pirate_sechighways.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/maps/xu_ep2_universe/dlc_pirate_sectors.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_pirate/maps/xu_ep2_universe/dlc_pirate_zones.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/character_macros.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/constructionplans.xml",
+      "entity_tag": "plan",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/effects.xml",
+      "entity_tag": "effect",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/icons.xml",
+      "entity_tag": "icon",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/jobs.xml",
+      "entity_tag": "job",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/loadouts.xml",
+      "entity_tag": "loadout",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/mapdefaults.xml",
+      "entity_tag": "dataset",
+      "id_attribute": "macro"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/missiongroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/modulegroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/people.xml",
+      "entity_tag": "people",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/region_definitions.xml",
+      "entity_tag": "alias",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/roomgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/rooms.xml",
+      "entity_tag": "room",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/shipgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_split/libraries/ships.xml",
+      "entity_tag": "ship",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_split/maps/xu_ep2_universe/dlc4_clusters.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_split/maps/xu_ep2_universe/dlc4_sechighways.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_split/maps/xu_ep2_universe/dlc4_sectors.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_split/maps/xu_ep2_universe/dlc4_zones.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/character_components.xml",
+      "entity_tag": "component",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/character_macros.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/constructionplans.xml",
+      "entity_tag": "plan",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/drops.xml",
+      "entity_tag": "droplist",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/effects.xml",
+      "entity_tag": "effect",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/icons.xml",
+      "entity_tag": "icon",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/loadouts.xml",
+      "entity_tag": "loadout",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/mapdefaults.xml",
+      "entity_tag": "dataset",
+      "id_attribute": "macro"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/missiongroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/modulegroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/modulesets.xml",
+      "entity_tag": "set",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/people.xml",
+      "entity_tag": "people",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/region_definitions.xml",
+      "entity_tag": "alias",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/roomgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/rooms.xml",
+      "entity_tag": "room",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/shipgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/libraries/ships.xml",
+      "entity_tag": "ship",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/maps/xu_ep2_universe/dlc_terran_clusters.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/maps/xu_ep2_universe/dlc_terran_sechighways.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/maps/xu_ep2_universe/dlc_terran_sectors.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_terran/maps/xu_ep2_universe/dlc_terran_zones.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/libraries/character_components.xml",
+      "entity_tag": "component",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/libraries/character_macros.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/libraries/constructionplans.xml",
+      "entity_tag": "plan",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/libraries/drops.xml",
+      "entity_tag": "droplist",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/libraries/effects.xml",
+      "entity_tag": "effect",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/libraries/icons.xml",
+      "entity_tag": "icon",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/libraries/loadouts.xml",
+      "entity_tag": "loadout",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/libraries/mapdefaults.xml",
+      "entity_tag": "dataset",
+      "id_attribute": "macro"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/libraries/people.xml",
+      "entity_tag": "people",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/libraries/region_definitions.xml",
+      "entity_tag": "region",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/libraries/shipgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/libraries/ships.xml",
+      "entity_tag": "ship",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/libraries/trail_effects.xml",
+      "entity_tag": "effect",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/scenario_conceal_and_delay_universe/regions.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/scenario_escort_universe/zones.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/test_scenario_mining_universe/regions.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_assassinate_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_board_ships_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_capture_alive_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_deploy_defences_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_deploy_satellites_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_disable_capship_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_dragonfyre_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_escort_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_find_poi_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_fleet_battle_1_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_fleet_battle_2_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_fleet_battle_3_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_heist_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_hub_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_khaak_boss_battle_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_m0_bossbattle_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_map_space_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_mining_1_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_mining_5_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_mining_7_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_patrol_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_presidents_end_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_protect_object_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_race_1_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_race_2_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_race_3_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_recruitment_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_rescue_ship_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_sabotage_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_scan_anomalies_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_scan_ships_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_scan_station_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_seek_and_destroy_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_spacesuit_1_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_spacesuit_2_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_spacesuit_3_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_spacesuit_4_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_tail_ship_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_taxi_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_tharkas_cascade_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_track_ship_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_trading_1_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_trading_2_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_trading_3_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_transport_refugees_engineer_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_transport_refugees_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_treasure_hunt_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_waveattack_antigone_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_waveattack_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_weaken_fleet_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_map_weaken_station_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/timelines_scenario_rescueoperation_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/xu_ep2_universe/dlc7_clusters.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/xu_ep2_universe/dlc7_sectors.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_timelines/maps/xu_ep2_universe/dlc7_zones.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_ventures/libraries/chapters.xml",
+      "entity_tag": "category",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_ventures/libraries/coalitions.xml",
+      "entity_tag": "coalition",
+      "id_attribute": "id"
+    },
+    {
+      "file": "extensions/ego_dlc_ventures/libraries/effects.xml",
+      "entity_tag": "effect",
+      "id_attribute": "name"
+    },
+    {
+      "file": "extensions/ego_dlc_ventures/libraries/icons.xml",
+      "entity_tag": "icon",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/aicompat.xml",
+      "entity_tag": "aiscript",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/animation_sequences.xml",
+      "entity_tag": "state",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/assignments.xml",
+      "entity_tag": "assignment",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/baskets.xml",
+      "entity_tag": "basket",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/behaviours.xml",
+      "entity_tag": "set",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/bodypartgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/character_components.xml",
+      "entity_tag": "component",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/character_macros.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/charactergroups.xml",
+      "entity_tag": "character",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/characters.xml",
+      "entity_tag": "character",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/component.xml",
+      "entity_tag": "component",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/constructionplans.xml",
+      "entity_tag": "plan",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/contexts.xml",
+      "entity_tag": "context",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/drops.xml",
+      "entity_tag": "droplist",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/effects.xml",
+      "entity_tag": "effect",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/emotedb.xml",
+      "entity_tag": "emote",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/entitytypes.xml",
+      "entity_tag": "entitytype",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/equipmentcompatibilities.xml",
+      "entity_tag": "compatibilitytype",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/eventdefs.xml",
+      "entity_tag": "event",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/experiences.xml",
+      "entity_tag": "experience",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/factions.xml",
+      "entity_tag": "faction",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/fonts-l007.xml",
+      "entity_tag": "alias",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/fonts-l081.xml",
+      "entity_tag": "alias",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/fonts-l082.xml",
+      "entity_tag": "alias",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/fonts-l086.xml",
+      "entity_tag": "alias",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/fonts-l088.xml",
+      "entity_tag": "alias",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/fonts.xml",
+      "entity_tag": "alias",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/gamestarts.xml",
+      "entity_tag": "gamestart",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/icons.xml",
+      "entity_tag": "icon",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/influenceconfigurations.xml",
+      "entity_tag": "influencelist",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/inputmap.xml",
+      "entity_tag": "action",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/inputmap_defaults_gamepad_arcade.xml",
+      "entity_tag": "action",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/inputmap_defaults_saitek_x52.xml",
+      "entity_tag": "action",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/inputmap_defaults_t16000m_fcs.xml",
+      "entity_tag": "action",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/inputmap_defaults_t16000m_fcs_hotas.xml",
+      "entity_tag": "action",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/inputmap_defaults_t16000m_fcs_spacesimduo.xml",
+      "entity_tag": "action",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/inputmap_defaults_tflight_hotas.xml",
+      "entity_tag": "action",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/inputmap_defaults_tm_hotas_warthog.xml",
+      "entity_tag": "action",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/inputmap_defaults_vkb_gladiator_nxt_evo.xml",
+      "entity_tag": "action",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/inputmap_defaults_vkb_gladiator_nxt_evo_omni.xml",
+      "entity_tag": "action",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/inputmap_defaults_vpc_constellation_ap_1.xml",
+      "entity_tag": "action",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/inputmap_defaults_vpc_constellation_ap_2.xml",
+      "entity_tag": "action",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/jobs.xml",
+      "entity_tag": "job",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/languages.xml",
+      "entity_tag": "language",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/lens_effects.xml",
+      "entity_tag": "lenseffect",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/loadouts.xml",
+      "entity_tag": "loadout",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/mapdefaults.xml",
+      "entity_tag": "dataset",
+      "id_attribute": "macro"
+    },
+    {
+      "file": "libraries/medium_library.xml",
+      "entity_tag": "medium",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/missiongroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/modulegroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/modules.xml",
+      "entity_tag": "module",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/modulesets.xml",
+      "entity_tag": "set",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/mousecursors.xml",
+      "entity_tag": "entry",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/news.xml",
+      "entity_tag": "item",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/notificationtypes.xml",
+      "entity_tag": "notification",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/npc_tools.xml",
+      "entity_tag": "tool",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/objectspawnpoints.xml",
+      "entity_tag": "space",
+      "id_attribute": "macro"
+    },
+    {
+      "file": "libraries/particle_effects.xml",
+      "entity_tag": "effect",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/people.xml",
+      "entity_tag": "people",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/posts.xml",
+      "entity_tag": "post",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/progressbar.xml",
+      "entity_tag": "type",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/propgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/props.xml",
+      "entity_tag": "prop",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/purposes.xml",
+      "entity_tag": "purpose",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/races.xml",
+      "entity_tag": "race",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/region_definitions.xml",
+      "entity_tag": "region",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/regionobjectgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/regionyields.xml",
+      "entity_tag": "definition",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/roles.xml",
+      "entity_tag": "role",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/roomgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/rooms.xml",
+      "entity_tag": "room",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/scriptproperties.xml",
+      "entity_tag": "datatype",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/shipgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/ships.xml",
+      "entity_tag": "ship",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/stationgroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/stations.xml",
+      "entity_tag": "station",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/stats.xml",
+      "entity_tag": "stat",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/stock.xml",
+      "entity_tag": "stock",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/targetpoints.xml",
+      "entity_tag": "pointlist",
+      "id_attribute": "macro"
+    },
+    {
+      "file": "libraries/themes.xml",
+      "entity_tag": "theme",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/timeline.xml",
+      "entity_tag": "entry",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/trail_effects.xml",
+      "entity_tag": "effect",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/trigger_events.xml",
+      "entity_tag": "event",
+      "id_attribute": "name"
+    },
+    {
+      "file": "libraries/unlocks.xml",
+      "entity_tag": "commission",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/voicesequences.xml",
+      "entity_tag": "voicesequence",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/volume_library.xml",
+      "entity_tag": "volume",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/waregroups.xml",
+      "entity_tag": "group",
+      "id_attribute": "id"
+    },
+    {
+      "file": "libraries/wares.xml",
+      "entity_tag": "ware",
+      "id_attribute": "id"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_default_empty_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_default_shipyard_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_default_station_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_default_two_clusters_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_default_wharf_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_gates_highways_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_mining_advanced_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_mining_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_scanning_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_spacesuit_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_station_building_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_station_management_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_superhighway_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_trading_advanced_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_tutorial_trading_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/basegame_map_workshop_galaxy_macro.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/black2galaxy/black2zone.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/blackgalaxy/blackcluster.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/blackgalaxy/blacksector.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/blackgalaxy/blackzone.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/demo_universe/demo_clusters.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/demo_universe/demo_sectors.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/demo_universe/demo_zonehighways.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/demo_universe/demo_zones.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/editor/editor_galaxy.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/xu_ep2_universe/clusters.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/xu_ep2_universe/sechighways.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/xu_ep2_universe/sectors.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/xu_ep2_universe/zonehighways.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    },
+    {
+      "file": "maps/xu_ep2_universe/zones.xml",
+      "entity_tag": "macro",
+      "id_attribute": "name"
+    }
+  ]
+}
