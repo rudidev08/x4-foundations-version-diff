@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components>
+  <component name="shield_gen_s_virtual_01" class="shieldgenerator">
+    <connections>
+      <connection name="con_shield_01" tags="advanced component shield small" />
+      <connection name="Con_shieldgen_01" tags="deprecated" />
+    </connections>
+  </component>
+</components>

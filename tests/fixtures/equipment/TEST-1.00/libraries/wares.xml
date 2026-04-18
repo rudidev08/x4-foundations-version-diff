@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wares>
+  <ware id="software_scanner_mk1" name="{20108,1041}" description="{20108,1042}" group="software" transport="equipment" volume="1" tags="equipment scanner software">
+    <price min="10000" average="12000" max="14000" />
+    <production time="10" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="2" />
+        <ware ware="scanningarrays" amount="1" />
+      </primary>
+    </production>
+    <component ref="software_scanner_mk1_macro" />
+    <use threshold="0" />
+    <owner faction="argon" />
+  </ware>
+  <ware id="hardware_mining_laser_mk1" name="{20108,2041}" description="{20108,2042}" group="hardware" transport="equipment" volume="1" tags="equipment hardware">
+    <price min="5000" average="6000" max="7000" />
+    <production time="10" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="1" />
+        <ware ware="miningequipment" amount="1" />
+      </primary>
+    </production>
+    <component ref="hardware_mining_laser_mk1_macro" />
+    <use threshold="0" />
+    <owner faction="argon" />
+  </ware>
+  <ware id="countermeasures_flare_mk1" name="{20108,3041}" description="{20108,3042}" group="countermeasures" transport="equipment" volume="1" tags="countermeasure equipment">
+    <price min="200" average="250" max="300" />
+    <production time="1" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="1" />
+      </primary>
+    </production>
+    <component ref="countermeasures_flare_mk1_macro" />
+    <use threshold="0" />
+  </ware>
+  <ware id="engine_gen_spacesuit_01_mk1" name="{20113,4001}" description="{20113,4002}" group="engines" transport="inventory" volume="1" tags="disallowdrop engine equipment inventory personalupgrade">
+    <price min="800" average="1000" max="1200" />
+    <production time="10" amount="1" method="default" name="{20206,101}" />
+    <component ref="engine_gen_spacesuit_01_mk1_macro" />
+    <use threshold="0" />
+  </ware>
+</wares>

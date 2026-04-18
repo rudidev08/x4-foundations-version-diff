@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="/gamestarts">
+    <gamestart id="gs_test_dlc_sourced" name="{30178,9006}" description="{30178,9106}" image="gamestart_split" group="6" tags="split scenario">
+      <cutscene ref="scenario_split_intro" voice="voice_split_intro" />
+      <player macro="character_player_split_macro" money="10000" name="{1021,5002}">
+        <ship macro="ship_spl_s_fighter_01_a_macro" />
+      </player>
+      <universe ventures="true" visitors="true" onlineinventory="true" />
+    </gamestart>
+  </add>
+  <replace sel="//gamestart[@id='gs_test_modified']/universe/@ventures">true</replace>
+</diff>

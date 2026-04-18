@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="/wares">
+    <ware id="weapon_gen_spacesuit_laser_01_mk1" name="{20113,1061}" description="{20113,1062}" group="weapons" transport="inventory" volume="1" tags="disallowdrop equipment inventory personalupgrade weapon">
+      <price min="45000" average="60000" max="75000" />
+      <production time="10" amount="1" method="default" name="{20206,101}" />
+      <component ref="spacesuit_gen_laser_01_macro" />
+      <use threshold="0" />
+    </ware>
+  </add>
+  <replace sel="//ware[@id='engine_gen_spacesuit_01_mk1']/@volume">2</replace>
+  <add sel="//ware[@id='engine_gen_spacesuit_01_mk1']/price" pos="after">
+    <owner faction="alliance" />
+  </add>
+</diff>

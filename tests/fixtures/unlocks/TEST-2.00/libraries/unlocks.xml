@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<unlocks>
+  <discount id="disc_modified" name="{20210,2001}" description="">
+    <conditions weight="30">
+      <wares sells="energycells graphene"/>
+      <viewangle max="20"/>
+      <distance exact="500m"/>
+      <scannerlevel max="2" />
+    </conditions>
+    <actions>
+      <amount min="2" max="8"/>
+      <duration min="24h" max="48h"/>
+    </actions>
+    <rechecktime min="24h" max="36h"/>
+  </discount>
+</unlocks>

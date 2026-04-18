@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<macros>
+  <macro name="weapon_arg_m_shotgun_control_01_mk1_macro" class="weapon">
+    <component ref="weapon_arg_m_shotgun_control_01_mk1" />
+    <properties>
+      <identification name="{20105,9001}" description="{20105,9002}" />
+      <bullet class="bullet_gen_shotgun_01_mk1_macro" />
+      <heat overheat="8000" cooldelay="1" coolrate="1500" />
+      <rotationspeed max="90" />
+      <hull max="900" />
+    </properties>
+  </macro>
+</macros>

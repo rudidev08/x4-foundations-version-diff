@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plans>
+  <plan id="plan_a" race="argon">
+    <entry index="1" macro="mod_a" connection="slot_01" />
+  </plan>
+  <plan id="plan_b" race="paranid">
+    <entry index="1" macro="mg_b" connection="slot_01" />
+  </plan>
+  <plan id="plan_to_remove" race="teladi">
+    <entry index="1" macro="mod_to_remove" connection="slot_01" />
+  </plan>
+</plans>

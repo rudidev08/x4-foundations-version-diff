@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<factions>
+  <faction id="argon" name="{20203,201}" primaryrace="argon" behaviourset="default" policefaction="argonpolice">
+    <licences>
+      <licence type="generaluseship" name="{20207,2321}" minrelation="-0.01" />
+      <licence type="capitalship" name="{20207,3111}" minrelation="0.1" />
+      <licence type="station_gen_basic" name="{20207,4101}" minrelation="0.0" />
+    </licences>
+    <relations>
+      <relation faction="xenon" relation="-1" />
+      <relation faction="khaak" relation="-0.5" />
+      <relation faction="scaleplate" relation="-0.1" />
+    </relations>
+  </faction>
+  <faction id="badguys" name="{20203,401}" primaryrace="unknown" behaviourset="default">
+    <licences>
+      <licence type="capitalship" name="{20207,3111}" minrelation="0.1" />
+      <licence type="capitalship" name="{20207,3112}" minrelation="0.5" />
+    </licences>
+    <relations>
+      <relation faction="argon" relation="-1" />
+    </relations>
+  </faction>
+</factions>

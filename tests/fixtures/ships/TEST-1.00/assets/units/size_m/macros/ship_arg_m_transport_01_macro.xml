@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<macros>
+  <macro name="ship_arg_m_transport_01_macro" class="ship_m">
+    <component ref="ship_arg_m_transport_01" />
+    <properties>
+      <identification name="{20101,1003}" basename="{20101,1003}" makerrace="argon" />
+      <hull max="14000" />
+      <people capacity="6" />
+      <physics mass="40.0" />
+      <jerk forward="0.3" strafe="0.3" angular="0.3" />
+      <purpose primary="transport" />
+      <storage missile="2" />
+      <ship type="transport" />
+    </properties>
+  </macro>
+</macros>

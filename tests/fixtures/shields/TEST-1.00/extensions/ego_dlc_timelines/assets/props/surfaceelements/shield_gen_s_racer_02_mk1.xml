@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components>
+  <component name="shield_gen_s_racer_02_mk1" class="shieldgenerator">
+    <connections>
+      <connection name="Connection01" tags="small shield component unhittable small_racer" />
+    </connections>
+  </component>
+</components>

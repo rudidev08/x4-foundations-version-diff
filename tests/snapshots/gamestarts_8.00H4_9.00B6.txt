@@ -1,0 +1,22 @@
+'scenario_assassinate'	modified		fa71b2b7a377e70351ba9341e44ec56dec106479b99964ce67e991e4a5783a8b
+'scenario_waveattack_1'	modified		6b763c1ce885b17966f6c4aa24f53b5a83e50f6e554f54f24947fd97c92e458e
+'test_smallship2'	removed		3c224ecf10100ba8b965845e75c3efe266be93ceb2d9166e61a4a4b1be678771
+'test_smallship_jpm'	removed		b1e4f96c145d362c1253dd499f2a0c5ff0bd03e0d2d1696f77962501c08cce09
+'test_weapon_debugger'	added		6ff3b84f6035e26fbda4bf66969773be8b3e3113a395b033b97078a580fe62d6
+'tutorial_combat'	modified		980f251d107d479e567d563d6b1b26e7c213b9e573ff576c974659652a0158cf
+'tutorial_weapons_turrets'	modified		69e331bd5881ee94968f8b063c39a59c5dc848a73ec68c88e89d490e52bf58d7
+('diagnostic', 'gamestarts', '5db4b6a823be')	incomplete	diagnostic	5db4b6a823be420a13e896ac786dfdcd476d13cb86a3c4ede656ca789408a49b
+('diagnostic', 'gamestarts', '7427b7f3dd53')	warning	diagnostic	0d848b8bb917ca54e3aaecea22e00a3f47038067936506adb4788ebae5291ee0
+('diagnostic', 'gamestarts', '7427b7f3dd53')	warning	diagnostic	0d848b8bb917ca54e3aaecea22e00a3f47038067936506adb4788ebae5291ee0
+('diagnostic', 'gamestarts', '76602327aa60')	warning	diagnostic	7164a62d7334d1872f40ac4a9e8543815e4b1f520651b41e644c246b0812397a
+('diagnostic', 'gamestarts', '76602327aa60')	warning	diagnostic	7164a62d7334d1872f40ac4a9e8543815e4b1f520651b41e644c246b0812397a
+('diagnostic', 'gamestarts', '7ca895d6444f')	warning	diagnostic	3a16ef1bc9f57a0a746ac6e51e9886255b59d49706d20d430193cb6416eb6102
+('diagnostic', 'gamestarts', '7ca895d6444f')	warning	diagnostic	3a16ef1bc9f57a0a746ac6e51e9886255b59d49706d20d430193cb6416eb6102
+('diagnostic', 'gamestarts', '7e25d2ba96f1')	warning	diagnostic	cc8f88a7ae7ebf051ae15cfe6678313dce4e439e9b972933090c1287079eea47
+('diagnostic', 'gamestarts', '7e25d2ba96f1')	warning	diagnostic	cc8f88a7ae7ebf051ae15cfe6678313dce4e439e9b972933090c1287079eea47
+('diagnostic', 'gamestarts', '9245ef3ae269')	warning	diagnostic	291607f66dc0f7bd7589eb12589aa55557abe6e5005b29caf9601fe9c6265ff2
+('diagnostic', 'gamestarts', '9245ef3ae269')	warning	diagnostic	291607f66dc0f7bd7589eb12589aa55557abe6e5005b29caf9601fe9c6265ff2
+('diagnostic', 'gamestarts', 'af39db65a069')	warning	diagnostic	89ef96811b07d5f54debcf4ffe10dbe911ec108d9f0950f20aa36c73e5cbbacb
+('diagnostic', 'gamestarts', 'af39db65a069')	warning	diagnostic	89ef96811b07d5f54debcf4ffe10dbe911ec108d9f0950f20aa36c73e5cbbacb
+('diagnostic', 'gamestarts', 'c29631b98202')	warning	diagnostic	4396669227cc15baf501ba0e5273e2cf6d3bdc641ec772797f0f3e4fb5e822ab
+('diagnostic', 'gamestarts', 'c29631b98202')	warning	diagnostic	4396669227cc15baf501ba0e5273e2cf6d3bdc641ec772797f0f3e4fb5e822ab

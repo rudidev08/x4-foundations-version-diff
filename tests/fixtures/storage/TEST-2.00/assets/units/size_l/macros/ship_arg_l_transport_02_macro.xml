@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<macros>
+  <macro name="ship_arg_l_transport_02_macro" class="ship_l">
+    <component ref="ship_arg_l_transport_02" />
+    <properties>
+      <identification makerrace="argon" />
+      <hull max="95000" />
+    </properties>
+    <connections>
+      <connection ref="con_storage01">
+        <macro ref="storage_arg_l_container_02_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="con_storage02">
+        <macro ref="storage_arg_xl_container_01_macro" connection="ShipConnection" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="/wares">
+    <ware id="turret_bor_m_standard_01_mk1" name="{20105,4040}" description="{20105,4041}" group="turrets" transport="equipment" volume="1" tags="equipment turret">
+      <price min="1400" average="1600" max="1800" />
+      <production time="10" amount="1" method="default" name="{20206,101}">
+        <primary>
+          <ware ware="energycells" amount="5" />
+          <ware ware="turretcomponents" amount="1" />
+        </primary>
+      </production>
+      <component ref="turret_bor_m_standard_01_mk1_macro" />
+      <use threshold="0" />
+    </ware>
+  </add>
+  <replace sel="//ware[@id='turret_arg_m_standard_01_mk1']/price/@min">1300</replace>
+</diff>

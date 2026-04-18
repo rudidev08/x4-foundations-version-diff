@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<groups>
+  <group name="sg_a">
+    <select constructionplan="plan_a_v2" />
+  </group>
+  <group name="sg_b">
+    <select constructionplan="plan_b" />
+  </group>
+  <group name="sg_new">
+    <select constructionplan="plan_new" />
+  </group>
+</groups>

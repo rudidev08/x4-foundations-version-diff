@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jobs>
+  <job id="job_arg_transport_01" name="{20204,1001}" startactive="true" friendgroup="argon">
+    <category faction="argon" tags="trader medium" size="ship_m" />
+    <environment buildatshipyard="argon_shipyard" />
+    <modifiers commandeerable="true" rebuild="true" speedfactor="1.0" />
+    <quota galaxy="8" cluster="2" />
+    <location class="galaxy" macro="xu_ep2_universe_macro" />
+    <orders>
+      <order order="TradeRoutine" default="true" />
+    </orders>
+    <ship>
+      <select faction="argon" tags="[trader]" size="ship_m" />
+    </ship>
+  </job>
+  <job id="job_par_scout_01" name="{20204,1002}" startactive="true">
+    <category faction="paranid" tags="scout" size="ship_s" />
+    <modifiers commandeerable="false" />
+    <quota galaxy="4" />
+    <location class="sector" faction="paranid" />
+    <ship>
+      <select faction="paranid" tags="[scout]" size="ship_s" />
+    </ship>
+  </job>
+  <job id="job_bor_trade_01" name="{20204,1003}" startactive="true">
+    <category faction="boron" tags="trader small" size="ship_s" />
+    <modifiers commandeerable="true" rebuild="true" />
+    <quota galaxy="6" />
+    <location class="sector" faction="boron" />
+    <orders>
+      <order order="TradeRoutine" default="true" />
+    </orders>
+    <ship>
+      <select faction="boron" tags="[trader]" size="ship_s" />
+    </ship>
+  </job>
+  <job id="job_test_unchanged" name="{20204,1005}" startactive="true">
+    <category faction="argon" tags="patrol" size="ship_s" />
+    <quota galaxy="3" />
+    <location class="galaxy" macro="xu_ep2_universe_macro" />
+    <ship>
+      <select faction="argon" tags="[fighter]" size="ship_s" />
+    </ship>
+  </job>
+  <job id="job_test_repeated_singleton" name="{20204,1006}" startactive="true">
+    <category faction="argon" tags="police" size="ship_s" />
+    <modifiers commandeerable="false" />
+    <modifiers rebuild="true" />
+    <quota galaxy="2" />
+    <location class="galaxy" macro="xu_ep2_universe_macro" />
+  </job>
+  <job id="job_test_bad_child" name="{20204,1007}" startactive="true">
+    <category faction="argon" tags="test" size="ship_s" />
+    <quota galaxy="1" />
+    <location class="galaxy" macro="xu_ep2_universe_macro" />
+    <weirdnewtag attr="value" />
+  </job>
+</jobs>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language id="44">
+  <page id="20101" title="Ships">
+    <t id="1001">(ARG M Fighter) Argon M Fighter</t>
+    <t id="1002">(ARG S Fighter) Argon S Fighter</t>
+    <t id="1003">(ARG M Transport) Argon M Transport</t>
+    <t id="1004">(ARG L Transport) Argon L Transport</t>
+    <t id="1005">(GEN XS Drone) Generic XS Drone</t>
+    <t id="1006">(BOR M Fighter) Boron M Fighter</t>
+    <t id="1007">(TEL M Fighter) Teladi M Fighter</t>
+  </page>
+</language>

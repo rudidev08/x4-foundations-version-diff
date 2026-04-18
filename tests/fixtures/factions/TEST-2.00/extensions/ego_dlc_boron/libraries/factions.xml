@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="/factions">
+    <faction id="boron" name="{20203,501}" primaryrace="boron" behaviourset="default" policefaction="boron">
+      <licences>
+        <licence type="generaluseship" name="{20207,2321}" minrelation="-0.01" />
+        <licence type="capitalship" name="{20207,3111}" minrelation="0.1" />
+      </licences>
+      <relations>
+        <relation faction="xenon" relation="-1" />
+        <relation faction="khaak" relation="-1" />
+      </relations>
+    </faction>
+  </add>
+</diff>

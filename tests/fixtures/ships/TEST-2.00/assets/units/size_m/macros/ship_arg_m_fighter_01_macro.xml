@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<macros>
+  <macro name="ship_arg_m_fighter_01_macro" class="ship_m">
+    <component ref="ship_arg_m_fighter_01" />
+    <properties>
+      <identification name="{20101,1001}" basename="{20101,1001}" makerrace="argon" />
+      <hull max="12000" />
+      <people capacity="4" />
+      <physics mass="25.0" />
+      <jerk forward="0.6" strafe="0.5" angular="0.5" />
+      <purpose primary="fight" />
+      <storage missile="10" />
+      <ship type="fighter" />
+    </properties>
+  </macro>
+</macros>

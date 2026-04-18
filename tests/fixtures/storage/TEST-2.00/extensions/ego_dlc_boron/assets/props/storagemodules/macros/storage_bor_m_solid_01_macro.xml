@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<macros>
+  <macro name="storage_bor_m_solid_01_macro" class="storage">
+    <component ref="generic_storage" />
+    <properties>
+      <cargo max="7800" tags="solid" />
+      <hull integrated="1" />
+    </properties>
+  </macro>
+</macros>

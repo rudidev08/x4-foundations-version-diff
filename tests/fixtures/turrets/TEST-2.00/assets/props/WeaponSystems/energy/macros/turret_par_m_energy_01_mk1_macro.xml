@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<macros>
+  <macro name="turret_par_m_energy_01_mk1_macro" class="turret">
+    <component ref="turret_par_m_energy_01_mk1" />
+    <properties>
+      <identification name="{20105,4030}" description="{20105,4031}" mk="1" />
+      <bullet class="bullet_par_m_energy_01_mk1_macro" />
+      <rotationspeed max="35" />
+      <rotationacceleration max="55" />
+      <hull max="1000" />
+    </properties>
+  </macro>
+</macros>

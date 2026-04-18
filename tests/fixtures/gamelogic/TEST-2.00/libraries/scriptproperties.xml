@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scriptproperties>
+  <datatype name="component">
+    <property name="exists" result="true iff it is present" type="boolean" />
+    <property name="new_prop" result="new property" type="string" />
+    <property name="weird_prop" result="malformed" type="boolean">
+      <unknowntag value="1" />
+    </property>
+  </datatype>
+  <datatype name="object">
+    <property name="isclass.{$class}" result="true iff of class" type="boolean">
+      <param name="class" type="class" />
+      <example value="ship" />
+    </property>
+  </datatype>
+</scriptproperties>

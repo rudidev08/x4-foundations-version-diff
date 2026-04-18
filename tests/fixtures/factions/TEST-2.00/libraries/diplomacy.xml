@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diplomacy>
+  <actions>
+    <action id="cultivate_influence" category="negotiation" name="{20235,10101}" unique="true" hidden="false">
+      <agent experience="0" type="negotiation" risk="none"/>
+      <cost money="6500" maxinfluencefactor="20"/>
+      <reward influence="5" text="{20235,10131}"/>
+      <time duration="1200" cooldown="1200" maxinfluencefactor="10"/>
+      <icon active="diplomacy_negotiation" image="diplomacy_banner_gatherinfluence"/>
+      <success chance="100" text="{20235,10121}"/>
+      <params>
+        <param name="station" text="{20235,101}" type="object" isfactionexclusive="true" isagenttarget="true">
+          <input_param name="stationtype" value="[stationtype.tradingstation, stationtype.shipyard]" comment="Filter by station type"/>
+          <input_param name="notinrelationrange" value="'self'" comment="Filter by relation"/>
+        </param>
+      </params>
+    </action>
+
+    <action id="improve_relations_medium" category="negotiation" name="{20235,10301}" unique="false" hidden="true" friendgroup="improve_relations">
+      <agent experience="10" type="negotiation" risk="low"/>
+      <cost influence="4" money="150000">
+        <wares tags="bribe">
+          <ware ware="inv_spaceflycaviar" amount="1"/>
+          <ware ware="inv_finemeal" amount="2"/>
+        </wares>
+      </cost>
+      <reward text="{20235,10331}"/>
+      <time duration="3600" cooldown="900"/>
+      <icon active="diplomacy_negotiation" image="diplomacy_banner_improverelations"/>
+      <failure text="{20235,10311}"/>
+      <success chance="70" text="{20235,10321}"/>
+      <params>
+        <param name="station" text="{20235,111}" type="object" isfactionexclusive="true" isagenttarget="true">
+          <input_param name="isfactionhq" value="true" comment="Filter for the headquarters"/>
+        </param>
+      </params>
+    </action>
+
+    <action id="bad_params" category="negotiation" name="{20235,11001}">
+      <agent experience="0" type="negotiation" risk="none"/>
+      <cost money="100"/>
+      <reward text="{20235,11031}"/>
+      <time duration="100" cooldown="100"/>
+      <icon active="diplomacy_negotiation" image="diplomacy_banner_generic"/>
+      <success chance="100" text="{20235,11021}"/>
+      <params>
+        <param name="station" text="{20235,101}" type="object">
+          <input_param name="stationtype" value="[stationtype.shipyard]" comment="filter"/>
+        </param>
+        <param name="station" text="{20235,102}" type="object">
+          <input_param name="stationtype" value="[stationtype.wharf]" comment="filter2"/>
+        </param>
+      </params>
+    </action>
+
+    <action id="weirdchild" category="espionage" name="{20235,11101}">
+      <agent experience="0" type="espionage" risk="none"/>
+      <cost money="100"/>
+      <reward text="{20235,11131}"/>
+      <time duration="100" cooldown="100"/>
+      <icon active="diplomacy_espionage" image="diplomacy_banner_generic"/>
+      <success chance="100" text="{20235,11121}"/>
+      <weirdtag attr="value"/>
+    </action>
+  </actions>
+</diplomacy>

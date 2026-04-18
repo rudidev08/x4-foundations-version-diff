@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<components>
+  <component name="turret_bor_m_standard_01_mk1" class="turret">
+    <connections>
+      <connection name="con_turret_std_m" tags="turret medium standard component combat"/>
+    </connections>
+  </component>
+</components>

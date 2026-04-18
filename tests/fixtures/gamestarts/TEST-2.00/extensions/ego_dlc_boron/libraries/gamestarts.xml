@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="//gamestart[@id='gs_test_unchanged']" pos="after">
+    <gamestart id="gs_test_boron_addon" name="gs_test_boron_addon" image="gamestart_boron" group="7" tags="boron scenario">
+      <player macro="character_player_boron_macro" money="500" name="{1021,5002}" />
+      <universe ventures="true" visitors="true" onlineinventory="false" />
+    </gamestart>
+  </add>
+</diff>

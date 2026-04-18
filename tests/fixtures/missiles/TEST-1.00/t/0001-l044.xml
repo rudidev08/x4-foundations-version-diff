@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language id="44">
+  <page id="20006" title="Miscellaneous Locations" descr="Names and descriptions of miscellaneous location" voice="yes">
+    <t id="102">No information available</t>
+  </page>
+  <page id="20106" title="Shields" descr="Names and descriptions of ship and station shields" voice="no">
+    <t id="1001">Shield Generator</t>
+    <t id="1002">{20006,102}(No information available)</t>
+    <t id="1003">Shield</t>
+    <t id="1004">(ARG S Shield Generator Mk1){20202,103} {20111,5011} {20106,1001} {20111,101}</t>
+    <t id="1005">(Shield Mk1){20106,1003} {20111,101}</t>
+    <t id="1011">(Shield Generator){20106,1001}</t>
+    <t id="1012">{20006,102}(No information available)</t>
+    <t id="1013">(Shield){20106,1003}</t>
+    <t id="1014">(PAR S Shield Generator Mk1){20202,403} {20111,5011} {20106,1011} {20111,101}</t>
+    <t id="1015">(Shield Mk1){20106,1013} {20111,101}</t>
+    <t id="2021">(Shield Generator){20106,1001}</t>
+    <t id="2022">{20006,102}(No information available)</t>
+    <t id="2024">(TEL M Shield Generator Mk1){20202,503} {20111,5021} {20106,2021} {20111,101}</t>
+    <t id="2025">(Shield Mk1){20106,2023} {20111,101}</t>
+  </page>
+  <page id="20105" title="Weapons and Turrets" descr="Names and descriptions of weapons and turrets" voice="no">
+    <t id="6041">Guided Missile</t>
+    <t id="6042">desc</t>
+    <t id="6101">Cluster Missile</t>
+    <t id="6102">desc</t>
+    <t id="6104">(Light Cluster Missile Mk1){20111,5201} {20105,6101} {20111,101}</t>
+    <t id="6141">Torpedo Missile</t>
+    <t id="6151">(Torpedo Missile){20105,6141}</t>
+    <t id="6152">desc</t>
+    <t id="6154">(Heavy Torpedo Missile Mk1){20111,5211} {20105,6151} {20111,101}</t>
+    <t id="6391">(Guided Missile){20105,6041}</t>
+    <t id="6392">desc</t>
+    <t id="6394">(Medium Guided Missile){20111,5221} {20105,6391}</t>
+  </page>
+  <page id="20111" title="Object Variations" descr="Names and descriptions of object variations" voice="yes">
+    <t id="101">Mk1</t>
+    <t id="5011">(small)S</t>
+    <t id="5021">(medium)M</t>
+    <t id="5201">Light</t>
+    <t id="5211">Heavy</t>
+    <t id="5221">Medium</t>
+  </page>
+  <page id="20202" title="Races" descr="Names and descriptions of races" voice="yes">
+    <t id="103">ARG</t>
+    <t id="403">PAR</t>
+    <t id="503">TEL</t>
+  </page>
+</language>

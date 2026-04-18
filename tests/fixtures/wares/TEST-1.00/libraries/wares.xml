@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wares>
+  <ware id="test_ware_silicon" name="{20201,9001}" description="{20201,9001}" group="minerals" transport="solid" volume="10" tags="economy mineral solid ware">
+    <price min="100" average="125" max="150" />
+    <production time="100" amount="50" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="test_ware_energy" amount="10" />
+      </primary>
+    </production>
+    <production time="150" amount="60" method="boron" name="{20206,401}">
+      <primary>
+        <ware ware="test_ware_energy" amount="8" />
+      </primary>
+    </production>
+    <owner faction="argon" />
+    <owner faction="paranid" />
+  </ware>
+  <ware id="test_ware_energy" name="{20201,9002}" description="{20201,9002}" group="economy" transport="container" volume="1" tags="container economy ware">
+    <price min="10" average="16" max="22" />
+    <production time="60" amount="175" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="test_ware_energy" amount="0" />
+      </primary>
+    </production>
+    <owner faction="argon" />
+  </ware>
+  <ware id="test_ware_obsolete_widget" name="{20201,9003}" description="{20201,9003}" group="hightech" transport="container" volume="4" tags="container economy ware">
+    <price min="500" average="600" max="700" />
+    <production time="300" amount="10" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="test_ware_energy" amount="40" />
+      </primary>
+    </production>
+    <owner faction="argon" />
+  </ware>
+  <ware id="test_ware_ore" name="{20201,9004}" description="{20201,9004}" group="minerals" transport="solid" volume="10" tags="economy mineral solid ware">
+    <price min="40" average="52" max="65" />
+    <production time="60" amount="100" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="test_ware_energy" amount="5" />
+      </primary>
+    </production>
+    <owner faction="argon" />
+    <owner faction="teladi" />
+  </ware>
+</wares>

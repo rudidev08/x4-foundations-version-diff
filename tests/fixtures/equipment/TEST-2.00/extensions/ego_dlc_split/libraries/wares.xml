@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="//ware[@id='engine_gen_spacesuit_01_mk1']/price" pos="after">
+    <owner faction="yaki" />
+  </add>
+</diff>

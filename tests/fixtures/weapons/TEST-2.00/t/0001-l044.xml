@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language id="44">
+  <page id="20105" title="Weapons and Turrets" descr="Names and descriptions of weapons and turrets">
+    <t id="9001">ARG M Standard Weapon Mk1</t>
+    <t id="9002">desc-arg-m-standard</t>
+    <t id="9011">ARG L Heavy Weapon Mk1</t>
+    <t id="9012">desc-arg-l-heavy</t>
+    <t id="9021">PAR M Energy Weapon Mk1</t>
+    <t id="9022">desc-par-m-energy</t>
+    <t id="9031">BOR M Standard Weapon Mk1</t>
+    <t id="9032">desc-bor-m-standard</t>
+    <t id="9041">ARG S Energy Weapon Mk1</t>
+    <t id="9042">desc-arg-s-energy</t>
+  </page>
+</language>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="/wares">
+    <ware id="weapon_bor_m_standard_01_mk1" name="{20105,9031}" description="{20105,9032}" group="weapons" transport="equipment" volume="1" tags="equipment weapon boron">
+      <price min="12000" average="14000" max="16000" />
+      <production time="10" amount="1" method="default" name="{20206,101}">
+        <primary>
+          <ware ware="energycells" amount="5" />
+          <ware ware="weaponcomponents" amount="2" />
+        </primary>
+      </production>
+      <component ref="weapon_bor_m_standard_01_mk1_macro" />
+    </ware>
+  </add>
+  <replace sel="//ware[@id='weapon_arg_m_standard_01_mk1']/price/@min">11000</replace>
+</diff>

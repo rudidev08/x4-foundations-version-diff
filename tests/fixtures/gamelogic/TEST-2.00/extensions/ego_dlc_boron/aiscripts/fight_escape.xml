@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <replace sel="//handler[@name='EscapeHandler']/actions/wait/@exact">3s</replace>
+  <add sel="//params">
+    <param name="boron_specific" />
+  </add>
+</diff>

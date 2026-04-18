@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adsigns>
+  <type ref="highway">
+    <adsign ware="advancedcomposites" macro="props_adsigns_warez_construction_02_macro"/>
+    <adsign ware="energycells" macro="props_adsigns_warez_energy_01_macro"/>
+    <adsign ware="new_ware" macro="props_adsigns_warez_misc_01_macro"/>
+  </type>
+  <type ref="station">
+    <adsign ware="foodrations" macro="props_adsign_arg_foodrations_macro"/>
+    <adsign ware="dual_attr_ware" waregroup="confusing_group" macro="props_adsign_broken_macro"/>
+    <adsign waregroup="drones" macro="props_adsign_gen_equipment_macro"/>
+    <adsign waregroup="thrusters" macro="props_adsign_gen_equipment_macro"/>
+  </type>
+</adsigns>

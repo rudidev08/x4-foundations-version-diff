@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="FactionLogic" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+  <cues>
+    <cue name="FactionInit">
+      <actions>
+        <set_value name="$ReputationBase" exact="5"/>
+      </actions>
+    </cue>
+  </cues>
+</mdscript>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<macros>
+  <macro name="weapon_arg_l_heavy_01_mk1_macro" class="weapon">
+    <component ref="weapon_arg_l_heavy_01_mk1" />
+    <properties>
+      <identification name="{20105,9011}" description="{20105,9012}" />
+      <bullet class="bullet_gen_std_01_mk1_macro" />
+      <heat overheat="20000" cooldelay="2" coolrate="3000" />
+      <rotationspeed max="50" />
+      <hull max="3000" />
+    </properties>
+  </macro>
+</macros>

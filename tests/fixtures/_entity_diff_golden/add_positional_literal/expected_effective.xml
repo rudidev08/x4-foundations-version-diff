@@ -1,0 +1,4 @@
+<root><parent>
+    <append_to_list name="n"><first_target/><new/></append_to_list>
+    <append_to_list name="n"><second_target/></append_to_list>
+  </parent></root>

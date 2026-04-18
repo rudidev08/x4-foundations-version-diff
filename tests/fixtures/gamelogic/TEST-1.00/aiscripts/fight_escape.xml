@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<aiscript name="fight_escape" version="1">
+  <params>
+    <param name="target" />
+  </params>
+  <attention>
+    <handler name="EscapeHandler">
+      <actions>
+        <wait exact="1s" />
+      </actions>
+    </handler>
+  </attention>
+</aiscript>

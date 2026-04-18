@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="//ware[@id='test_ware_energy']" pos="after">
+    <ware id="ware_split_addon" name="ware_split_addon" group="minerals" transport="solid" volume="5" tags="economy mineral solid ware">
+      <price min="50" average="60" max="70" />
+    </ware>
+  </add>
+</diff>

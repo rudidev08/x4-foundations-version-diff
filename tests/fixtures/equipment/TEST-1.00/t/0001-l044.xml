@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language id="44">
+  <page id="20108" title="Software" descr="Software and hardware ware names" voice="no">
+    <t id="1041">Object Scanner Mk1</t>
+    <t id="1042">desc</t>
+    <t id="2041">Mining Laser Mk1</t>
+    <t id="2042">desc</t>
+    <t id="3041">Flare Launcher Mk1</t>
+    <t id="3042">desc</t>
+  </page>
+  <page id="20113" title="Inventory" descr="Inventory / spacesuit gear" voice="no">
+    <t id="1061">Spacesuit Laser Mk1</t>
+    <t id="1062">desc</t>
+    <t id="4001">Spacesuit Engine Mk1</t>
+    <t id="4002">desc</t>
+  </page>
+  <page id="20201" title="Satellites and Bombs" descr="Satellites etc." voice="no">
+    <t id="20301">Advanced Satellite</t>
+    <t id="20302">desc</t>
+  </page>
+  <page id="20206" title="Production Methods" descr="Method labels" voice="no">
+    <t id="101">Default Production</t>
+  </page>
+</language>

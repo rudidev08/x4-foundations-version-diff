@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<macros>
+  <macro name="ship_bor_m_fighter_01_macro" class="ship_m">
+    <component ref="ship_bor_m_fighter_01" />
+    <properties>
+      <identification name="{20101,1006}" basename="{20101,1006}" makerrace="boron" />
+      <hull max="13000" />
+      <people capacity="5" />
+      <physics mass="28.0" />
+      <jerk forward="0.55" strafe="0.55" angular="0.5" />
+      <purpose primary="fight" />
+      <storage missile="8" />
+      <ship type="fighter" />
+    </properties>
+  </macro>
+</macros>

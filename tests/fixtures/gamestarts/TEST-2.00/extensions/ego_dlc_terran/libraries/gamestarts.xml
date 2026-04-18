@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="//gamestart[@id='gs_test_unchanged']" pos="after">
+    <gamestart id="gs_test_terran_addon" name="gs_test_terran_addon" image="gamestart_terran" group="8" tags="terran scenario">
+      <player macro="character_player_terran_macro" money="750" name="{1021,5002}" />
+      <universe ventures="true" visitors="true" onlineinventory="false" />
+    </gamestart>
+  </add>
+</diff>

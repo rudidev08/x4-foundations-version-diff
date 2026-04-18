@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="//impossible[@id='x'][position()=1]">
+    <ware id="engine_bor_m_allround_01_mk1" />
+  </add>
+</diff>

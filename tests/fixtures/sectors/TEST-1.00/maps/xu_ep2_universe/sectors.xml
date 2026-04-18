@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<macros>
+  <macro name="Cluster_01_Sector001_macro" class="sector">
+    <component ref="standardsector" />
+    <connections>
+      <connection name="Zone001_connection" ref="zones">
+        <macro ref="Cluster_01_Sector001_Zone001_macro" connection="sector" />
+      </connection>
+    </connections>
+  </macro>
+  <macro name="Cluster_01_Sector002_macro" class="sector">
+    <component ref="standardsector" />
+    <connections>
+      <connection name="Zone002_connection" ref="zones">
+        <macro ref="Cluster_01_Sector002_Zone001_macro" connection="sector" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

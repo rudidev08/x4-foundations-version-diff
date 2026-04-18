@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wares>
+  <ware id="turret_arg_m_standard_01_mk1" name="{20105,4010}" description="{20105,4011}" group="turrets" transport="equipment" volume="1" tags="equipment turret">
+    <price min="1200" average="1400" max="1600" />
+    <production time="10" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="5" />
+        <ware ware="turretcomponents" amount="1" />
+      </primary>
+    </production>
+    <component ref="turret_arg_m_standard_01_mk1_macro" />
+    <use threshold="0" />
+  </ware>
+  <ware id="turret_par_m_energy_01_mk1" name="{20105,4030}" description="{20105,4031}" group="turrets" transport="equipment" volume="1" tags="deprecated">
+    <price min="1500" average="1700" max="1900" />
+    <production time="12" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="6" />
+        <ware ware="turretcomponents" amount="2" />
+      </primary>
+    </production>
+    <component ref="turret_par_m_energy_01_mk1_macro" />
+    <use threshold="0" />
+  </ware>
+  <ware id="turret_arg_s_missile_01_mk1" name="{20105,4050}" description="{20105,4051}" group="turrets" transport="equipment" volume="1" tags="equipment missilelauncher turret">
+    <price min="900" average="1000" max="1100" />
+    <production time="8" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="4" />
+        <ware ware="missilecomponents" amount="1" />
+      </primary>
+    </production>
+    <component ref="turret_arg_s_missile_01_mk1_macro" />
+    <use threshold="0" />
+  </ware>
+  <ware id="turret_gen_m_shared_01_mk1" name="{20105,4060}" description="{20105,4011}" group="turrets" transport="equipment" volume="1" tags="equipment turret">
+    <price min="1100" average="1250" max="1400" />
+    <production time="10" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="5" />
+        <ware ware="turretcomponents" amount="1" />
+      </primary>
+    </production>
+    <component ref="turret_gen_m_shared_01_mk1_macro" />
+    <use threshold="0" />
+  </ware>
+  <ware id="turret_gen_m_shared_02_mk1" name="{20105,4061}" description="{20105,4011}" group="turrets" transport="equipment" volume="1" tags="equipment turret">
+    <price min="1100" average="1250" max="1400" />
+    <production time="10" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="5" />
+        <ware ware="turretcomponents" amount="1" />
+      </primary>
+    </production>
+    <component ref="turret_gen_m_shared_02_mk1_macro" />
+    <use threshold="0" />
+  </ware>
+  <ware id="turret_gen_m_unchanged_01_mk1" name="{20105,4070}" description="{20105,4011}" group="turrets" transport="equipment" volume="1" tags="equipment turret">
+    <price min="900" average="1000" max="1100" />
+    <production time="10" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="4" />
+        <ware ware="turretcomponents" amount="1" />
+      </primary>
+    </production>
+    <component ref="turret_gen_m_unchanged_01_mk1_macro" />
+    <use threshold="0" />
+  </ware>
+  <ware id="turret_arg_s_standard_01_mk1" name="{20105,4080}" description="{20105,4011}" group="turrets" transport="equipment" volume="1" tags="equipment turret">
+    <price min="700" average="800" max="900" />
+    <production time="10" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="3" />
+        <ware ware="turretcomponents" amount="1" />
+      </primary>
+    </production>
+    <component ref="turret_arg_s_standard_01_mk1_macro" />
+    <use threshold="0" />
+  </ware>
+</wares>

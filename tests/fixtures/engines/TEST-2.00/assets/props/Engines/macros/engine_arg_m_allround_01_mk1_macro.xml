@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<macros>
+  <macro name="engine_arg_m_allround_01_mk1_macro" class="engine">
+    <component ref="engine_arg_m_allround_01_mk1" />
+    <properties>
+      <identification name="{20107,1}" />
+      <boost thrust="6.0" acceleration="6.0" />
+      <travel thrust="7.0" attack="40" />
+      <thrust forward="900" reverse="900" />
+      <hull max="100" />
+    </properties>
+  </macro>
+</macros>

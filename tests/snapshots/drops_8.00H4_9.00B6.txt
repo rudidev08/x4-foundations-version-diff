@@ -1,0 +1,15 @@
+('ammo', 'basket_ammo_01')	modified	ammo	cf7eeb8f0314deac8eda1c86012879031ca8d60d8479c2b101d49e628be3b66c
+('ammo', 'basket_ammo_02')	modified	ammo	fa38d503ca3057e480b36c90737f1b82eac83bd8813d465ef393fdba74ef6237
+('ammo', 'basket_ammo_03')	modified	ammo	735ee9fe806199d00f371370b0408d1c587e3f91c84616ee3e3dc4a5715392f2
+('ammo', 'basket_missile_torpedo_01')	added	ammo	54ffc0b9394ab1830738ad92f1c52884f4add47ad92ea8f21e5e07e56200ddb8
+('ammo', 'basket_missiles_large_01')	added	ammo	16031c1e628d1ddc1cae19b552a8f467e7eb8847a2b4dad1b950b628356a721d
+('ammo', 'basket_missiles_medium_01')	added	ammo	c984c82964eb7da3028d03997625ed0ea69d4b26a9891aebf3d0b098aaefb347
+('ammo', 'basket_missiles_small_01')	added	ammo	01e5970a527026512f9db63a809f0485025ba57617f50d3b40b373f5c940d315
+('droplist', 'drops_scenario_conceal_and_delay_missiles')	removed	droplist	b4ffcc04eba98d5571d8e2fd05c98b265e12cd57055bcef4152831b991fe11e2
+('droplist', 'drops_scenario_presidents_end_guided_missile')	removed	droplist	1876c4c49ca365093794d0eea86c45688c9f9bc3d5cfe0b24b8ad2e3e4261bb8
+('droplist', 'hidden_rare_lockbox')	modified	droplist	ffadf18314e0a3f952ea1d6c63d07d46565288526d82cb218a6a4a263a7a2a2a
+('droplist', 'ship_large_khaak')	modified	droplist	35336d554679ff7fbdd1b976cc1095b354097183b27667e7228ae011901c6a82
+('droplist', 'ship_large_military')	modified	droplist	992e409c873ae1434a5224f48fdcf7b1ac179efa15b487075533afde3e142dab
+('droplist', 'ship_large_xenon')	modified	droplist	5abbcc30c21f98a37ddfa6dcba974317b79d90673fbd8659dfda03b827424e9d
+('droplist', 'ship_large_xenon_tf')	modified	droplist	eea64af89b40f48a4cad198247f4efb26a2ec81515d9bc5cb9d6e787c6f2b381
+('wares', 'basket_khaakalloy_01')	added	wares	dca8a659cff601ca1e5b2443b3d6db5da9d3537295440dc28256ba5e7de26d7a

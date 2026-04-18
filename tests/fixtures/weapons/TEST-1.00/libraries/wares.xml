@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wares>
+  <ware id="weapon_arg_m_standard_01_mk1" name="{20105,9001}" description="{20105,9002}" group="weapons" transport="equipment" volume="1" tags="equipment weapon">
+    <price min="10000" average="12000" max="14000" />
+    <production time="10" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="5" />
+        <ware ware="weaponcomponents" amount="2" />
+      </primary>
+    </production>
+    <component ref="weapon_arg_m_standard_01_mk1_macro" />
+  </ware>
+  <ware id="weapon_arg_l_heavy_01_mk1" name="{20105,9011}" description="{20105,9012}" group="weapons" transport="equipment" volume="1" tags="equipment weapon">
+    <price min="50000" average="60000" max="70000" />
+    <production time="20" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="15" />
+        <ware ware="weaponcomponents" amount="10" />
+      </primary>
+    </production>
+    <component ref="weapon_arg_l_heavy_01_mk1_macro" />
+  </ware>
+  <ware id="weapon_par_m_energy_01_mk1" name="{20105,9021}" description="{20105,9022}" group="weapons" transport="equipment" volume="1" tags="equipment weapon">
+    <price min="15000" average="18000" max="21000" />
+    <production time="12" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="8" />
+        <ware ware="weaponcomponents" amount="3" />
+      </primary>
+    </production>
+    <component ref="weapon_par_m_energy_01_mk1_macro" />
+  </ware>
+  <ware id="weapon_arg_m_shotgun_control_01_mk1" name="{20105,9001}" description="{20105,9002}" group="weapons" transport="equipment" volume="1" tags="equipment weapon">
+    <price min="8000" average="9000" max="10000" />
+    <production time="10" amount="1" method="default" name="{20206,101}">
+      <primary>
+        <ware ware="energycells" amount="4" />
+      </primary>
+    </production>
+    <component ref="weapon_arg_m_shotgun_control_01_mk1_macro" />
+  </ware>
+</wares>

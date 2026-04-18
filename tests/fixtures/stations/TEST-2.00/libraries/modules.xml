@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modules>
+  <module id="mod_a" class="production" group="mg_a">
+    <category ware="energycells" tags="[production, module]" race="argon" faction="[argon, paranid]" />
+    <compatibilities>
+      <limits production="2"/>
+      <maxlimits production="6"/>
+      <production ware="energycells" chance="60" />
+    </compatibilities>
+  </module>
+  <module id="mod_b" class="storage" group="mg_b">
+    <category tags="storage" faction="[argon, paranid]" race="argon" />
+    <compatibilities>
+      <limits production="1"/>
+    </compatibilities>
+  </module>
+  <module id="shared_name" class="production" group="shared_name">
+    <category ware="hullparts" tags="[production, module]" race="teladi" faction="teladi" />
+    <compatibilities>
+      <production ware="hullparts" chance="40" />
+    </compatibilities>
+  </module>
+</modules>

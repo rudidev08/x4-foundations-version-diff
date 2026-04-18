@@ -1,0 +1,4 @@
+('diagnostic', 'equipment', '12f0336b3edc')	warning	diagnostic	3a279a2a67fe8324215a986c8622db61025373d5b70a8c53090554fd7262ddf6
+('diagnostic', 'equipment', '64db75dab00c')	incomplete	diagnostic	64db75dab00c699f024d760f974bb6023f9a6bdd85e9fb325c4cc9b41bc159df
+('diagnostic', 'equipment', '8d91ee22578a')	warning	diagnostic	cd48f5a152b16f176f17f31a60435470841f9bcb3eb65bfb9d1911db39d8cda5
+('diagnostic', 'equipment', 'f627c16f1efa')	warning	diagnostic	ed5088480c066e89ab8f62bbba9e3410ca206a141f290b7275fc3a811fefc8f2

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<macros>
+  <macro name="bullet_arg_m_standard_01_mk1_macro" class="bullet">
+    <component ref="bullet_arg_m_standard_01_mk1" />
+    <properties>
+      <ammunition value="6" reload="2" />
+      <bullet speed="2800" lifetime="1" amount="1" barrelamount="2" timediff="0.01" reload="1" heat="0.1" />
+      <damage value="140" />
+    </properties>
+  </macro>
+</macros>

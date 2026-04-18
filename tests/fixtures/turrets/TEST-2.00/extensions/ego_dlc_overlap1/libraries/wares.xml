@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="//ware[@id='turret_gen_m_unchanged_01_mk1']" pos="after">
+    <ware id="turret_overlap_a_mk1" group="turrets" transport="equipment" volume="1" tags="equipment turret">
+      <price min="500" average="600" max="700" />
+      <component ref="turret_overlap_a_mk1_macro" />
+    </ware>
+  </add>
+</diff>

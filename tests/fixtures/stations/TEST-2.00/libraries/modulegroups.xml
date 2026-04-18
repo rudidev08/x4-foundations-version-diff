@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<groups>
+  <group name="mg_a">
+    <select macro="mod_a" />
+    <select macro="mod_b" />
+  </group>
+  <group name="mg_b">
+    <select macro="mod_b" />
+  </group>
+  <group name="shared_name">
+    <select macro="ghost_module" />
+  </group>
+</groups>

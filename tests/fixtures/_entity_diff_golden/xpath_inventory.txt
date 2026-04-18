@@ -1,0 +1,103 @@
+# XPath corpus inventory
+
+## op counts
+  add: 10398
+  replace: 1846
+  remove: 154
+
+## by version
+  8.00H4: 1722
+  9.00B1: 1778
+  9.00B2: 1778
+  9.00B3: 1780
+  9.00B4: 1780
+  9.00B5: 1780
+  9.00B6: 1780
+
+## file root tags (for fragment vs diff detection)
+  macros: 8862
+  components: 7102
+  diff: 1339
+  cutscene: 720
+  mdscript: 686
+  index: 112
+  language: 112
+  groups: 105
+  effects: 63
+  envmapprobes: 56
+  icons: 56
+  camerasettings: 50
+  loadouts: 49
+  defaults: 49
+  regions: 49
+  missiongroups: 49
+  ships: 42
+  plans: 42
+  catalogs: 35
+  peopledefinitions: 35
+  actions: 32
+  influencelistconfigurations: 28
+  modulesets: 21
+  rooms: 21
+  droplists: 21
+  jobs: 14
+  stances: 7
+  addon: 7
+  categories: 7
+  coalitions: 7
+
+## pos values
+  after: 603
+  before: 112
+  prepend: 70
+
+## silent values
+  1: 530
+  true: 371
+
+## sel shapes (top 40)
+  /wares/ware[@id='$V']: 5376
+  /factions/faction[@id='$V']/relations: 784
+  /mdscript/cues//cue[@name='$V']/actions/set_value[@name='$V']/@exact: 434
+  /modules/module[@id='$V']/category: 369
+  /mdscript/cues//cue[@name='$V']/actions/do_all[@exact='$V']/do_elseif[@value='$V']: 280
+  //cue[@name="$V"]/conditions/check_any: 203
+  /diplomacy/gifts/gift[@ware='$V']: 147
+  /gamestarts/gamestart[@id='$V']/info/item[@name='$V']/@value: 140
+  /soundlibrary/sound[@id='$V']/sample: 133
+  /gamestarts/gamestart[@id='$V']/budget/story[@ref='$V']: 126
+  /jobs/job[@id='$V']/location[not(factions)]: 126
+  /jobs/job[@id='$V']/location/factions: 126
+  //create_ship[@name='$V']/loadout: 112
+  /gamestarts/gamestart[@id='$V']/player/blueprints/ware[@ware='$V']: 105
+  /baskets/basket[@id='$V']/wares: 105
+  /gamestarts/gamestart[@id='$V']/custom/item[@value='$V']: 98
+  /mdscript/cues/library[@name='$V']/cues/cue[@name='$V']/cues/cue[@name='$V']/actions/do_elseif[@value='$V']: 98
+  /jobs/job[@id='$V']/location: 91
+  /gamestarts/gamestart[@id='$V']/universe/factions/relations: 84
+  /gamestarts/gamestart[@id='$V']: 77
+  /gamestarts/gamestart[@id='$V']/budget/known/parameters/space: 70
+  /factions/faction[@id='$V']/licences: 70
+  /characters: 70
+  //cue[@name="$V"]/conditions: 67
+  /themes/theme[@id='$V']: 63
+  //cue[@name='$V']//do_if[@value='$V']//append_to_list[@name='$V'][1]: 63
+  //cue[@name='$V']/cues: 63
+  /materiallibrary: 56
+  /wares: 56
+  /soundlibrary: 56
+  /mdscript/cues: 56
+  /soundlibrary/sound[@id='$V']/sample/@start: 56
+  //cue[@name='$V']/actions/do_all/do_any: 56
+  //create_cue_actor[@name='$V']/page/@exact: 56
+  /gamestarts/groups: 49
+  /macros/macro[@name='$V']/connections: 49
+  //cue[@name='$V']//do_if[@value='$V']: 49
+  /mdscript/cues//cue[@name='$V']/actions/do_if[@value='$V']: 49
+  //cue[@name='$V']//set_value[@name='$V']: 43
+  /god/stations: 42
+
+## if shapes (top 40)
+  /wares/production/method[@id='$V']: 280
+  not(//faction[@id='$V']): 133
+  //station[@id='$V']: 56

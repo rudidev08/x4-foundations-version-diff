@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plans>
+  <plan id="plan_a" race="argon">
+    <entry index="1" macro="mod_a" connection="slot_02" />
+  </plan>
+  <plan id="plan_b" race="paranid">
+    <entry index="1" macro="mg_b" connection="slot_01" />
+  </plan>
+  <plan id="plan_new" race="teladi">
+    <entry index="1" macro="mod_a" connection="slot_01" />
+    <entry index="2" macro="mg_b" connection="slot_02" />
+    <entry index="3" macro="shared_name" connection="slot_03" />
+  </plan>
+</plans>

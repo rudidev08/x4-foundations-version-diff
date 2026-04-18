@@ -1,0 +1,148 @@
+('aiscript', 'build.buildstorage')	modified	aiscript	c3c7418594bf6215e8196000bd1c071d67881df76ffbdfe53bcca6ba923bc843
+('aiscript', 'build.shiptrader')	modified	aiscript	43bdab9c171b3ab8fdfc60e69d5534934cbfb6a93f75934c14ef2b4880da94c3
+('aiscript', 'engineer.ai')	modified	aiscript	0a6e714ae7659266d82db24f9e89632473a91e90c762064d36fa291e2fc68d31
+('aiscript', 'fight.attack.object.bigtarget')	modified	aiscript	0e5b70d533a4b32a173ca2451e2b1ba43aa755dfcfc75b83922328d98a2fced7
+('aiscript', 'fight.attack.object.capital')	modified	aiscript	556c9be596a29056d5dc0b008203af9838da2f4043552e3b429c12a92f9b8d23
+('aiscript', 'fight.attack.object.fighter')	modified	aiscript	01a751b97c3128990be0ab9651523301c23a5167bce40c720e7ab0ff9de5fb09
+('aiscript', 'fight.attack.object.medium')	modified	aiscript	7408f34b50196afc1209378a0bfffdd8c8edbcf9f7692d7de3a00cd1145fc32e
+('aiscript', 'fight.attack.object.station')	modified	aiscript	b2e551a6156569d4ea10d99e16d7dd673846f20bb5d4eecf4b9674c1b6ff0622
+('aiscript', 'interrupt.attacked')	modified	aiscript	2adec40135f9ccbcafb49eabfbe941ba487e66af35b86cee8f64c1c50a5dfb9a
+('aiscript', 'interrupt.disengage')	modified	aiscript	47c3896ef4d6b5c18fd301e78a96a9349d412b37661a1aef6e41c8bc7d89459b
+('aiscript', 'interrupt.foundabandonedship')	modified	aiscript	d1e781d6cf7db34e637461dd0ec49ee28776cc41ec399efa09041c9832896081
+('aiscript', 'interrupt.foundlockbox')	modified	aiscript	6b449ccc2b59cf5ae58b6f79c0a2517fa756d95c1bef7fd10af8604bb9e8b4e0
+('aiscript', 'interrupt.restock')	modified	aiscript	2b74643e1924234996eff1e5aa380a30800596541e30e43ec46122940e23984b
+('aiscript', 'lib.boost.relations')	added	aiscript	05a07cb79dd561beaa7ad721e924c92ee3dffdc41bee0baef629b328c02376bb
+('aiscript', 'lib.find.sectors.inrange')	modified	aiscript	2883390df5d34b86265eb070ff3570734233d01f791e1b0318b82998828b736c
+('aiscript', 'lib.fleet.organize.defences')	modified	aiscript	19bc3154f3fb59b82a223407ee1e3840c2928b549c23d8308c546c899ffd8998
+('aiscript', 'lib.request.orders')	modified	aiscript	e2e2803fe09a99b3e15809aba5f47fc275ecd6af9c160fee104021254197f7ec
+('aiscript', 'lib.respond.inspected')	modified	aiscript	0931e993631c19000570c5f622ba2ec742b4e2f36a0bb896004a4307f1b03da7
+('aiscript', 'lib.target.selection')	modified	aiscript	91339df46a11850f29f0fff16925a3f14d5fca2bb5a9312bc25934eae38b555d
+('aiscript', 'lib.target.selection.singletarget')	modified	aiscript	0be412cb8d2e4d4e6673f657cd79e973bbfa183c3cd5fe6eda38d0d7bd53e576
+('aiscript', 'masstraffic.handler.attacked')	modified	aiscript	e531ecde19c1366e39baf0791c3dffd4c6bfa0adef7050de395e4ccd51a5e27e
+('aiscript', 'masstraffic.police')	modified	aiscript	8295312acbafa692b8282576d429c284683573599d4a683d77acbede9221ef71
+('aiscript', 'masstraffic.watchdog')	modified	aiscript	2e9f94af7bbdf54f0c7ce7af936232baaf38af3feda8eb5f9b146f215399b32c
+('aiscript', 'mining.collect.ship.capital')	modified	aiscript	99eeb41dce0a69b71876c6126e9281aaa7c064ce89ecf71763dfd775a41d4c13
+('aiscript', 'mining.collect.ship.liquid')	modified	aiscript	7da42293ed60905bf16d2f9a4e977c5ea50f0a7eb9c91069969c8269d58b8993
+('aiscript', 'mining.collect.ship.medium')	modified	aiscript	255ca61b322112bc6acfe76e45cbcab788802f094725c5a18596353d1bfe26f7
+('aiscript', 'move.attack.object.capital')	modified	aiscript	e1f01b619518a3d98853ae2676a9c4c4715a0906e85cc73df7d9a378c6c50b99
+('aiscript', 'move.attack.object.capital.steering')	added	aiscript	c36525d4b3970fd5ff9d06759695fe87f2a8de2a2947f49d27f3786c940a6da6
+('aiscript', 'move.autopilot')	modified	aiscript	137b1ab9bd41fcaa23d02096a7593a73c815048f97e8ad382c74c42fe9a8e2c2
+('aiscript', 'move.buildership')	modified	aiscript	18c17c45f7815baaee1107be81c809370cac54bec510165d8a492c0947200484
+('aiscript', 'move.collect.ship.smallship')	modified	aiscript	937517ffd5ab72679df2e0168c5e1588fac95d338f2baaa54ed595d6f54d41fb
+('aiscript', 'move.evade')	modified	aiscript	95712d9c3ddfa07787207cf48ee4ebe7cfadd2da4084956edfa4e21fd81e1f35
+('aiscript', 'move.flee')	modified	aiscript	1a99cfa0b875dd70a2c8b4da5560ce897356db19dcaab8f3db33d70c2cb44aa4
+('aiscript', 'move.flee.boost')	modified	aiscript	bd3c73bca89b26d20c400c5542c8c16a0431703a679fd389084cc3a686184fd3
+('aiscript', 'move.flee.dock')	modified	aiscript	7775bb327bee591db72ef156d62bfc804c1e66b59f904e6a28aba86fe13e2e6a
+('aiscript', 'move.gate')	modified	aiscript	7e7097ce80cb3fcd9483f00ebbf61e536075e71aa8f09357e512a5b10831b61c
+('aiscript', 'move.generic')	modified	aiscript	bb8600490c268b8c583e868426a518de0dd2157cea918265b6cab39486a3007e
+('aiscript', 'move.hack.station.storage')	modified	aiscript	0906eb61931eefa21e44d2cb25f7044a8ebb95fc1a3f1b4c8a53374d102b04f6
+('aiscript', 'move.seekenemies')	modified	aiscript	b57b7708e41ce99e02df0fd66b0ec34332f00380081d6e9baf85576748143542
+('aiscript', 'order.assign.commander')	modified	aiscript	0f8a751a9438cc68d3b9e4e0c1a3225ea317e56b3888de7373c43ed4f8afa6ec
+('aiscript', 'order.build.deploy')	modified	aiscript	63be2f3760c267233820d3b6202e2e7e916020070f07fd770d1f12eb27bb7acb
+('aiscript', 'order.build.find.task')	modified	aiscript	26ab4789bab282fb6054dea2af45e153885d547383c29fdfa7fe640d02b4b4fb
+('aiscript', 'order.collect.ship')	modified	aiscript	ebebe9c50409a639ae6810f7d858ac3f2cb40e6ea868ab187449a611784a0fb5
+('aiscript', 'order.deployobjectatposition')	modified	aiscript	0870f8d1d242238fedfee9ffbbdfcb33b8d1c658a80512bcc0e535c9ea2bfa54
+('aiscript', 'order.dock')	modified	aiscript	3908066f335cc4a3738c2d094b04233597742ea85aa4c78eea9a264322bf7dcd
+('aiscript', 'order.dock.wait')	modified	aiscript	042630ed3703ecab0922e277ed3e2defd22fa9575bb8d36a32e31865dafab4c2
+('aiscript', 'order.fight.attack.inrange')	modified	aiscript	60abe74f6629ac6168235cf8fd1c908c4c56b9e6982ba57229fff5ec446386c9
+('aiscript', 'order.fight.attack.object')	modified	aiscript	4f8790f0971b237bc5f11db39b5055a4be6ac12ebd73a51c35f0dd2fda971efa
+('aiscript', 'order.fight.attack.object.player')	modified	aiscript	bc3491ac089856e3eea501ee262197ba8240ea0050c3f34f6a32c0807b9fa9b7
+('aiscript', 'order.fight.board')	modified	aiscript	e72a546b73bd21d978a58863848317fc35a2108a15760584db0b62f77151f9c9
+('aiscript', 'order.fight.escort')	modified	aiscript	17034c1b6a048cbc8a9ee679dd998b8a6dec101e518c9669a413cf78064fc7f7
+('aiscript', 'order.fight.lasertower')	modified	aiscript	3cef80bf1b38454f1e2cea11a764372146dde0aa87962b5dbad4fc616d942f70
+('aiscript', 'order.fight.patrol')	modified	aiscript	d1b9aed89292913fdbe2520846ca59c59042735bae7dff1f750c5c30e7b474f2
+('aiscript', 'order.fight.protect.ship')	modified	aiscript	9293bc080383fd62359e1d7601ef6e71ab78aa460ba9dcc7f137d25faad9085d
+('aiscript', 'order.mining.collect.ship')	modified	aiscript	ab609262d32ef765d461ee0cbd2ec581e8bc164583b5b2a43a9ca80c81adfadb
+('aiscript', 'order.mining.player')	modified	aiscript	ac9e73f18d4fbdfdee4a547800d8748ef295cf30dedce9b1aa8562e796f92978
+('aiscript', 'order.mining.routine')	modified	aiscript	8e47079dfca11464f3d669b394b32c9f3a1a65a14e4f77c5e1ca98466be3bf71
+('aiscript', 'order.move.follow')	modified	aiscript	76adef09625011fbd07dc66fcf9fd4b34bce96e639eee4dafa9f8b82b4e30ffb
+('aiscript', 'order.move.recon')	modified	aiscript	8189edae40832747f461a5dd1ed75f32e0ab221a1a4d81a1389b7308d7ce608f
+('aiscript', 'order.move.wait')	modified	aiscript	ce861cd55b4146130170c4f08aeed2822e82ea04a1480a7715e0a81142961260
+('aiscript', 'order.player.attack')	modified	aiscript	35ca6ce317bef410c74d31c86ab8e866bd1cf7e205887f7590a690a8ec6ff57a
+('aiscript', 'order.plunder')	modified	aiscript	866079a97685f4ddc967864017b51a903988cf4c60bd1f2b1e0f3b8602317130
+('aiscript', 'order.recycle.default')	modified	aiscript	6c3cc8b268c9927c7b45757c94c2d58da633332da8d8f903fcfe2ee0b8d22f7f
+('aiscript', 'order.rescue.inrange')	modified	aiscript	b9af40f2def30533a6828cfe9043f39efa61d84709d8593ea8aab19d474a0cb2
+('aiscript', 'order.rescue.ship')	modified	aiscript	da041ad06a4ad8a801a04b2df65cb3a1afb56d74a21c045c31a41a77457035a6
+('aiscript', 'order.restock')	modified	aiscript	ea933887ba2be791b218414c4f9bc28cb0a9be83116b057eb3c8edafbbdf724c
+('aiscript', 'order.restock.subordinates')	modified	aiscript	0022399f77313b6a9891000587e98415ca202a80667c6da046817ed5b909171c
+('aiscript', 'order.salvage.collect')	modified	aiscript	4f812ff0ad841f4bff7f20e8932206a435b78f74784fd32df6cd1245dd5c944e
+('aiscript', 'order.salvage.crush')	modified	aiscript	8be7be25383656eaae7cff9ba27a6df0e217193ab319487116209e6bcd81bff4
+('aiscript', 'order.salvage.deliver')	modified	aiscript	c5149538eee41b62f6e7c0326c83521704e26f5915e22a3b6bc1b6cd1347d00c
+('aiscript', 'order.salvage.radius')	modified	aiscript	da76d17e7c094e05e6f9da0c053526be810231ea87819ff2834371d52b917faf
+('aiscript', 'order.salvage.routine')	modified	aiscript	74b41de82c81c73f09f33543228a4ae9c8c91792d0138054b57e3f3c2d9708f8
+('aiscript', 'order.trade.crewexchange')	modified	aiscript	e7e52fd5faf1057cb9dbe8117873f10ea4f2a543ef92731f9f37d1b57e35a03b
+('aiscript', 'order.trade.middleman')	modified	aiscript	198dc126401a8ac298d427d73aaedbebe94b0820b233f32dc2b95847c112b6ae
+('aiscript', 'order.trade.routine')	modified	aiscript	2dbcc92b5329c435508811fbd2e841b6f9c11b0b5588871c14bec9802ee5cb84
+('aiscript', 'order.trade.wareexchange.ship')	modified	aiscript	70679f20f4e413689dcd785767d8895bde5873f85fe812607495c1a7b9a13d94
+('aiscript', 'orders.base')	modified	aiscript	8d4e16c51fcec429fc520c3126be0ca95176606eec7c8b8623a016e7bb6b92b5
+('aiscript', 'trade.find.free')	modified	aiscript	f56fe64e319316e588dbf8267a12983e749a525def4935bacf7bbd1ef99ea1bb
+('aiscript', 'trade.station')	modified	aiscript	91f5f18cbfeed9e422bc8628ac1e2e5518d96e454a1fdbb85667c13820e5871f
+('diagnostic', 'gamelogic', 'ddab569d4cbd')	incomplete	aiscript	ddab569d4cbdf32fbb565fb75a8e7ed2ce8a673e8f4d51337625bcb246654b6c
+('scriptproperty', ('build', 'loadoutfaction'))	added	scriptproperty	d2375521fe3caff1c70441cd9eda30cfb4d4be1f264940e67e970adea1c53e9c
+('scriptproperty', ('cluster', 'isexploration'))	added	scriptproperty	e16bcf6205fd63b5d1055add6f008216fa3b278f940a8e445e527743204935d1
+('scriptproperty', ('cluster', 'isnormalcluster'))	modified	scriptproperty	4bf50b6a1cf497193704734e328a6abc7196f87a67326fbdc0ebafaee4e6e87e
+('scriptproperty', ('cluster', 'isventurer'))	added	scriptproperty	4bce936c11e1d68088af65fdc404606c6281c21c7a69654a5b1f8b27f3ba42f8
+('scriptproperty', ('component', 'resourceprobescantime'))	added	scriptproperty	29ca92751f7ee669f2e8acab4167a150359cdf28521fb0b4aefcf8a60308ff15
+('scriptproperty', ('constructionplanentrydata', 'stage'))	added	scriptproperty	39135b70e76c8a9aa6f8fa8ef9a65bf97a9bbf7f4088cafb6e695a89be66db25
+('scriptproperty', ('constructionsequence', 'finalsequence'))	added	scriptproperty	fd961f2d3dcbc043d83751b2222af4f13d160c3703fe21ff1a01b5dd4077d074
+('scriptproperty', ('constructionsequence', 'hasstages'))	added	scriptproperty	1b56b7394d43bada7a5fdb189089d78463c0330ddaa682e98a2c3afa077d1199
+('scriptproperty', ('constructionsequence', 'isfixed'))	added	scriptproperty	d0bca7bfd62d148a4052436af5d865dcf1b23d92d9a2df6993e222aaee288140
+('scriptproperty', ('constructionsequence', 'stage.count'))	added	scriptproperty	0496f1fbd88a50d5836f763a3c3402203bac555226b97662fe432d0d92bd840a
+('scriptproperty', ('constructionsequence', 'stage.current'))	added	scriptproperty	59dd5211b5721767caaddb479c89ff8d4c0560fb77989d0064ca9b22318a4299
+('scriptproperty', ('constructionsequence', 'stage.{$numeric}.first'))	added	scriptproperty	e22edfd9ca32f2c58bd44414718bc38155819c3eda877450d659b3339be90246
+('scriptproperty', ('constructionsequence', 'stage.{$numeric}.last'))	added	scriptproperty	3a9332f861063e0eb51a273daee942aa438c78790749af6d56f4a416c2a55b85
+('scriptproperty', ('constructionsequence', 'stage.{$numeric}.sequence'))	added	scriptproperty	117bd49ee26211987892ff38637f8c09e377eccefcca9999e1225b4d5c65a030
+('scriptproperty', ('container', 'buypriceoverride.{$ware}'))	added	scriptproperty	91ebdb76c0c947f52e62c19149d8e171619c96203a66c04c996a03dd9eca6433
+('scriptproperty', ('container', 'maytransmutefor.{$faction}'))	added	scriptproperty	002e9fe4ceb05ab69ef4037a0fe0ee9f8b7c869c3ed6e5c4a85d18427fd85cd8
+('scriptproperty', ('container', 'referenceprice.{$ware}'))	added	scriptproperty	6d1ff2ab5285b56f82bbe6ebcde794a6126fed0dd4e17414bb3d706700e9232a
+('scriptproperty', ('container', 'referenceprofit.{$ware}.{$price}.{$amount}'))	added	scriptproperty	87940156f5ac8196536357e9ef1a4cb28e779c013bedc4377efa450a43ab71e4
+('scriptproperty', ('container', 'sellpriceoverride.{$ware}'))	added	scriptproperty	c0d4ffd3a8db5a565b6ed1c91468cf57d4eb3877333bdd1a166ada6e8042835e
+('scriptproperty', ('defensible', 'hasstagedconstruction'))	added	scriptproperty	c1b2bf5cabaa331e0e4b586977a1d88ef99b3817b2e5e70d339fa1247c1b0c29
+('scriptproperty', ('defensible', 'incomingmissilecount'))	added	scriptproperty	bdc9a521b57c634b2b5992a94be9fad9e61ed649d02d10c3adf9795f450aa5cf
+('scriptproperty', ('defensible', 'isalertlevel.<alertlevel>'))	modified	scriptproperty	4b20fb604cd3021ca38e2b3af01306c5f35a88f0385ff15ac2a976855c89227d
+('scriptproperty', ('defensible', 'isammocompatible.{$macro}'))	added	scriptproperty	1feead9ee4f6f71d20c985ddd15828e5ef888d285d8eea34e1d3d15d3fa5dd5a
+('scriptproperty', ('defensible', 'missileturrets.<state>.count'))	added	scriptproperty	072d4175c7c3c96d0bdad634e908f3f591524ec9fcb70bb9eb918854c383a248
+('scriptproperty', ('defensible', 'missileturrets.<state>.indexof.{$component}'))	added	scriptproperty	ce8e11cd773312e09311391443d7b3968c03c72df7661e06054520a25ced336b
+('scriptproperty', ('defensible', 'missileturrets.<state>.list'))	added	scriptproperty	09cb157a272fdb1dbf67ff6bafb305a2c4024a14cba28c5c06155dfa89b44690
+('scriptproperty', ('defensible', 'missileturrets.<state>.random'))	added	scriptproperty	cf385fd2c13a079c3dca74333f746cbbda2c1e7ef4024a8743df7c19d3d932ea
+('scriptproperty', ('dockingbay', 'isshowroom'))	added	scriptproperty	ef4288b4d1bfa2c3de9fcf91e24a38a52706da360bd465cf300247a10fdc4ddd
+('scriptproperty', ('explosive', 'istargetable'))	added	scriptproperty	7ca7f5fd542346676a3b23bf52d8c6cb26787845abadefce354a58a518c238e7
+('scriptproperty', ('explosive', 'istorpedo'))	added	scriptproperty	2caec7a7e67ad44c72496fbcc1fd4f059473aae416c1e51368d5cda0869dc4ee
+('scriptproperty', ('galaxy', 'yieldthresholds'))	removed	scriptproperty	613a77293389fefe88a23dd96705a8db1ec1f4e6d3639b7b805c61bff57197d6
+('scriptproperty', ('macro', 'isbeam'))	added	scriptproperty	89146d775ab7bdd18ef46382a4fd210b572d8d01aa642d64e461b38dd685c15e
+('scriptproperty', ('macro', 'isguided'))	modified	scriptproperty	247999c8e797f856b4efae2cc50553eaab790fd1f02890558caef904b5575953
+('scriptproperty', ('macro', 'isshowroom'))	added	scriptproperty	4523dd798bb2be4104d5045d96574022e2245a3770d0c7e7294597de210c108e
+('scriptproperty', ('macro', 'istorpedo'))	added	scriptproperty	33f017f03e367d65671a8d59954bbeff33d6e63fef49243db7dcfaca7a6441e2
+('scriptproperty', ('macro', 'purposemacro'))	removed	scriptproperty	dd2af3dc03654c78eff005fe92525e0630bda7a695a25f896ca82619063dcad9
+('scriptproperty', ('macro', 'purposename'))	removed	scriptproperty	14da1be830cef7c99574e47d52f17b0162275252292611f851e34046afc545b0
+('scriptproperty', ('missile', 'isdistributing'))	added	scriptproperty	6e666a85158399e1bb13d65129c03522775ba14aab321897b78240ccad64718e
+('scriptproperty', ('missile', 'isswarm'))	added	scriptproperty	f5a2c7e7cd5bb7224faf61992e90040cab0da15cc5d24a83789b184d028e2fdf
+('scriptproperty', ('object', 'efficiencyupgrades.<state>.count'))	removed	scriptproperty	0c590d048dbcd853166c5e38b9fa46cb4d42fe53bdcdceaa2d1d5e270ce0a04c
+('scriptproperty', ('object', 'efficiencyupgrades.<state>.indexof.{$component}'))	removed	scriptproperty	9103183edabb7f327f399fbb5f0142b961a3859ec409e4020cda5d734868114a
+('scriptproperty', ('object', 'efficiencyupgrades.<state>.list'))	removed	scriptproperty	6f2e74f89d51f8184f940a064efb1f4faa9bf5145557e9a4406718fa04ce64d6
+('scriptproperty', ('object', 'efficiencyupgrades.<state>.random'))	removed	scriptproperty	575f75c168da9a9cc0176d9529c92e8ac9e060c85db5785667a7deb3ef83f8a0
+('scriptproperty', ('object', 'efficiencyupgrades.numslots'))	removed	scriptproperty	eacd26d8508d0ec14d1dcca252e1d73e5084a209fe86b87ca293e87e2f600128
+('scriptproperty', ('object', 'equipmentmodwares'))	added	scriptproperty	fee55304585644f0d4677e5d7356a3533bd6563bc91bfb3ea587c8f576230fa8
+('scriptproperty', ('object', 'suspicious'))	removed	scriptproperty	358165778100a4de0dadbe8d5224a3b3e2580e8e6dafd33471635b88615eb9ee
+('scriptproperty', ('order', 'haspriority'))	modified	scriptproperty	1737a310feeeb185df303ab79042a6686b7dc41892c7697a8ceeaa0b105ceb40
+('scriptproperty', ('resourceprobe', 'bestyieldrating.{$ware}'))	added	scriptproperty	f4fe21bbfdccd031e5351f319b961c4812b09f26fa3e6b2d4df63a3913fe614d
+('scriptproperty', ('resourceprobe', 'currentbestyield.{$ware}'))	removed	scriptproperty	dba8a6a0df47343fc1c7526ce03d6232415da15708c87b3b9bb152417429b145
+('scriptproperty', ('resourceprobe', 'maxyield'))	removed	scriptproperty	ed5db53c8ae9c3f2f8c426598834b9a1d96310d5e06f00e9621bab8100c7ac7d
+('scriptproperty', ('room', 'iscurrentlywalkable'))	added	scriptproperty	075ddbea63ef17dbcbe4ffb777d2e9f07fa57ffae2547d0e39cb39d6ff370135
+('scriptproperty', ('room', 'numfreeactorslots'))	modified	scriptproperty	94a701e8aca0cd91322f4347630f9464d044cc839cb5fd0dabe954907d3feb6c
+('scriptproperty', ('sector', 'averagemaxyield'))	removed	scriptproperty	000afe325370000dd01d2e8de2f9d5f95a9c3a8de0a336bb42d6475aae72befd
+('scriptproperty', ('sector', 'bestyieldrating.{$ware}'))	added	scriptproperty	56d8467ef5b9b41e6acd8d6f81f5059a599f5f45974e7e5cf4b22d5e801704e3
+('scriptproperty', ('sector', 'yieldrating.{$ware}'))	added	scriptproperty	368191670574ec3a34d89b145bc88a035464165ba0f03226121e1d244d41bf47
+('scriptproperty', ('ship', 'isvalidjobship'))	added	scriptproperty	2a4f2166e0b9c01493682776698931df95501eedf5ac2bdfaf35536827c10ef0
+('scriptproperty', ('ship', 'iswaitingjobship'))	added	scriptproperty	8aa2580c6dab3c31ffec782e8889545e23968221403ac2cece48b993cf6af00d
+('scriptproperty', ('ship', 'jobloadoutfaction'))	added	scriptproperty	152feef31de80d2cf591ebb39d77e6fd7cc348554bd9462b3c65ab8752e46d88
+('scriptproperty', ('ship', 'madscore.isexceedingmax'))	added	scriptproperty	19b84a7b89cfcf964b0ac6ba82851db39d0c38cd5103e6cdf966cabe558f08fb
+('scriptproperty', ('ship', 'madscore.value'))	added	scriptproperty	e349da1fddf0179b7c93512d8f1630de18a2dd638f5bb1c4182d87a34837f717
+('scriptproperty', ('ship', 'numfreeactorslots'))	modified	scriptproperty	981e7e8ea4ea529110e967fc2930c488eeb66d11ddf7c850ff9910ed4d5884dd
+('scriptproperty', ('ship', 'stances.count'))	added	scriptproperty	4257582ad0d7faefd1135bf2045c5e42df98cc082b24024a75b72253eddc3cff
+('scriptproperty', ('ship', 'stances.random'))	added	scriptproperty	9d63f175fe6295828f7e092bc2329ae6ba5461e39bd1850c9c285547f0ea7228
+('scriptproperty', ('ship', 'traveldrivestability.maxvalue'))	added	scriptproperty	885e01ffd443a61d1231fc5cb93e26e9dd6f25c0452f7e1a8b8c3d2a44986c3c
+('scriptproperty', ('ship', 'traveldrivestability.remainingresettime'))	added	scriptproperty	d9766fae8309dfa17b6995f8567ac7d894ed07001ec77e402aa46b98c0b462bf
+('scriptproperty', ('ship', 'traveldrivestability.value'))	added	scriptproperty	de809e772efff2d044929961e3a8f69d892ba508cb2615fc4331943015033165
+('scriptproperty', ('weapon', 'isguided'))	added	scriptproperty	f718e5e9903df548b2fb7206a151c56ad08f0b961148107a1af7a92170d8b415
+('scriptproperty', ('weapon', 'istorpedo'))	added	scriptproperty	4c78cd843df90440298c020eecc1d7dd86c379586f8f63d473be47c0186d6828

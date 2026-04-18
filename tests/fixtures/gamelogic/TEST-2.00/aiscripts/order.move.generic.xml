@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<aiscript name="order.move.generic" version="1">
+  <params>
+    <param name="destination" />
+  </params>
+  <init>
+    <set_value name="$dest" exact="event.param" />
+  </init>
+</aiscript>

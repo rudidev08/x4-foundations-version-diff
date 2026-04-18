@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<behaviours>
+  <set name="default">
+    <normal>
+      <behaviour name="dogfight1" chance="60" />
+      <behaviour name="old_chase" chance="40" minskill="20" />
+    </normal>
+    <evade>
+      <behaviour name="evasive_loop" chance="65" minskill="20" />
+    </evade>
+  </set>
+</behaviours>
