@@ -15,14 +15,15 @@ Cross-entity ref graph (validated every hop):
 
 - station.group_ref → stationgroup @name
 - stationgroup.plan_refs → constructionplan @id (via `<select @constructionplan>`)
-- modulegroup.module_macro_refs → module @id (via `<select @macro>`)
-- constructionplan.entry_* → module @id OR modulegroup @name (typed via runtime
-  inspection of `<entry @macro>` values against both loaded sets)
+- modulegroup.module_macro_refs → on-disk macro filename stem under
+  `assets/structures/**/*_macro.xml` (via `<select @macro>`).
+- constructionplan.entry_macro_refs → on-disk macro filename stem (via
+  `<entry @macro>`). Real X4 data: plan entries and modulegroup selects both
+  reference on-disk macro files directly, NOT module library ids or
+  modulegroup names. Verified 100% match across all 166 modulegroup selects
+  and 138 plan entries in 9.00B6.
 
 Unresolved refs surface as `forward_warnings` with reason `'ref_target_unresolved'`.
-Constructionplan entries whose `@macro` value matches both a module @id AND a
-modulegroup @name surface as `extras.incomplete=True` with reason
-`'ref_namespace_collision'`.
 
 Validation indices come from the public `DiffReport.effective_{old,new}_root`
 surface — never the private `_materialize`.
@@ -110,6 +111,10 @@ def run(old_root: Path, new_root: Path, changes=None) -> list[RuleOutput]:
         sg_report.effective_old_root, 'group', 'name')
     new_plan_ids = _collect_ids(plan_report.effective_new_root, 'plan', 'id')
     old_plan_ids = _collect_ids(plan_report.effective_old_root, 'plan', 'id')
+    # On-disk macro stems: what modulegroup `<select @macro>` and plan
+    # `<entry @macro>` actually reference in real X4 data.
+    new_macro_stems = _on_disk_macro_stems(new_root)
+    old_macro_stems = _on_disk_macro_stems(old_root)
 
     # Rule-synthesized extra failures/warnings, routed per sub-source.
     extras_reports = {
@@ -134,13 +139,12 @@ def run(old_root: Path, new_root: Path, changes=None) -> list[RuleOutput]:
         extras_reports['module'],
     ))
     outputs.extend(_emit_modulegroup_subsource(
-        mg_report, old_module_ids, new_module_ids,
+        mg_report, old_macro_stems, new_macro_stems,
         extras_reports['modulegroup'],
     ))
     outputs.extend(_emit_constructionplan_subsource(
         plan_report,
-        old_module_ids, new_module_ids,
-        old_modulegroup_names, new_modulegroup_names,
+        old_macro_stems, new_macro_stems,
         extras_reports['constructionplan'],
     ))
 
@@ -184,6 +188,21 @@ class _MergedReport:
     @property
     def warnings(self) -> list[tuple[str, dict]]:
         return list(getattr(self.base, 'warnings', []) or [])
+
+
+def _on_disk_macro_stems(tree_root: Path) -> set[str]:
+    """Return the set of `*_macro.xml` filename stems under `assets/structures/`
+    (core + all DLC extensions). Modulegroup `<select @macro>` and
+    constructionplan `<entry @macro>` reference these stems directly.
+    """
+    stems: set[str] = set()
+    for p in tree_root.rglob('assets/structures/**/*_macro.xml'):
+        stems.add(p.stem)
+    ext_dir = tree_root / 'extensions'
+    if ext_dir.is_dir():
+        for p in ext_dir.rglob('assets/structures/**/*_macro.xml'):
+            stems.add(p.stem)
+    return stems
 
 
 def _collect_ids(root: Optional[ET.Element], tag: str, attr: str) -> set[str]:
@@ -677,41 +696,38 @@ def _module_production_diff(old_module: ET.Element,
 
 
 def _emit_modulegroup_subsource(
-    report, old_module_ids: set[str], new_module_ids: set[str],
+    report, old_macro_stems: set[str], new_macro_stems: set[str],
     extras: _ExtraFailuresReport,
 ) -> list[RuleOutput]:
     outputs: list[RuleOutput] = []
     for rec in report.added:
         outputs.append(_emit_modulegroup_row(
-            rec, side='new', module_ids=new_module_ids, extras=extras,
+            rec, side='new', macro_stems=new_macro_stems, extras=extras,
         ))
     for rec in report.removed:
         outputs.append(_emit_modulegroup_row(
-            rec, side='old', module_ids=old_module_ids, extras=extras,
+            rec, side='old', macro_stems=old_macro_stems, extras=extras,
         ))
     for rec in report.modified:
-        out = _emit_modulegroup_modified(rec, new_module_ids, extras)
+        out = _emit_modulegroup_modified(rec, new_macro_stems, extras)
         if out is not None:
             outputs.append(out)
     return outputs
 
 
-def _emit_modulegroup_row(rec, side: str, module_ids: set[str],
+def _emit_modulegroup_row(rec, side: str, macro_stems: set[str],
                           extras: _ExtraFailuresReport) -> RuleOutput:
     group = rec.element
     name = rec.key
     macro_refs = _modulegroup_macro_refs(group)
-    # Real X4 data: `select @macro` values reference on-disk macro files
-    # (with `_macro` suffix) that are NOT defined in modules.xml — 178/178
-    # entries in 9.00B6 fail a literal `@id` match. Rather than spam 178
-    # warnings, classify per-entry as resolved/unresolved into a bucket on
-    # extras.refs and emit a single aggregate warning only when unresolved
-    # refs exist. The bucket is the primary surface; consumers inspect it.
-    unresolved = [r for r in macro_refs if r not in module_ids]
+    # Check each `<select @macro>` value against on-disk macro filename stems
+    # under `assets/structures/**/*_macro.xml`. Real X4: 166/166 resolve. A
+    # non-zero unresolved count signals a data anomaly worth surfacing.
+    unresolved = [r for r in macro_refs if r not in macro_stems]
     if unresolved:
         extras.warnings.append((
             f'modulegroup {name}: {len(unresolved)} unresolved module '
-            f'macro_ref(s)',
+            f'macro_ref(s) (no matching on-disk *_macro.xml file)',
             {'reason': 'ref_target_unresolved',
              'ref_kind': 'module_macro_refs',
              'owner_subsource': 'modulegroup',
@@ -749,7 +765,7 @@ def _emit_modulegroup_row(rec, side: str, module_ids: set[str],
     return RuleOutput(tag=TAG, text=text, extras=out_extras)
 
 
-def _emit_modulegroup_modified(rec, new_module_ids: set[str],
+def _emit_modulegroup_modified(rec, new_macro_stems: set[str],
                                 extras: _ExtraFailuresReport
                                 ) -> Optional[RuleOutput]:
     name = rec.key
@@ -762,11 +778,11 @@ def _emit_modulegroup_modified(rec, new_module_ids: set[str],
         changes.append(f'total_entry_count {old_count}→{new_count}')
 
     macro_refs = _modulegroup_macro_refs(rec.new)
-    unresolved = [r for r in macro_refs if r not in new_module_ids]
+    unresolved = [r for r in macro_refs if r not in new_macro_stems]
     if unresolved:
         extras.warnings.append((
             f'modulegroup {name}: {len(unresolved)} unresolved module '
-            f'macro_ref(s)',
+            f'macro_ref(s) (no matching on-disk *_macro.xml file)',
             {'reason': 'ref_target_unresolved',
              'ref_kind': 'module_macro_refs',
              'owner_subsource': 'modulegroup',
@@ -806,42 +822,30 @@ def _modulegroup_macro_refs(group: ET.Element) -> list[str]:
 
 def _emit_constructionplan_subsource(
     report,
-    old_module_ids: set[str], new_module_ids: set[str],
-    old_modulegroup_names: set[str], new_modulegroup_names: set[str],
+    old_macro_stems: set[str], new_macro_stems: set[str],
     extras: _ExtraFailuresReport,
 ) -> list[RuleOutput]:
     outputs: list[RuleOutput] = []
     for rec in report.added:
         outputs.append(_emit_constructionplan_row(
-            rec, side='new',
-            module_ids=new_module_ids,
-            modulegroup_names=new_modulegroup_names,
-            extras=extras,
+            rec, side='new', macro_stems=new_macro_stems, extras=extras,
         ))
     for rec in report.removed:
         outputs.append(_emit_constructionplan_row(
-            rec, side='old',
-            module_ids=old_module_ids,
-            modulegroup_names=old_modulegroup_names,
-            extras=extras,
+            rec, side='old', macro_stems=old_macro_stems, extras=extras,
         ))
     for rec in report.modified:
-        out = _emit_constructionplan_modified(
-            rec, new_module_ids, new_modulegroup_names, extras,
-        )
+        out = _emit_constructionplan_modified(rec, new_macro_stems, extras)
         if out is not None:
             outputs.append(out)
     return outputs
 
 
-def _emit_constructionplan_row(rec, side: str, module_ids: set[str],
-                                modulegroup_names: set[str],
+def _emit_constructionplan_row(rec, side: str, macro_stems: set[str],
                                 extras: _ExtraFailuresReport) -> RuleOutput:
     plan = rec.element
     plan_id = rec.key
-    refs, has_collision = _classify_plan_refs(
-        plan, plan_id, module_ids, modulegroup_names, extras,
-    )
+    refs = _classify_plan_refs(plan, plan_id, macro_stems, extras)
     kind = 'added' if side == 'new' else 'removed'
     if kind == 'added':
         srcs = render_sources(None, rec.sources)
@@ -867,8 +871,6 @@ def _emit_constructionplan_row(rec, side: str, module_ids: set[str],
         'sources': list(rec.sources),
         'ref_sources': dict(rec.ref_sources),
     }
-    if has_collision:
-        out_extras['incomplete'] = True
     if kind == 'added':
         out_extras['new_sources'] = list(rec.sources)
     else:
@@ -876,8 +878,7 @@ def _emit_constructionplan_row(rec, side: str, module_ids: set[str],
     return RuleOutput(tag=TAG, text=text, extras=out_extras)
 
 
-def _emit_constructionplan_modified(rec, new_module_ids: set[str],
-                                     new_modulegroup_names: set[str],
+def _emit_constructionplan_modified(rec, new_macro_stems: set[str],
                                      extras: _ExtraFailuresReport
                                      ) -> Optional[RuleOutput]:
     plan_id = rec.key
@@ -895,15 +896,13 @@ def _emit_constructionplan_modified(rec, new_module_ids: set[str],
     if old_count != new_count:
         changes.append(f'total_entry_count {old_count}→{new_count}')
 
-    refs, has_collision = _classify_plan_refs(
-        rec.new, plan_id, new_module_ids, new_modulegroup_names, extras,
-    )
+    refs = _classify_plan_refs(rec.new, plan_id, new_macro_stems, extras)
     if not changes:
         return None
     srcs = render_sources(rec.old_sources, rec.new_sources)
     classifications = ['constructionplan']
     text = _format(plan_id, classifications, srcs, changes)
-    extras_out = {
+    return RuleOutput(tag=TAG, text=text, extras={
         'entity_key': ('constructionplan', plan_id),
         'kind': 'modified',
         'subsource': 'constructionplan',
@@ -916,10 +915,7 @@ def _emit_constructionplan_modified(rec, new_module_ids: set[str],
         'new_sources': list(rec.new_sources),
         'sources': list(rec.new_sources),
         'ref_sources': dict(rec.new_ref_sources),
-    }
-    if has_collision:
-        extras_out['incomplete'] = True
-    return RuleOutput(tag=TAG, text=text, extras=extras_out)
+    })
 
 
 def _plan_entries(plan: ET.Element) -> dict[tuple[str, str], ET.Element]:
@@ -955,58 +951,30 @@ def _plan_entries_diff(old: dict[tuple[str, str], ET.Element],
 
 
 def _classify_plan_refs(plan: ET.Element, plan_id: str,
-                         module_ids: set[str], modulegroup_names: set[str],
-                         extras: _ExtraFailuresReport
-                         ) -> tuple[dict, bool]:
-    """Split `<entry @macro>` values into module_refs / modulegroup_refs /
-    unresolved, and detect namespace collisions.
+                         macro_stems: set[str],
+                         extras: _ExtraFailuresReport) -> dict:
+    """Split `<entry @macro>` values into resolved (matching an on-disk
+    `*_macro.xml` file) and unresolved (no matching file).
 
-    Returns `(refs_dict, has_namespace_collision)`.
+    Real X4: all plan entries reference on-disk macro files directly — NOT
+    module library ids or modulegroup names. If an entry ref is genuinely
+    unresolved against the on-disk set, surface it on `entry_unresolved_refs`
+    but don't emit per-entry warnings (plans can have many entries and noise
+    would be overwhelming).
     """
-    entry_module_refs: list[str] = []
-    entry_modulegroup_refs: list[str] = []
+    entry_macro_refs: list[str] = []
     entry_unresolved_refs: list[str] = []
-    colliding: list[str] = []
     for e in plan.findall('entry'):
         macro_ref = e.get('macro')
         if not macro_ref:
             continue
-        in_modules = macro_ref in module_ids
-        in_groups = macro_ref in modulegroup_names
-        if in_modules and in_groups:
-            colliding.append(macro_ref)
-            # Still record both typed refs so downstream can inspect — but
-            # mark incomplete via extras.failures below.
-            entry_module_refs.append(macro_ref)
-            entry_modulegroup_refs.append(macro_ref)
-            continue
-        if in_modules:
-            entry_module_refs.append(macro_ref)
-        elif in_groups:
-            entry_modulegroup_refs.append(macro_ref)
-        else:
+        entry_macro_refs.append(macro_ref)
+        if macro_ref not in macro_stems:
             entry_unresolved_refs.append(macro_ref)
-    if colliding:
-        for ref in colliding:
-            extras.failures.append((
-                f'constructionplan {plan_id}: entry @macro={ref!r} '
-                'resolves as both module @id and modulegroup @name',
-                {'reason': 'ref_namespace_collision',
-                 'plan_id': plan_id,
-                 'macro_ref': ref,
-                 'affected_keys': [('constructionplan', plan_id)]},
-            ))
-    # Per-entry unresolved warnings are suppressed. In real X4 data 9.00B6,
-    # 3246/3492 plan entries reference on-disk macro files that aren't in
-    # modules.xml or modulegroups.xml — firing a warning per entry would
-    # produce ~3400 rows of noise. The `entry_unresolved_refs` bucket on the
-    # plan row IS the surface; consumers inspect it directly.
-    refs = {
-        'entry_module_refs': entry_module_refs,
-        'entry_modulegroup_refs': entry_modulegroup_refs,
+    return {
+        'entry_macro_refs': entry_macro_refs,
         'entry_unresolved_refs': entry_unresolved_refs,
     }
-    return refs, bool(colliding)
 
 
 # ---------- ref validation (shared) ----------

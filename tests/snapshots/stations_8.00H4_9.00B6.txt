@@ -84,13 +84,7 @@
 ('constructionplan', 'ter_proteinpaste_prefab_04')	added	constructionplan	e6bcb1ed81a05fe1fabc1bee89bce7c18e30f7ac3f7014393e6e5b8b48a422a3
 ('constructionplan', 'ter_siliconcarbide_prefab_04')	added	constructionplan	6300906765fbf8b450998d9095f20910dce45fff66232720833ee82e8add6d64
 ('constructionplan', 'ter_terranmre_prefab_04')	added	constructionplan	9e3581ef0586a2c7cacc157764b77cd3c499b7e8af1a2a9fadd3e04f7de3dea0
-('diagnostic', 'stations', '479da68130bb')	warning	diagnostic	ae26e12b59ea9404b1d6146eb53992c9ad6dcdc0c7c614ea5a90a148ca5876dd
-('diagnostic', 'stations', '80f2ca9367e3')	warning	diagnostic	952aafd07fd06c0def1299f1ee0ccf0f6c39e5e2ae5787b96c2cbc93b982343e
-('diagnostic', 'stations', '8be879236354')	warning	diagnostic	8906f1e229a096c6811af16215ae592b7b13bb648314badfe0c56e8ed7002aba
-('diagnostic', 'stations', 'd7ea2d8171de')	warning	diagnostic	3f150b4a12cf782980fcdfbbf17bfde158e5c2c1401b36a171cc8a0129a327c0
-('diagnostic', 'stations', 'f0efd6137ce7')	warning	diagnostic	5f50b03b73ed3236134393916d2c1c34914f88afe7f88101771672259d18cea7
-('diagnostic', 'stations', 'f6edc6a5f8a3')	warning	diagnostic	6fd94abad598cf29f3800e4f07bf8a93f2affc5249e8c09f64eec144d0fd8dff
-('module', 'processing_kha')	added	module	6dcadb51d5c6135c739ca3bc8f11fe03c640b02a6dad4a8d9a401a684f12920e
+('module', 'processing_kha')	added	module	20fddefa91fc73b3d9a1c59f7c354388cc11bd7f447daf505d2c4a9a4f941ea7
 ('module', 'processing_ter')	removed	module	2b3cc2b41a63bd919fe445e1b10fedef6e8f92e9b04cf730429234b8e209ae7b
 ('module', 'prod_gen_khaakscrapmetal')	added	module	7c49b0221611ef95169a7343131933c479047d85083049fd344814c8635121d6
 ('module', 'recycling_kha')	added	module	e201bc81a8e0587b1319c3fb40e595024d2e66785bc1a32e3557c3c4aad88873

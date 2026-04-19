@@ -164,6 +164,57 @@ ALLOWLIST = [
         ),
         'seen_in_pairs': [('8.00H4', '9.00B6')],
     },
+    # Helper-harness entries for the test_realdata_helpers.AllowlistRespectedTest
+    # check. Helpers run diff_library across 7 library files; same underlying
+    # cross-DLC patterns as the per-rule diagnostics surface under helper_<name>
+    # tags. Pair-scoped to 8.00H4→9.00B6 canonical pair.
+    {
+        'tag': 'helper_wares',
+        'entity_key': None,
+        'reason': 'if_raw_dependency',
+        'justification': (
+            'Same closedloop if= cross-DLC conflicts as the wares-rule '
+            'diagnostic sentinel. 880 failures on the canonical pair; '
+            'affected_keys are always method ids (e.g. "closedloop"), never '
+            'real ware ids.'
+        ),
+        'seen_in_pairs': [('8.00H4', '9.00B6')],
+    },
+    {
+        'tag': 'helper_wares',
+        'entity_key': None,
+        'reason': 'if_raw_gate_flip',
+        'justification': (
+            'Timelines DLC has `if="not(//wares/production/method[@id=\'terran\'])"` '
+            'gates that flip once terran DLC ops apply. 80 failures; all scoped '
+            'to specific production method ids via affected_keys.'
+        ),
+        'seen_in_pairs': [('8.00H4', '9.00B6')],
+    },
+    {
+        'tag': 'helper_wares',
+        'entity_key': None,
+        'reason': 'add_target_missing',
+        'justification': (
+            'DLC wares.xml patches reference missile ware ids that do not '
+            'exist in core (missile_disruptor_light_mk1, missile_gen_s_*, '
+            'missile_scatter_heavy_mk1 etc). 10 failures scoped via '
+            'affected_keys to those specific ids; none ever shipped in core.'
+        ),
+        'seen_in_pairs': [('8.00H4', '9.00B6')],
+    },
+    {
+        'tag': 'helper_jobs',
+        'entity_key': None,
+        'reason': 'add_target_missing',
+        'justification': (
+            'Same pattern as the jobs-rule diagnostic: DLC jobs.xml patches '
+            '<add> into 4 job ids (loanshark_plunderer_iceunion, zyarth_scout_'
+            'patrol_s, terran_scout_patrol_s, scavenger_free_tug_m) across '
+            'mini_02 / pirate / split DLCs. 8 failures.'
+        ),
+        'seen_in_pairs': [('8.00H4', '9.00B6')],
+    },
     {
         'tag': 'gamestarts',
         'entity_key': ('diagnostic', 'gamestarts', '5db4b6a823be'),

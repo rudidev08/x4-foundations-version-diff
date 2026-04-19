@@ -105,26 +105,24 @@ class StationsRuleTest(unittest.TestCase):
         self.assertIn('ghost_module',
                       warnings[0].extras['details']['unresolved_refs'])
 
-    def test_constructionplan_added_with_typed_refs(self):
-        """plan_new has one entry→module (mod_a), one entry→modulegroup (mg_b),
-        one namespace-colliding entry (shared_name).
-
-        Namespace collision → incomplete; typed refs still recorded."""
+    def test_constructionplan_added_with_macro_refs(self):
+        """plan_new's entries are recorded under `entry_macro_refs`. Since the
+        synthetic fixture has no on-disk `*_macro.xml` files, every ref is
+        unresolved against the on-disk set — real X4 data has 100% match, but
+        the fixture tests the bucketing shape, not real-world resolution.
+        """
         matches = self._find(('constructionplan', 'plan_new'))
         self.assertEqual(len(matches), 1)
         out = matches[0]
         self.assertEqual(out.extras['kind'], 'added')
         self.assertEqual(out.extras['subsource'], 'constructionplan')
-        self.assertTrue(out.extras.get('incomplete'),
-                        msg=f'plan_new not marked incomplete: {out.text}')
         refs = out.extras['refs']
-        # mod_a + shared_name (collision retained) resolve to module.
-        self.assertIn('mod_a', refs['entry_module_refs'])
-        self.assertIn('shared_name', refs['entry_module_refs'])
-        # mg_b + shared_name (collision retained) resolve to modulegroup.
-        self.assertIn('mg_b', refs['entry_modulegroup_refs'])
-        self.assertIn('shared_name', refs['entry_modulegroup_refs'])
-        self.assertEqual(refs['entry_unresolved_refs'], [])
+        self.assertIn('mod_a', refs['entry_macro_refs'])
+        self.assertIn('mg_b', refs['entry_macro_refs'])
+        self.assertIn('shared_name', refs['entry_macro_refs'])
+        # Fixture has no on-disk macro files; everything unresolved.
+        self.assertEqual(set(refs['entry_unresolved_refs']),
+                         {'mod_a', 'mg_b', 'shared_name'})
         self.assertIn('race=teladi', out.text)
         self.assertIn('total_entry_count=3', out.text)
 
@@ -220,38 +218,6 @@ class StationsRuleTest(unittest.TestCase):
         self.assertEqual(self._find(('constructionplan', 'plan_b')), [])
 
     # ---------- Cross-entity ref graph ----------
-    def test_plan_b_entry_resolves_to_modulegroup_bridge(self):
-        """plan_b (unchanged so no diff row) still resolves its entry's
-        @macro=mg_b to a modulegroup; no warning, no incomplete.
-
-        Verified via plan_new which has mg_b as one entry — typed refs must
-        still list mg_b under entry_modulegroup_refs.
-        """
-        matches = self._find(('constructionplan', 'plan_new'))
-        self.assertEqual(len(matches), 1)
-        refs = matches[0].extras['refs']
-        self.assertIn('mg_b', refs['entry_modulegroup_refs'])
-
-    def test_plan_new_entry_resolves_to_module_direct(self):
-        """plan_new has mod_a as one entry — typed refs list it under
-        entry_module_refs."""
-        matches = self._find(('constructionplan', 'plan_new'))
-        refs = matches[0].extras['refs']
-        self.assertIn('mod_a', refs['entry_module_refs'])
-
-    def test_namespace_collision_marks_plan_incomplete(self):
-        """A `<entry @macro>` value matching BOTH module @id AND modulegroup
-        @name surfaces as extras.incomplete=True."""
-        matches = self._find(('constructionplan', 'plan_new'))
-        self.assertTrue(matches[0].extras.get('incomplete'))
-        # Sentinel emitted under subsource='constructionplan'.
-        sentinels = [o for o in self.outputs
-                     if o.extras.get('kind') == 'incomplete'
-                     and o.extras.get('subsource') == 'constructionplan']
-        self.assertTrue(sentinels,
-                        msg=f'no constructionplan incomplete sentinel: '
-                            f'{[o.text for o in self.outputs]}')
-
     def test_station_group_dangling_emits_warning(self):
         """station_new.group_ref='nonexistent_sg' → warning with
         reason='ref_target_unresolved'."""
@@ -277,15 +243,16 @@ class StationsRuleTest(unittest.TestCase):
             all_unresolved.update(w.extras['details']['unresolved_refs'])
         self.assertIn('ghost_module', all_unresolved)
 
-    def test_contamination_scoped_per_subsource(self):
-        """A namespace collision in constructionplan must not contaminate
-        outputs in other sub-sources."""
+    def test_no_contamination_on_clean_fixture(self):
+        """With no failures in any subsource, no outputs are marked incomplete.
+        (The old namespace-collision trigger was removed when plan entries
+        became on-disk macro refs; the fixture has no other failure source.)"""
         contaminated = {
             o.extras.get('subsource') for o in self.outputs
             if o.extras.get('incomplete')
             and o.extras.get('kind') != 'incomplete'
         }
-        self.assertEqual(contaminated, {'constructionplan'},
+        self.assertEqual(contaminated, set(),
                          msg=f'unexpected contamination spread: {contaminated}')
 
     def test_module_display_uses_id_when_identification_missing(self):

@@ -366,6 +366,13 @@ def _do_add(root, sel, children, pos) -> dict[str, list[str]]:
         else:
             for c in children:
                 t.append(_clone(c))
+        # Record the target entity (or nearest id-bearing ancestor) — ops that
+        # add children INTO an existing entity are writers of that entity, even
+        # when the appended children carry no id/name (e.g., `<illegal>` or
+        # `<owner>` elements with no id attribute).
+        target_entity = _nearest_ancestor_id(root, t)
+        if target_entity:
+            touched.setdefault(target_entity, [])
         # Attribute inserted children with any id/name they carry, and record any
         # ref-bearing child under them. Currently `<component ref="...">` only; other
         # ref-carrying forms will be generalized in a later refactor when the set

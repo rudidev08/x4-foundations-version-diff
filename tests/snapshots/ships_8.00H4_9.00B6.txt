@@ -190,7 +190,7 @@
 ('ware', 'ship_atf_l_destroyer_01_a')	modified	ware	db2e18c1cd774fa703e21bcaa3c6534dd7e81cd2ac1f027ab4c81bccd4d6eff0
 ('ware', 'ship_bor_l_destroyer_01_a')	modified	ware	ce276517a0b2710ed5ff9a1a09eb46b5c504a1bdf85451a9d337e82c09809ab8
 ('ware', 'ship_bor_m_corvette_02_a')	modified	ware	d77c316ea9f15811c04b842456172b12311e18839cf482665504def51990cf13
-('ware', 'ship_gen_m_tugboat_01_a')	modified	ware	3a0f95b118e0563cacf10357efe9a38ac4f09f848920852dc999c22abca03748
+('ware', 'ship_gen_m_tugboat_01_a')	modified	ware	b4db794eedf8ed66bab33806ee57bab5656f0121955391ef6613e2f904114094
 ('ware', 'ship_gen_m_yacht_01_a')	modified	ware	f9a4b280abc784bb80d9c400e01c3fb95085f0ea02c62ce61e78879714276b2f
 ('ware', 'ship_par_l_destroyer_02_a')	modified	ware	61773097198246f2a68c5b9e796d6209fa30f05477121f77e79329681e6372d1
 ('ware', 'ship_par_l_expeditionary_01_a')	modified	ware	d96052c606638809db1b2754a3097e4f3aa345787624f5830433b556b1eb4b15

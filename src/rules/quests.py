@@ -27,6 +27,8 @@ from src.lib.rule_output import RuleOutput
 TAG = 'quests'
 
 # Prefix → classification token. Prefix is the chars before the first `_`.
+# Extended from real-data inventory of 9.00B6 md/ trees (core + all DLCs).
+# Prefixes seen ≥5 times are mapped; rarer ones fall through to empty list.
 _CLASS_MAP = {
     'gm': 'generic_mission',
     'story': 'story',
@@ -34,6 +36,19 @@ _CLASS_MAP = {
     'scenario': 'scenario',
     'gs': 'gamestart',
     'trade': 'trade',
+    'rml': 'rml',                       # Reusable mission library
+    'tutorial': 'tutorial',
+    'setup': 'setup',
+    'npc': 'npc',
+    'cm': 'combat',                     # combat manager / content manager
+    'x4ep1': 'timelines',               # Timelines DLC (X4 Expansion Pack 1)
+    'lib': 'library',                   # shared mdscript helpers
+    'gmc': 'gm_canned',                 # canned generic missions
+    'factiongoal': 'factiongoal',
+    'factionsubgoal': 'factionsubgoal',
+    'terraforming': 'terraforming',
+    'inituniverse': 'universe_init',
+    'cinematiccamera': 'cinematic',
 }
 
 # Literal bare-filename matches take precedence over prefix mapping.

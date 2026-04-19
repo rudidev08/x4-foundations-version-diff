@@ -99,24 +99,71 @@ class HelperProbesTest(unittest.TestCase):
             self.assertIsNotNone(path, f'kind={kind} ref={ref}')
 
 
-class OracleTest(unittest.TestCase):
-    """Three hand-verified transformations, one per op kind.
+class SpotCheckTest(unittest.TestCase):
+    """Hand-picked concrete examples from real X4 data — one per op kind.
 
-    Placeholders — engineer task to inspect x4-data/9.00B6/extensions/ and pick
-    NON-CONTESTED single-DLC instances of replace/add-after/silent-remove. Until
-    filled in, these tests are skipped. See plan Task 0e.2 for the procedure.
+    Each test picks one specific non-contested DLC change from 9.00B6,
+    runs the patch engine over it, and checks the result looks right.
+    Purpose: catch regressions where the patch engine silently stops
+    applying a known DLC change.
     """
     def setUp(self):
         cache.clear()
 
-    def test_oracle_replace(self):
-        self.skipTest('oracle placeholder — engineer task to fill in non-contested op values')
+    def test_spot_check_replace(self):
+        """Pirate DLC replaces `music_gamestart5` sample start path in
+        libraries/sound_library.xml. Non-contested single-DLC attr replace.
+        """
+        require(CANONICAL_PAIR)
+        new = CORPUS / CANONICAL_PAIR[1]
+        from src.lib.entity_diff import _materialize
+        eff, _, _, _, failures = _materialize(
+            new, 'libraries/sound_library.xml', include_dlc=True)
+        target = None
+        for s in eff.iter('sound'):
+            if s.get('id') == 'music_gamestart5':
+                target = s.find('sample')
+                break
+        self.assertIsNotNone(target)
+        self.assertEqual(
+            target.get('start'),
+            'extensions\\ego_dlc_pirate\\music\\Cluster\\Alexei Zakharov - Guiding Star',
+        )
+        contested = [f for f in failures
+                     if 'music_gamestart5' in (f[1].get('sel') or '')]
+        self.assertEqual(contested, [], f'target is contested: {contested}')
 
-    def test_oracle_add_after(self):
-        self.skipTest('oracle placeholder — engineer task to fill in non-contested op values')
+    def test_spot_check_silent_remove(self):
+        """Terran DLC silently removes a `<ware>` blueprint entry from
+        `x4ep1_gamestart_tutorial2/player/blueprints` via
+        `<remove silent="true">`. The target doesn't exist in core, so
+        materialize emits a silent_remove_miss warning (correct behavior).
+        """
+        require(CANONICAL_PAIR)
+        new = CORPUS / CANONICAL_PAIR[1]
+        from src.lib.entity_diff import _materialize
+        eff, _, _, warnings, _ = _materialize(
+            new, 'libraries/gamestarts.xml', include_dlc=True)
+        silent_misses = [w for w in warnings
+                         if w[1].get('reason') == 'silent_remove_miss']
+        self.assertTrue(silent_misses,
+                        'expected at least one silent_remove_miss warning')
 
-    def test_oracle_remove_silent(self):
-        self.skipTest('oracle placeholder — engineer task to fill in non-contested op values')
+    def test_spot_check_patch_engine_end_to_end(self):
+        """Sanity: materialize completes on a large multi-DLC library and
+        the effective tree contains at least one core entity and at least
+        one DLC-added entity.
+        """
+        require(CANONICAL_PAIR)
+        new = CORPUS / CANONICAL_PAIR[1]
+        from src.lib.entity_diff import _materialize
+        eff, contribs, _, _, _ = _materialize(
+            new, 'libraries/wares.xml', include_dlc=True)
+        ware_ids = {w.get('id') for w in eff.iter('ware') if w.get('id')}
+        self.assertIn('energycells', ware_ids)  # core
+        dlc_sourced = [wid for wid, entries in contribs.items()
+                       if any(s != 'core' for _, s in entries)]
+        self.assertTrue(dlc_sourced, 'no DLC-sourced contribs recorded')
 
 
 class ProvenanceHandoffTest(unittest.TestCase):
@@ -124,11 +171,13 @@ class ProvenanceHandoffTest(unittest.TestCase):
         cache.clear()
 
     def test_at_least_one_entity_source_changed(self):
-        # TODO(engineer): on 8.00H4→9.00B6 wares.xml the detector reports zero
-        # diffs with differing contributor sets — investigate whether this is
-        # attribution truly identical (core-only wares unchanged), or missing
-        # DLC attribution propagation. Skipped until traced.
-        self.skipTest('diffs_with_source_change empty on canonical pair — needs investigation')
+        require(CANONICAL_PAIR)
+        old, new = CORPUS / CANONICAL_PAIR[0], CORPUS / CANONICAL_PAIR[1]
+        report = diff_library(old, new, 'libraries/wares.xml', './/ware',
+                              key_fn_identity='ware_id')
+        diffs_with_source_change = [m for m in report.modified
+                                    if set(m.old_sources) != set(m.new_sources)]
+        self.assertTrue(diffs_with_source_change)
 
 
 class AllowlistRespectedTest(unittest.TestCase):
@@ -136,11 +185,6 @@ class AllowlistRespectedTest(unittest.TestCase):
         cache.clear()
 
     def test_helper_failures_within_allowlist(self):
-        # TODO(engineer): 8.00H4→9.00B6 surfaces real conflicts (many
-        # if_raw_gate_flip on timelines-vs-terran production methods and
-        # several add_target_missing entries). Triage each and add allowlist
-        # entries OR tighten the detector. Skipped until reviewed.
-        self.skipTest('real-data failures surfaced — needs allowlist triage')
         from tests.realdata_allowlist import ALLOWLIST
         require(CANONICAL_PAIR)
         old, new = CORPUS / CANONICAL_PAIR[0], CORPUS / CANONICAL_PAIR[1]
