@@ -17,9 +17,12 @@ aggregated recursively. That means this works with weaker LLMs too —
 the chunk budget controls what fits in one call regardless of input size.
 
 Usage:
-    python3 scripts/aggregate_release_notes.py output/8.00H4_9.00B6 xhigh
+    python3 scripts/aggregate_release_notes.py artifacts/8.00H4_9.00B6 xhigh
     python3 scripts/aggregate_release_notes.py <pair_dir> <level> \\
         [--max-tokens 24000] [--dry-run]
+
+The per-rule aggregates stay under <pair_dir>/; the top-level
+RELEASE_NOTES_<level>.md is written to output/<pair>/.
 """
 from __future__ import annotations
 
@@ -208,16 +211,19 @@ def tree_reduce(parts: list[str], template: str, budget: int,
 def collect_rule_chunks(pair_dir: Path, rule: str, level: str) -> list[Path]:
     """Return this rule's per-chunk markdown files (or the single file if
     no chunking happened). Excludes the _aggregated.md output if re-run.
+    Matches both normal and --compact outputs (llm_<rule>_compact_*).
     """
-    single = pair_dir / f'llm_{rule}_{level}.md'
     chunk_pattern = re.compile(
-        rf'^llm_{re.escape(rule)}_chunk\d+of\d+_{re.escape(level)}\.md$')
+        rf'^llm_{re.escape(rule)}(?:_compact)?_chunk\d+of\d+'
+        rf'_{re.escape(level)}\.md$')
     chunks = sorted(p for p in pair_dir.iterdir()
                     if chunk_pattern.match(p.name))
     if chunks:
         return chunks
-    if single.exists():
-        return [single]
+    for name in (f'llm_{rule}_{level}.md', f'llm_{rule}_compact_{level}.md'):
+        p = pair_dir / name
+        if p.exists():
+            return [p]
     return []
 
 
@@ -261,14 +267,21 @@ def aggregate_top(pair_dir: Path, rule_outputs: list[tuple[Path, str]],
                   level: str, budget: int, reasoning: str | None,
                   profile: dict | None, dry_run: bool,
                   versions: tuple[str, str]) -> Path:
+    # Final release notes land under <project_root>/output/<pair>/ so the
+    # deliverable is separated from the regeneratable artifacts/ tree.
+    output_dir = ROOT / 'output' / pair_dir.name
+    out_path = output_dir / f'RELEASE_NOTES_{level}.md'
+    if out_path.exists() and out_path.stat().st_size > 0 and not dry_run:
+        print(f'top-level: skip (cached {out_path})')
+        return out_path
     parts = [content for _, content in rule_outputs]
     old_v, new_v = versions
     ctx = {'old_version': old_v, 'new_version': new_v}
     print(f'top-level: combining {len(rule_outputs)} rule sections')
     merged = tree_reduce(parts, FINAL_AGGREGATE_PROMPT, budget, reasoning,
                          profile, dry_run, ctx, label='top')
-    out_path = pair_dir / f'RELEASE_NOTES_{level}.md'
     if not dry_run:
+        output_dir.mkdir(parents=True, exist_ok=True)
         out_path.write_text(merged)
         print(f'  wrote {out_path} ({len(merged)} chars)')
     return out_path
@@ -283,7 +296,7 @@ def parse_versions(pair_dir: Path) -> tuple[str, str]:
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument('pair_dir', help='e.g. output/8.00H4_9.00B6')
+    ap.add_argument('pair_dir', help='e.g. artifacts/8.00H4_9.00B6')
     ap.add_argument('level',
                     help='Filename tag to aggregate. When using .env profiles, '
                          'pass the profile\'s MODEL_NAME (e.g. gpt-5.4-xhigh). '

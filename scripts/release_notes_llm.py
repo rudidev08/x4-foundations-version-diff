@@ -5,7 +5,7 @@ Usage:
     python3 scripts/release_notes_llm.py <pair_dir> <rule> <reasoning>
 
 Example:
-    python3 scripts/release_notes_llm.py output/8.00H4_9.00B6 missiles xhigh
+    python3 scripts/release_notes_llm.py artifacts/8.00H4_9.00B6 missiles xhigh
 
 Reasoning levels: low, medium, xhigh.
 

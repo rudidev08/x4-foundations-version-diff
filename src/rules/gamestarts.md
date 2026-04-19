@@ -91,8 +91,8 @@ Source bracket follows `render_sources` — `[core]`, `[core+split]`, or
 - `diff_library` materializes `libraries/gamestarts.xml` with all DLC
   `<diff>` ops applied; contributor attribution populates `sources` /
   `ref_sources` per gamestart id.
-- Cross-DLC conflict classification runs during materialization — the
-  real 9.00 corpus ships boron+split+terran all replacing the same
+- Cross-DLC conflict classification runs during materialization — real
+  9.00 game data has boron+split+terran all replacing the same
   `x4ep1_gamestart_tutorial1` attributes (canonical write-write
   contention); that surfaces as the `RULE INCOMPLETE` sentinel with
   `affected_keys=['x4ep1_gamestart_tutorial1', ...]`. See

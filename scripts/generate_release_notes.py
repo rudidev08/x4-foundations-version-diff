@@ -8,6 +8,7 @@ Runs three stages for a version pair:
                                      chunk under artifacts/<pair>/
   3. scripts/aggregate_release_notes.py — tree-reduce merge per rule,
                                      then top-level RELEASE_NOTES_<tag>.md
+                                     under output/<pair>/
 
 Every stage is idempotent: outputs that already exist on disk are
 skipped. A failed run can be resumed just by rerunning the same command.
@@ -53,9 +54,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('old_version', help='e.g. 8.00H4')
     ap.add_argument('new_version', help='e.g. 9.00B6')
-    ap.add_argument('--corpus', default=str(ROOT / 'x4-data'),
-                    help='Directory of version subdirectories '
-                         '(default: ./x4-data)')
+    ap.add_argument('--game-data', default=str(ROOT / 'x4-data'),
+                    help='Directory containing the extracted X4 version '
+                         'folders (default: ./x4-data).')
     ap.add_argument('--artifacts', default=str(ROOT / 'artifacts'),
                     help='Output root (default: ./artifacts)')
     ap.add_argument('--model',
@@ -69,10 +70,10 @@ def main():
                          'comes from active profile CHUNK_KB or default).')
     args = ap.parse_args()
 
-    corpus = Path(args.corpus)
+    game_data = Path(args.game_data)
     for v in (args.old_version, args.new_version):
-        if not (corpus / v).is_dir():
-            sys.exit(f'missing game version folder: {corpus / v}')
+        if not (game_data / v).is_dir():
+            sys.exit(f'missing game-data version folder: {game_data / v}')
 
     profile = _resolve_profile(args.model)
     tag = profile['MODEL_NAME'] if profile else (args.reasoning or 'xhigh')
@@ -95,7 +96,7 @@ def main():
     run_rules_argv = [
         'python3', 'scripts/run_rules.py',
         args.old_version, args.new_version,
-        '--corpus', args.corpus,
+        '--game-data', args.game_data,
         '--out', args.artifacts,
     ]
     summary = pair_dir / 'summary.json'
@@ -132,7 +133,7 @@ def main():
         agg_argv += ['--max-tokens', str(args.max_tokens)]
     _run(agg_argv)
 
-    final = pair_dir / f'RELEASE_NOTES_{tag}.md'
+    final = ROOT / 'output' / pair_dir.name / f'RELEASE_NOTES_{tag}.md'
     print(f'\nDone. Release notes: {final}')
 
 

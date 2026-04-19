@@ -12,9 +12,10 @@ writes them up in plain English.
 ```
 
 That's the whole thing. Takes a pair of extracted game versions under
-`x4-data/`, produces `artifacts/8.00H4_9.00B6/RELEASE_NOTES_<tag>.md` as
-the final output. The `<tag>` comes from the active LLM profile in
-`.env` (or the `--reasoning` flag if no profile is set).
+`x4-data/`, produces `output/8.00H4_9.00B6/RELEASE_NOTES_<tag>.md` as
+the final deliverable. Intermediate per-rule and per-chunk files live
+under `artifacts/8.00H4_9.00B6/`. The `<tag>` comes from the active LLM
+profile in `.env` (or the `--reasoning` flag if no profile is set).
 
 The run is **resumable**: every chunk file and aggregated file is
 written only after its LLM call succeeds. If an LLM call fails, the
@@ -50,8 +51,9 @@ Three stages run under the hood:
 
 3. **Aggregation.** `scripts/aggregate_release_notes.py` runs a
    tree-reduce merge: multi-chunk rules get collapsed into one
-   `llm_<rule>_aggregated_<tag>.md`, then all 15+ per-rule summaries
-   get combined into the top-level `RELEASE_NOTES_<tag>.md`. The
+   `artifacts/<old>_<new>/llm_<rule>_aggregated_<tag>.md`, then all
+   15+ per-rule summaries get combined into the top-level
+   `output/<old>_<new>/RELEASE_NOTES_<tag>.md`. The
    tree-reduce is size-aware — if too many summaries to fit in one
    LLM call, inputs are packed into batches, each batch is merged
    with a partial-merge prompt, and the batch outputs are merged
@@ -111,9 +113,12 @@ Budget resolution order, highest precedence first:
   the five ware-driven rules so no ware gets emitted twice.
 - `.env.example` — LLM profile catalog. Copy to `.env` and edit.
 - `x4-data/` — extracted game versions you provide. Not committed.
-- `artifacts/` — pipeline outputs. Not committed; safe to delete if
-  you want a clean regeneration, but the pipeline's resume logic
+- `artifacts/` — intermediate pipeline outputs (rule JSON, per-chunk
+  LLM summaries, per-rule aggregates). Not committed; safe to delete
+  if you want a clean regeneration, but the pipeline's resume logic
   means you usually don't need to.
+- `output/` — final release-notes documents
+  (`RELEASE_NOTES_<tag>.md`). Not committed.
 - `docs/` — design docs (plan + spec). Not required at runtime.
 
 ## The 20 rules
@@ -142,7 +147,7 @@ If you want to force a rebuild, delete the relevant file:
 ```bash
 rm artifacts/8.00H4_9.00B6/llm_quests_chunk7of15_<tag>.md  # one chunk
 rm artifacts/8.00H4_9.00B6/llm_quests_aggregated_<tag>.md  # one rule
-rm artifacts/8.00H4_9.00B6/RELEASE_NOTES_<tag>.md          # just the top merge
+rm output/8.00H4_9.00B6/RELEASE_NOTES_<tag>.md             # just the top merge
 ```
 
 The next `./run.sh` run rebuilds only what's missing.
@@ -160,7 +165,7 @@ The next `./run.sh` run rebuilds only what's missing.
 ## Conventions
 
 - No commits happen from scripts or from the pipeline. Output files
-  under `artifacts/` are regeneratable and gitignored.
+  under `artifacts/` and `output/` are regeneratable and gitignored.
 - LLM chunk outputs are idempotent: same inputs always go to the
   same filename, so the pipeline can be resumed after a failure or
   re-run after a partial delete.

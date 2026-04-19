@@ -49,7 +49,7 @@ def main():
                     silent_values[op.get('silent')] += 1
     OUT.parent.mkdir(parents=True, exist_ok=True)
     with OUT.open('w') as f:
-        f.write('# XPath corpus inventory\n\n')
+        f.write('# XPath inventory\n\n')
         f.write('## op counts\n')
         for k, v in counts.most_common(): f.write(f'  {k}: {v}\n')
         f.write('\n## by version\n')

@@ -86,21 +86,22 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('old_version', help='e.g., 8.00H4')
     ap.add_argument('new_version', help='e.g., 9.00B6')
-    ap.add_argument('--corpus', default=str(ROOT / 'x4-data'),
-                    help='Directory containing the version subdirectories')
+    ap.add_argument('--game-data', default=str(ROOT / 'x4-data'),
+                    help='Directory containing the extracted X4 version '
+                         'folders (default: ./x4-data).')
     ap.add_argument('--out', default=str(ROOT / 'artifacts'),
                     help='Output directory (default: ./artifacts). Each '
                          'pair creates a <old>_<new>/ subdirectory.')
     ap.add_argument('--only', help='Comma-separated list of rules to run')
     args = ap.parse_args()
 
-    corpus = Path(args.corpus)
-    old_root = corpus / args.old_version
-    new_root = corpus / args.new_version
+    game_data = Path(args.game_data)
+    old_root = game_data / args.old_version
+    new_root = game_data / args.new_version
     if not old_root.is_dir():
-        sys.exit(f'missing corpus dir: {old_root}')
+        sys.exit(f'missing game-data version folder: {old_root}')
     if not new_root.is_dir():
-        sys.exit(f'missing corpus dir: {new_root}')
+        sys.exit(f'missing game-data version folder: {new_root}')
 
     rules = [r.strip() for r in args.only.split(',')] if args.only else RULES
     for r in rules:

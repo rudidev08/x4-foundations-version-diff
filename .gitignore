@@ -30,3 +30,7 @@ __pycache__/
 
 # Extracted game source data
 x4-data/
+
+# Pipeline outputs (regeneratable)
+artifacts/
+output/
