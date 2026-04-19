@@ -31,7 +31,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from scripts.release_notes_llm import run_codex  # noqa: E402
+from scripts.release_notes_llm import (  # noqa: E402
+    run_codex, run_llm, _resolve_profile, _resolve_max_tokens,
+)
 
 
 RULES = [
@@ -149,7 +151,8 @@ def _build_prompt(template: str, parts: list[str], **ctx) -> str:
 
 
 def tree_reduce(parts: list[str], template: str, budget: int,
-                reasoning: str, dry_run: bool, ctx: dict,
+                reasoning: str | None, profile: dict | None,
+                dry_run: bool, ctx: dict,
                 label: str = '') -> str:
     """Recursively merge `parts` using `template` until a single string
     remains. Each LLM call stays under `budget` tokens including prompt
@@ -165,7 +168,7 @@ def tree_reduce(parts: list[str], template: str, budget: int,
               f'{len(parts)} parts)')
         if dry_run:
             return f'<dry-run merge of {len(parts)} parts>'
-        return run_codex(single, reasoning)
+        return run_llm(single, profile=profile, reasoning=reasoning)
 
     # Recursive case: batch and merge, then aggregate batch outputs.
     batches = _pack_into_batches(parts, budget, overhead)
@@ -174,7 +177,7 @@ def tree_reduce(parts: list[str], template: str, budget: int,
         print(f'  {label}: 1 oversized call  ({_est_tokens(single)} tokens)')
         if dry_run:
             return f'<dry-run oversized merge>'
-        return run_codex(single, reasoning)
+        return run_llm(single, profile=profile, reasoning=reasoning)
     print(f'  {label}: tree-reduce  ({len(parts)} parts -> '
           f'{len(batches)} batches)')
     batch_outputs = []
@@ -188,16 +191,17 @@ def tree_reduce(parts: list[str], template: str, budget: int,
                 # Recurse on sub-batch.
                 batch_outputs.append(
                     tree_reduce(batch, SUBBATCH_PROMPT, budget, reasoning,
-                                dry_run, ctx, label=sub_label))
+                                profile, dry_run, ctx, label=sub_label))
             else:
                 print(f'    {sub_label}: 1 call '
                       f'({_est_tokens(sub_prompt)} tokens, {len(batch)} parts)')
                 if dry_run:
                     batch_outputs.append(f'<dry-run partial {i+1}>')
                 else:
-                    batch_outputs.append(run_codex(sub_prompt, reasoning))
+                    batch_outputs.append(
+                        run_llm(sub_prompt, profile=profile, reasoning=reasoning))
     # Final merge over batch outputs using the original template.
-    return tree_reduce(batch_outputs, template, budget, reasoning,
+    return tree_reduce(batch_outputs, template, budget, reasoning, profile,
                        dry_run, ctx, label=f'{label} final')
 
 
@@ -218,7 +222,8 @@ def collect_rule_chunks(pair_dir: Path, rule: str, level: str) -> list[Path]:
 
 
 def aggregate_rule(pair_dir: Path, rule: str, level: str, budget: int,
-                   reasoning: str, dry_run: bool, versions: tuple[str, str]
+                   reasoning: str | None, profile: dict | None,
+                   dry_run: bool, versions: tuple[str, str]
                    ) -> tuple[Path, str] | None:
     """Aggregate one rule's chunks. Returns (output_path, content_string).
     Content is the merged markdown (or a placeholder in dry-run)."""
@@ -233,7 +238,7 @@ def aggregate_rule(pair_dir: Path, rule: str, level: str, budget: int,
     parts = [p.read_text() for p in chunks]
     ctx = {'rule': rule, 'old_version': old_v, 'new_version': new_v}
     merged = tree_reduce(parts, RULE_AGGREGATE_PROMPT, budget, reasoning,
-                         dry_run, ctx, label=rule)
+                         profile, dry_run, ctx, label=rule)
     out_path = pair_dir / f'llm_{rule}_aggregated_{level}.md'
     if dry_run:
         # Placeholder: concatenate parts so the top-level estimator sees
@@ -246,14 +251,15 @@ def aggregate_rule(pair_dir: Path, rule: str, level: str, budget: int,
 
 
 def aggregate_top(pair_dir: Path, rule_outputs: list[tuple[Path, str]],
-                  level: str, budget: int, reasoning: str, dry_run: bool,
+                  level: str, budget: int, reasoning: str | None,
+                  profile: dict | None, dry_run: bool,
                   versions: tuple[str, str]) -> Path:
     parts = [content for _, content in rule_outputs]
     old_v, new_v = versions
     ctx = {'old_version': old_v, 'new_version': new_v}
     print(f'top-level: combining {len(rule_outputs)} rule sections')
     merged = tree_reduce(parts, FINAL_AGGREGATE_PROMPT, budget, reasoning,
-                         dry_run, ctx, label='top')
+                         profile, dry_run, ctx, label='top')
     out_path = pair_dir / f'RELEASE_NOTES_{level}.md'
     if not dry_run:
         out_path.write_text(merged)
@@ -271,11 +277,20 @@ def parse_versions(pair_dir: Path) -> tuple[str, str]:
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('pair_dir', help='e.g. output/8.00H4_9.00B6')
-    ap.add_argument('level', choices=['low', 'medium', 'high', 'xhigh'])
-    ap.add_argument('--max-tokens', type=int, default=24000,
-                    help='Per-LLM-call token budget (default: 24000).')
+    ap.add_argument('level',
+                    help='Filename tag to aggregate. When using .env profiles, '
+                         'pass the profile\'s MODEL_NAME (e.g. gpt-5.4-xhigh). '
+                         'When using legacy Codex path, pass the reasoning '
+                         'level (low / medium / high / xhigh).')
+    ap.add_argument('--model',
+                    help='Override DEFAULT_MODEL from .env to pick a specific '
+                         'profile. Falls back to legacy Codex path if no '
+                         'profile is configured.')
+    ap.add_argument('--max-tokens', type=int, default=None,
+                    help='Per-LLM-call token budget. Overrides the .env '
+                         'profile\'s CHUNK_KB and X4_LLM_MAX_TOKENS.')
     ap.add_argument('--dry-run', action='store_true',
-                    help='Print the call plan without invoking Codex.')
+                    help='Print the call plan without invoking the LLM.')
     args = ap.parse_args()
 
     pair_dir = Path(args.pair_dir)
@@ -283,18 +298,28 @@ def main():
         sys.exit(f'missing pair dir: {pair_dir}')
     versions = parse_versions(pair_dir)
 
+    # Resolve profile + budget. When a profile is active, the legacy
+    # `level` arg is used only as the input filename tag (we're reading
+    # pre-existing llm_<rule>_<level>.md files), not as a reasoning hint.
+    profile = _resolve_profile(args.model)
+    legacy_reasoning = (args.level
+                        if args.level in ('low', 'medium', 'high', 'xhigh')
+                        and profile is None else None)
+    max_tokens = _resolve_max_tokens(args.max_tokens, profile)
+
     rule_outputs: list[tuple[Path, str]] = []
     for rule in RULES:
-        result = aggregate_rule(pair_dir, rule, args.level, args.max_tokens,
-                                args.level, args.dry_run, versions)
+        result = aggregate_rule(pair_dir, rule, args.level, max_tokens,
+                                legacy_reasoning, profile, args.dry_run,
+                                versions)
         if result is not None:
             rule_outputs.append(result)
 
     if not rule_outputs:
         sys.exit(f'no per-rule markdowns found for level={args.level}')
 
-    aggregate_top(pair_dir, rule_outputs, args.level, args.max_tokens,
-                  args.level, args.dry_run, versions)
+    aggregate_top(pair_dir, rule_outputs, args.level, max_tokens,
+                  legacy_reasoning, profile, args.dry_run, versions)
 
 
 if __name__ == '__main__':

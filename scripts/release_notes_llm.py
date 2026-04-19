@@ -19,9 +19,79 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
+
+
+# ---------- .env loader (no external deps) ----------
+
+def _load_env(path: str = '.env') -> None:
+    """Minimal .env loader. Reads KEY=VALUE lines into os.environ without
+    overriding existing environment. Supports single/double-quoted values
+    and `#` line comments. Silently skips if the file doesn't exist.
+    """
+    env_file = Path(__file__).resolve().parent.parent / path
+    if not env_file.is_file():
+        return
+    for raw in env_file.read_text().splitlines():
+        line = raw.strip()
+        if not line or line.startswith('#'):
+            continue
+        if '=' not in line:
+            continue
+        key, value = line.split('=', 1)
+        key = key.strip()
+        value = value.strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in ('"', "'"):
+            value = value[1:-1]
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
+_load_env()
+
+
+def _resolve_profile(model_override: str | None = None) -> dict | None:
+    """Resolve the active LLM profile from env. Returns a dict with
+    MODEL_NAME / LLM_CMD / CHUNK_KB, or None if no profile is set.
+
+    Profile is selected by matching `<PREFIX>_MODEL_NAME` env values
+    against `model_override` (if given) or `DEFAULT_MODEL` from env.
+    """
+    target = model_override or os.environ.get('DEFAULT_MODEL')
+    if not target:
+        return None
+    for key, value in os.environ.items():
+        if key.endswith('_MODEL_NAME') and value == target:
+            prefix = key[:-len('_MODEL_NAME')]
+            return {
+                'MODEL_NAME': value,
+                'LLM_CMD': os.environ.get(f'{prefix}_LLM_CMD') or '',
+                'CHUNK_KB': os.environ.get(f'{prefix}_CHUNK_KB') or '',
+            }
+    return None
+
+
+def _resolve_max_tokens(cli_override: int | None,
+                        profile: dict | None,
+                        default: int = 24000) -> int:
+    """Budget resolution order:
+    1. CLI --max-tokens if passed.
+    2. X4_LLM_MAX_TOKENS env var if set.
+    3. Active profile's CHUNK_KB (KB -> tokens via /4 chars/token).
+    4. Hard default.
+    """
+    if cli_override is not None:
+        return cli_override
+    explicit = os.environ.get('X4_LLM_MAX_TOKENS')
+    if explicit:
+        return int(explicit)
+    if profile and profile.get('CHUNK_KB'):
+        # 1 KB of chars ≈ 256 tokens at the 4-chars/token rule of thumb.
+        return int(profile['CHUNK_KB']) * 256
+    return default
 
 
 PROMPT = """\
@@ -193,29 +263,72 @@ def run_codex(prompt: str, reasoning: str) -> str:
     return result.stdout
 
 
+def run_llm_cmd(prompt: str, cmd: str) -> str:
+    """Run a shell command (from a .env profile) piping prompt to stdin."""
+    if not cmd:
+        raise ValueError('empty LLM_CMD — check .env profile')
+    result = subprocess.run(
+        ['/bin/sh', '-c', cmd],
+        input=prompt,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        sys.stderr.write(result.stderr)
+        raise SystemExit(result.returncode)
+    return result.stdout
+
+
+def run_llm(prompt: str, *, profile: dict | None = None,
+            reasoning: str | None = None) -> str:
+    """Unified LLM runner. If a profile is given, run its LLM_CMD. Else
+    fall back to the hardcoded codex path using the reasoning level.
+    """
+    if profile:
+        return run_llm_cmd(prompt, profile['LLM_CMD'])
+    if reasoning is None:
+        raise ValueError('either a profile or an explicit reasoning level '
+                         'is required')
+    return run_codex(prompt, reasoning)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('pair_dir')
     ap.add_argument('rule')
-    ap.add_argument('reasoning', choices=['low', 'medium', 'high', 'xhigh'])
+    ap.add_argument('reasoning', nargs='?',
+                    choices=['low', 'medium', 'high', 'xhigh'],
+                    help='Codex reasoning level (legacy path, used when no '
+                         '.env profile is active).')
+    ap.add_argument('--model',
+                    help='Override DEFAULT_MODEL from .env to pick a '
+                         'specific profile.')
     ap.add_argument('--compact', action='store_true',
                     help='Trim extras.diff to a short head excerpt (for rules '
                          'with large embedded diffs like quests/gamelogic)')
     ap.add_argument('--max-tokens', type=int, default=None,
                     help='Split the prompt into chunks each under this many '
-                         'tokens (estimated). One Codex call per chunk. '
-                         'Outputs get a _<n> suffix when chunked.')
+                         'tokens. Overrides .env CHUNK_KB and X4_LLM_MAX_TOKENS.')
     ap.add_argument('--dry-run', action='store_true',
-                    help='Print per-chunk sizes and counts, but do not call Codex.')
+                    help='Print per-chunk sizes and counts, but do not call '
+                         'the LLM.')
     args = ap.parse_args()
 
     pair_dir = Path(args.pair_dir)
     if not (pair_dir / f'{args.rule}.json').exists():
         sys.exit(f'missing rule output: {pair_dir}/{args.rule}.json')
 
+    profile = _resolve_profile(args.model)
+    if profile is None and not args.reasoning:
+        sys.exit('no .env profile (DEFAULT_MODEL unset) and no reasoning '
+                 'level passed — provide one')
+    max_tokens = _resolve_max_tokens(args.max_tokens, profile)
+
     prompts = build_prompts(pair_dir, args.rule, compact=args.compact,
-                            max_tokens=args.max_tokens)
+                            max_tokens=max_tokens)
     suffix = '_compact' if args.compact else ''
+    tag = profile['MODEL_NAME'] if profile else args.reasoning
 
     for i, prompt in enumerate(prompts):
         chunk_tag = f'_chunk{i+1}of{len(prompts)}' if len(prompts) > 1 else ''
@@ -223,10 +336,10 @@ def main():
               f'(~{len(prompt) // 4} tokens)')
         if args.dry_run:
             continue
-        print(f'Running codex at reasoning={args.reasoning}...')
-        response = run_codex(prompt, args.reasoning)
+        print(f'Running LLM (tag={tag}, budget={max_tokens} tokens)...')
+        response = run_llm(prompt, profile=profile, reasoning=args.reasoning)
         out_path = (pair_dir /
-                    f'llm_{args.rule}{suffix}{chunk_tag}_{args.reasoning}.md')
+                    f'llm_{args.rule}{suffix}{chunk_tag}_{tag}.md')
         out_path.write_text(response)
         print(f'Wrote {out_path} ({len(response)} chars)')
 
