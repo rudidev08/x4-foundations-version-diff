@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<diff>
-  <add pos="after" sel="//macro[@name='Cluster_01_macro']">
-    <macro name="Cluster_DLC_A_macro" class="cluster">
-      <component ref="standardcluster" />
-      <connections />
-    </macro>
-  </add>
-</diff>

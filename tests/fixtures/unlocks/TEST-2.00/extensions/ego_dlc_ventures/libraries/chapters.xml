@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<diff>
-  <add sel="/categories">
-    <category id="chapter_added_dlc" group="3" name="{55101,2001}" teamware="ven_new_teamware" highlight="true" />
-  </add>
-</diff>

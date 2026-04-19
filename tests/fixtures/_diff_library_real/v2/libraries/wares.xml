@@ -1,4 +1,0 @@
-<wares>
-  <ware id="existing_core_ware"/>
-  <ware id="changed_core_ware"><price min="50" max="80"/></ware>
-</wares>

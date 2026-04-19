@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<diff>
-  <add sel="//impossible[@id='x'][position()=1]">
-    <macro name="Cluster_99_macro" class="cluster" />
-  </add>
-</diff>

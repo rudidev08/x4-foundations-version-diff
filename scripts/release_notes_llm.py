@@ -238,46 +238,48 @@ def build_prompt(pair_dir: Path, rule: str, compact: bool = False) -> str:
     return build_prompts(pair_dir, rule, compact=compact)[0]
 
 
-def run_codex(prompt: str, reasoning: str) -> str:
-    """Invoke the Codex CLI with the given reasoning level. Returns stdout.
-
-    Reasoning is passed via `-c model_reasoning_effort=<level>` config
-    override. `codex exec` reads the prompt from stdin when `-` is passed
-    (or when nothing is passed as the prompt argument).
+class LLMError(RuntimeError):
+    """Raised when the configured LLM invocation returns a non-zero exit.
+    Nothing is written to disk when this fires — the caller is expected
+    to propagate it so the user sees the failure and can re-run to
+    resume from the last successful chunk.
     """
+
+
+def _invoke(argv: list[str], prompt: str, label: str) -> str:
+    result = subprocess.run(argv, input=prompt, capture_output=True,
+                            text=True, check=False)
+    if result.returncode != 0:
+        raise LLMError(
+            f'LLM call failed ({label}) — exit {result.returncode}\n'
+            f'--- stderr ---\n{result.stderr}\n'
+            f'--- stdout ---\n{result.stdout[:2000]}'
+        )
+    if not result.stdout.strip():
+        raise LLMError(
+            f'LLM call returned empty output ({label})\n'
+            f'--- stderr ---\n{result.stderr}'
+        )
+    return result.stdout
+
+
+def run_codex(prompt: str, reasoning: str) -> str:
+    """Invoke the Codex CLI with the given reasoning level. Returns stdout."""
     if reasoning not in ('low', 'medium', 'high', 'xhigh'):
         raise ValueError(f'unknown reasoning level: {reasoning}')
-    result = subprocess.run(
+    return _invoke(
         ['codex', 'exec',
          '-c', f'model_reasoning_effort="{reasoning}"',
          '--skip-git-repo-check',
          '-'],
-        input=prompt,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if result.returncode != 0:
-        sys.stderr.write(result.stderr)
-        raise SystemExit(result.returncode)
-    return result.stdout
+        prompt, label=f'codex reasoning={reasoning}')
 
 
 def run_llm_cmd(prompt: str, cmd: str) -> str:
     """Run a shell command (from a .env profile) piping prompt to stdin."""
     if not cmd:
         raise ValueError('empty LLM_CMD — check .env profile')
-    result = subprocess.run(
-        ['/bin/sh', '-c', cmd],
-        input=prompt,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if result.returncode != 0:
-        sys.stderr.write(result.stderr)
-        raise SystemExit(result.returncode)
-    return result.stdout
+    return _invoke(['/bin/sh', '-c', cmd], prompt, label=f'profile cmd={cmd!r}')
 
 
 def run_llm(prompt: str, *, profile: dict | None = None,
@@ -332,14 +334,19 @@ def main():
 
     for i, prompt in enumerate(prompts):
         chunk_tag = f'_chunk{i+1}of{len(prompts)}' if len(prompts) > 1 else ''
+        out_path = (pair_dir /
+                    f'llm_{args.rule}{suffix}{chunk_tag}_{tag}.md')
         print(f'Chunk {i+1}/{len(prompts)}: {len(prompt)} chars '
               f'(~{len(prompt) // 4} tokens)')
         if args.dry_run:
             continue
+        # Resumable: skip chunks we already produced so a crashed run
+        # restarts from the last unfinished chunk.
+        if out_path.exists() and out_path.stat().st_size > 0:
+            print(f'  skip: {out_path} exists ({out_path.stat().st_size} bytes)')
+            continue
         print(f'Running LLM (tag={tag}, budget={max_tokens} tokens)...')
         response = run_llm(prompt, profile=profile, reasoning=args.reasoning)
-        out_path = (pair_dir /
-                    f'llm_{args.rule}{suffix}{chunk_tag}_{tag}.md')
         out_path.write_text(response)
         print(f'Wrote {out_path} ({len(response)} chars)')
 

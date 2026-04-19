@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<components>
-  <component name="turret_arg_l_heavy_01_mk1" class="turret">
-    <connections>
-      <connection name="con_turret_heavy_l" tags="turret large heavy component combat"/>
-    </connections>
-  </component>
-</components>

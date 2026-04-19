@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<components>
-  <component name="turret_par_m_energy_01_mk1" class="turret">
-    <connections>
-      <connection name="con_turret_energy_m" tags="turret medium energy component combat"/>
-    </connections>
-  </component>
-</components>

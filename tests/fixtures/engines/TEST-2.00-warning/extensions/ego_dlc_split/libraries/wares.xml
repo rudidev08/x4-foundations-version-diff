@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<diff>
-  <add pos="after" sel="//ware[@id='engine_arg_m_allround_01_mk1']">
-    <ware id="engine_spl_m_combat_01_mk1" name="{20107,1}" group="engines" transport="equipment" volume="1" tags="engine equipment">
-      <price min="12500" average="14000" max="15500" />
-      <component ref="engine_spl_m_combat_01_mk1_macro" />
-    </ware>
-  </add>
-</diff>

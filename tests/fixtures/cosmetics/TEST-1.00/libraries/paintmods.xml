@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<paintmods>
-  <paint ware="paintmod_alpha" quality="1" hue="100" brightness="0.5" saturation="0.5"/>
-  <paint ware="paintmod_beta" quality="2" hue="200" brightness="-0.3"/>
-  <paint ware="paintmod_gone" quality="1" hue="50" brightness="0.1"/>
-</paintmods>

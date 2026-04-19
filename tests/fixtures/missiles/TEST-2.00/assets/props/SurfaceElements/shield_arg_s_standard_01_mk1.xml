@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<components>
-  <component name="shield_arg_s_standard_01_mk1" class="shieldgenerator">
-    <connections>
-      <connection name="Connection01" tags="small shield component unhittable standard" />
-    </connections>
-  </component>
-</components>

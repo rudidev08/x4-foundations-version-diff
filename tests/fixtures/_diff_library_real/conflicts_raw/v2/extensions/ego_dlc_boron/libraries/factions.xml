@@ -1,3 +1,0 @@
-<diff>
-  <add if="not(//faction[@id='terran'])" sel="/factions"><faction id="boron_adds_when_no_terran"/></add>
-</diff>

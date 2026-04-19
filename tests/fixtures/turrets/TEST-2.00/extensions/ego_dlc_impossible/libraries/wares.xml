@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<diff>
-  <add sel="//impossible[@id='x'][position()=1]">
-    <ware id="turret_unresolvable_mk1" group="turrets" tags="equipment turret">
-      <component ref="turret_unresolvable_mk1_macro" />
-    </ware>
-  </add>
-</diff>

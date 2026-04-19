@@ -1,3 +1,0 @@
-<diff>
-  <replace sel="//ware[@id='X']/price/@max">80</replace>
-</diff>

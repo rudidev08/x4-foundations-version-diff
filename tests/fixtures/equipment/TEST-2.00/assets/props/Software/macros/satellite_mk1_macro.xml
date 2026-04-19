@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<macros>
-  <macro name="satellite_mk1_macro" class="satellite">
-    <properties>
-      <identification name="{20201,20301}" basename="{20201,20301}" description="{20201,20302}" />
-    </properties>
-  </macro>
-</macros>

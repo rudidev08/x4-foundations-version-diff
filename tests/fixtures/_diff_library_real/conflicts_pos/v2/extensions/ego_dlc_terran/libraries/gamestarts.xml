@@ -1,3 +1,0 @@
-<diff>
-  <add pos="after" sel="//story[@ref='anchor']"><story ref="terran_added"/></add>
-</diff>

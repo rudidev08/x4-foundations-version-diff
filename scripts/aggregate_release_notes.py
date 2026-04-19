@@ -226,20 +226,27 @@ def aggregate_rule(pair_dir: Path, rule: str, level: str, budget: int,
                    dry_run: bool, versions: tuple[str, str]
                    ) -> tuple[Path, str] | None:
     """Aggregate one rule's chunks. Returns (output_path, content_string).
-    Content is the merged markdown (or a placeholder in dry-run)."""
+    Content is the merged markdown (or a placeholder in dry-run).
+
+    Resumable: if the aggregated file already exists on disk, return it
+    without making any LLM calls.
+    """
     chunks = collect_rule_chunks(pair_dir, rule, level)
     if not chunks:
         return None
     if len(chunks) == 1:
         # Nothing to aggregate; use existing single file as-is.
         return chunks[0], chunks[0].read_text()
+    out_path = pair_dir / f'llm_{rule}_aggregated_{level}.md'
+    if out_path.exists() and out_path.stat().st_size > 0 and not dry_run:
+        print(f'rule {rule}: skip (cached {out_path.name})')
+        return out_path, out_path.read_text()
     old_v, new_v = versions
     print(f'rule {rule}: aggregating {len(chunks)} chunks')
     parts = [p.read_text() for p in chunks]
     ctx = {'rule': rule, 'old_version': old_v, 'new_version': new_v}
     merged = tree_reduce(parts, RULE_AGGREGATE_PROMPT, budget, reasoning,
                          profile, dry_run, ctx, label=rule)
-    out_path = pair_dir / f'llm_{rule}_aggregated_{level}.md'
     if dry_run:
         # Placeholder: concatenate parts so the top-level estimator sees
         # realistic sizes.

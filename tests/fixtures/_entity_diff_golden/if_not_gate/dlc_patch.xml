@@ -1,1 +1,0 @@
-<diff><add if="not(//faction[@id='terran'])" sel="/root"><added/></add></diff>

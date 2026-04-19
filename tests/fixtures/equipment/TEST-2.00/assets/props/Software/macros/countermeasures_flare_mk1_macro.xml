@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<macros>
-  <macro name="countermeasures_flare_mk1_macro" class="countermeasure">
-    <properties>
-      <identification name="{20108,3041}" basename="{20108,3041}" description="{20108,3042}" />
-      <flare duration="2.5" />
-    </properties>
-  </macro>
-</macros>

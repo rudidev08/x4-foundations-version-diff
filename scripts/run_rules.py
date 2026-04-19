@@ -88,8 +88,9 @@ def main():
     ap.add_argument('new_version', help='e.g., 9.00B6')
     ap.add_argument('--corpus', default=str(ROOT / 'x4-data'),
                     help='Directory containing the version subdirectories')
-    ap.add_argument('--out', default=str(ROOT / 'output'),
-                    help='Output directory (default: ./output)')
+    ap.add_argument('--out', default=str(ROOT / 'artifacts'),
+                    help='Output directory (default: ./artifacts). Each '
+                         'pair creates a <old>_<new>/ subdirectory.')
     ap.add_argument('--only', help='Comma-separated list of rules to run')
     args = ap.parse_args()
 

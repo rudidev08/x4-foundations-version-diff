@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<macros>
-  <macro name="software_scanner_mk1_macro" class="software">
-    <properties>
-      <identification name="{20108,1041}" basename="{20108,1041}" description="{20108,1042}" />
-      <detection range="5000" />
-    </properties>
-  </macro>
-</macros>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<diff>
-  <add sel="//ware[@id='test_ware_energy']" pos="after">
-    <ware id="ware_terran_addon" name="ware_terran_addon" group="minerals" transport="solid" volume="5" tags="economy mineral solid ware">
-      <price min="55" average="65" max="75" />
-    </ware>
-  </add>
-</diff>

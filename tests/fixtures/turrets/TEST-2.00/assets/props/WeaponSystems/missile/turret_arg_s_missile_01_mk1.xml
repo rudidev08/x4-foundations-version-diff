@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<components>
-  <component name="turret_arg_s_missile_01_mk1" class="turret">
-    <connections>
-      <connection name="con_turret_missile_s" tags="turret small missile component combat"/>
-    </connections>
-  </component>
-</components>
