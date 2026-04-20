@@ -26,9 +26,9 @@ multiple internal labels so contamination stays scoped per-file / per-family:
   ...) so `diff_library`'s default single-tag indexer can't pick them up
   directly — the rule re-indexes the effective trees per family.
 
-Internal-label stability is a snapshot contract — renaming any of
+Internal-label stability is an entity-key contract — renaming any of
 `paint`, `adsign_ware`, `adsign_waregroup`, `equipmod_<family>` is a
-breaking change that forces snapshot regeneration.
+breaking change that reshapes every row.
 
 See `src/rules/cosmetics.md` for the stability contract + limitations.
 """
@@ -502,7 +502,7 @@ def _discover_equipmod_families_from_report(base_report) -> list[str]:
 
     Iterates direct children of `libraries/equipmentmods.xml`'s root in
     both effective trees and returns the union of tag names. Alphabetical
-    order at the caller site gives snapshot stability.
+    order at the caller site gives output stability.
     """
     families: set[str] = set()
     for tree_root in (base_report.effective_old_root,

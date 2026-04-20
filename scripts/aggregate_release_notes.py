@@ -313,7 +313,8 @@ def aggregate_top(pair_dir: Path, rule_outputs: list[tuple[Path, str]],
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
-    parser.add_argument('pair_dir', help='e.g. artifacts/8.00H4_9.00B6')
+    parser.add_argument('pair_dir',
+                        help='e.g. artifacts/8.00H4-9.00B6-opus-4.7-max')
     parser.add_argument('--model', required=True,
                         help='Active LLM profile (matches a *_MODEL_NAME '
                              'entry in .env).')

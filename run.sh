@@ -9,7 +9,8 @@
 #
 # `--model` must match a *_MODEL_NAME entry in .env. Run
 # `./run.sh --help` for the full option list. Intermediate files go to
-# artifacts/<old>_<new>/; final release notes land in output/.
+# artifacts/<old>-<new>-<MODEL>/; final release notes and raw notes
+# land in output/ as <old>-<new>-<MODEL>.md and <old>-<new>-<MODEL>-raw.md.
 set -e
 cd "$(dirname "$0")"
 exec python3 scripts/generate_release_notes.py "$@"

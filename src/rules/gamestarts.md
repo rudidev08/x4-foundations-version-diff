@@ -95,8 +95,7 @@ Source bracket follows `render_sources` — `[core]`, `[core+split]`, or
   9.00 game data has boron+split+terran all replacing the same
   `x4ep1_gamestart_tutorial1` attributes (canonical write-write
   contention); that surfaces as the `RULE INCOMPLETE` sentinel with
-  `affected_keys=['x4ep1_gamestart_tutorial1', ...]`. See
-  `tests/realdata_allowlist.py` for the justification.
+  `affected_keys=['x4ep1_gamestart_tutorial1', ...]`.
 
 ## What the rule does NOT cover
 

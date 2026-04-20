@@ -36,7 +36,7 @@ Derived from the filename (minus `.xml`):
 2. Otherwise, the prefix is the chars before the first `_` (or the whole
    stem if there's no underscore).
 3. Unknown prefix → empty list. This is explicit; no `["unknown"]` fallback.
-   Empty keeps snapshot diffs stable as new mdscript prefixes appear.
+   Empty keeps outputs stable as new mdscript prefixes appear.
 
 Literal stem mapping:
 
@@ -80,7 +80,7 @@ preserved. `extras.diff_truncated=True` flags the cap.
 
 Stability: `render_modified` is a pure function of its byte inputs;
 repeated calls on the same inputs produce identical output (load-bearing
-for Tier B snapshot hashing).
+for output determinism).
 
 ## Output
 

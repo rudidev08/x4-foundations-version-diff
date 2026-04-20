@@ -13,7 +13,7 @@ form the plan specifies.
 Classifications come from the filename prefix (chars before the first `_`).
 Literal bare filenames (e.g., `notifications`) take precedence over prefix
 matching. Unknown prefixes yield an empty classification list — explicit
-empty keeps snapshots from thrashing as new prefixes appear.
+empty keeps outputs from thrashing as new prefixes appear.
 """
 from pathlib import Path
 import xml.etree.ElementTree as ElementTree

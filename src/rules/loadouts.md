@@ -86,7 +86,7 @@ Rule rows are keyed by an 8-tuple:
   space-split, sorted, dedup'd via `set → tuple(sorted(...))`.
 
 **`tuple(sorted(set))`, NOT `frozenset`.** `repr(frozenset(...))` is
-insertion-order-dependent in CPython, which flakes Tier B snapshots (they
+insertion-order-dependent in CPython, which breaks output determinism (rows
 sort by `repr(entity_key)`).
 
 ## Multiset duplicate-applicability matching

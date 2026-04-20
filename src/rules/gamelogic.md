@@ -40,9 +40,9 @@ Pipeline per filename:
 4. Diff the old-effective vs new-effective canonical bytes through
    `src.lib.file_level.render_modified`.
 
-The canonical-bytes serializer is required for snapshot stability across
+The canonical-bytes serializer is required for output determinism across
 Python versions — plain `ET.tostring` varies whitespace, attribute order,
-and the XML declaration prefix enough to thrash the Tier B snapshot.
+and the XML declaration prefix enough to thrash output determinism.
 
 Key: `(subsource, filename_stem)`.
 

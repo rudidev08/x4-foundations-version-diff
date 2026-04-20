@@ -37,14 +37,14 @@ contamination from a single-file failure cannot bleed across siblings.
 - Map / highway connections: 3-tuple
   `(internal_label, parent_macro_name, connection_name)`.
 
-## Internal label stability contract (Tier B)
+## Internal label stability contract
 
-The eight internal labels listed above are frozen as part of the public
-snapshot contract. Renaming any of them — `map_clusters` → `clusters`,
-`highway_sec` → `highways_sec`, etc. — is a breaking Tier B change. The
-entity keys carry the label so a rename reshapes every snapshot row. A
-refactor that renames must regenerate `tests/snapshots/sectors_*.txt`
-alongside the code change; otherwise the diff will look like a regression.
+The eight internal labels listed above are frozen as part of the
+entity-key contract. Renaming any of them — `map_clusters` →
+`clusters`, `highway_sec` → `highways_sec`, etc. — is a breaking
+change. The entity keys carry the label so a rename reshapes every
+row; the next pipeline run will look like a regression even when no
+game data changed.
 
 Classification tokens (`galaxy`, `map`, `highway`, `regionyield`,
 `regiondef`, plus the structural `connection` token and macro `@class`

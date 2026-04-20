@@ -6,7 +6,7 @@ Usage:
         [--max-tokens N] [--compact] [--dry-run]
 
 Example:
-    python3 scripts/release_notes_llm.py artifacts/8.00H4_9.00B6 missiles \\
+    python3 scripts/release_notes_llm.py artifacts/8.00H4-9.00B6-opus-4.7-max missiles \\
         --model opus-4.7-max
 
 Writes one file per chunk:

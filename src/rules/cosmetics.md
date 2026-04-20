@@ -168,19 +168,18 @@ extras: {
 Adsign display: `"<type_ref>/<value>"` (or just `<value>` when no
 enclosing type).
 
-## Internal label stability contract (Tier B)
+## Internal label stability contract
 
 The following internal labels are frozen as part of the public
-snapshot contract:
+entity-key stability contract:
 
 - `paint`
 - `adsign_ware`, `adsign_waregroup`
 - `equipmod_<family>` for every discovered family
 
-Renaming any of them reshapes every snapshot row — the label is part of
-the `entity_key` tuple. A refactor that renames must regenerate
-`tests/snapshots/cosmetics_*.txt` alongside the code change; otherwise
-the diff will look like a regression.
+Renaming any of them reshapes every entity key — the label is part of
+the `entity_key` tuple. A refactor that renames will make the next run
+look like a regression even when no game data changed.
 
 User-facing classification tokens (`paint`, `adsign`, `equipmod`, plus
 each family name like `weapon`, `shield`, ...) are part of the same

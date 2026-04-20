@@ -529,7 +529,7 @@ def _emit_bucket_multiset(composite_key: tuple,
     For each signature, count old vs new occurrences. Pair up `min(count)`
     as unchanged (no output). Any excess on the new side → `added`; excess
     on the old side → `removed`. We preserve the original rule-element order
-    when emitting, so snapshots stay deterministic.
+    when emitting, so outputs stay deterministic.
     """
     outputs: list[RuleOutput] = []
     old_sigs = [_rule_signature(r) for r in old_rules]

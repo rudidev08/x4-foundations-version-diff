@@ -6,7 +6,7 @@ concatenate multiple sibling files into one user-facing label; internally
 each file carries its own distinct label so per-file failures cannot
 contaminate sibling-file outputs via `forward_incomplete_many` scoping.
 
-Internal labels (STABLE — part of the snapshot contract):
+Internal labels (STABLE — part of the entity-key contract):
 - `galaxy`       maps/xu_ep2_universe/galaxy.xml
 - `map_clusters` maps/xu_ep2_universe/clusters.xml
 - `map_sectors`  maps/xu_ep2_universe/sectors.xml

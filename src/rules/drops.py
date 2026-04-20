@@ -467,7 +467,7 @@ def _multiset_select_diff(old_els, old_sigs, new_els, new_sigs,
     `<label>[...] added ...` per new-only instance, one
     `<label>[...] removed ...` per old-only instance.
 
-    Output is sorted by rendered text so snapshots are stable regardless
+    Output is sorted by rendered text so runs are stable regardless
     of source order.
     """
     old_counts: dict[tuple, int] = {}

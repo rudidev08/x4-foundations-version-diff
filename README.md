@@ -19,11 +19,12 @@ The pipeline takes a pair of extracted game versions under `x4-data/`
 (override with `SOURCE_PATH_PREFIX` in `.env` or `--game-data`) and
 writes two files into `output/`:
 
-- `8.00H4-9.00B6-raw.md` — deterministic, exhaustive change list (no LLM)
+- `8.00H4-9.00B6-<MODEL>-raw.md` — deterministic, exhaustive change list (no LLM)
 - `8.00H4-9.00B6-<MODEL>.md` — LLM-written, player-facing release notes
 
 Intermediate per-rule and per-chunk files live under
-`artifacts/8.00H4_9.00B6/`.
+`artifacts/8.00H4-9.00B6-<MODEL>/`. Parallel runs on different models
+never share any files.
 
 The run is **fully resumable at LLM-call granularity**: per-chunk LLM
 outputs, per-rule aggregated files, and every intermediate tree-reduce
@@ -43,15 +44,20 @@ More examples:
 
 Four stages run under the hood:
 
+Every run owns a per-model artifact folder at
+`artifacts/<old>-<new>-<MODEL>/`. Parallel runs on different models
+share nothing; all deliverables in `output/` are model-tagged.
+
 1. **Rule pass.** 20 rules walk the two game-data trees and emit
-   structured change records to `artifacts/<old>_<new>/<rule>.json`.
-   Each record has a rule tag, a one-line text, and `extras` with
-   fields like entity keys, classifications, source DLCs, attribute
-   diffs. ~30 seconds for the canonical pair.
+   structured change records to
+   `artifacts/<old>-<new>-<MODEL>/<rule>.json`. Each record has a rule
+   tag, a one-line text, and `extras` with fields like entity keys,
+   classifications, source DLCs, attribute diffs. ~30 seconds for the
+   canonical pair.
 
 2. **Raw release notes (deterministic).**
    `scripts/raw_release_notes.py` concatenates every rule's `text`
-   fields into `output/<old>-<new>-raw.md`, grouped by primary
+   fields into `output/<old>-<new>-<MODEL>-raw.md`, grouped by primary
    classification. No LLM. This is the unfiltered, exhaustive change
    list — handy as a sanity check against the LLM-written notes and as
    a fallback when the LLM output drops detail.
@@ -60,22 +66,22 @@ Four stages run under the hood:
    or more markdown files by `scripts/release_notes_llm.py`. Large
    rules (quests, gamelogic, weapons, etc.) get split into size-limited
    chunks; each chunk is one LLM call. Outputs:
-   `artifacts/<old>_<new>/llm_<rule>_<MODEL>.md` or
-   `...llm_<rule>_chunk<N>of<M>_<MODEL>.md`.
+   `artifacts/<old>-<new>-<MODEL>/llm_<rule>.md` or
+   `...llm_<rule>_chunk<N>of<M>.md`.
 
 4. **Aggregation.** `scripts/aggregate_release_notes.py` runs a
    tree-reduce merge: multi-chunk rules get collapsed into one
-   `artifacts/<old>_<new>/llm_<rule>_aggregated_<MODEL>.md`, then all
+   `artifacts/<old>-<new>-<MODEL>/llm_<rule>_aggregated.md`, then all
    15+ per-rule summaries get combined into the top-level
    `output/<old>-<new>-<MODEL>.md`. The tree-reduce is size-aware — if
    too many summaries to fit in one LLM call, inputs are packed into
    batches, each batch is merged with a partial-merge prompt, and the
    batch outputs are merged recursively until a single doc remains.
    Every intermediate batch response is persisted under
-   `artifacts/<old>_<new>/.treereduce/` keyed by prompt hash, so a
-   rerun after a partial failure picks up exactly where it stopped.
-   Works on weak models (8k–16k context) just as well as large ones
-   (200k+).
+   `artifacts/<old>-<new>-<MODEL>/.treereduce/` keyed by prompt hash,
+   so a rerun after a partial failure picks up exactly where it
+   stopped. Works on weak models (8k–16k context) just as well as
+   large ones (200k+).
 
 ## LLM configuration
 
@@ -108,6 +114,10 @@ Budget resolution order, highest precedence first:
 ## Repository layout
 
 - `run.sh` — one-shot entry point.
+- `cat_extract.py` — standalone helper to extract X4's `.cat`/`.dat`
+  archives into `x4-data/<version>/`. Run with `--all-folders` so DLC
+  content under `extensions/ego_dlc_*/` ends up in the tree the
+  pipeline expects.
 - `scripts/`
   - `generate_release_notes.py` — driver; chains the four stages
     with resumable, skip-existing behavior.
@@ -117,8 +127,6 @@ Budget resolution order, highest precedence first:
     chunking.
   - `aggregate_release_notes.py` — stage 4: tree-reduce merge into a
     top-level release-notes document.
-  - `inventory_xpath_ops.py` — one-off tool to audit `<diff>` patch
-    shapes in real game data.
 - `src/lib/` — shared machinery. Core piece is `entity_diff.py`: an
   XPath subset evaluator, the DLC patch-engine that replays `<diff>`
   ops, the `diff_library` function the rules call, three-tier conflict
@@ -165,8 +173,8 @@ completed chunks are detected and skipped.
 If you want to force a rebuild, delete the relevant file:
 
 ```bash
-rm artifacts/8.00H4_9.00B6/llm_quests_chunk7of15_<MODEL>.md  # one chunk
-rm artifacts/8.00H4_9.00B6/llm_quests_aggregated_<MODEL>.md  # one rule
+rm artifacts/8.00H4-9.00B6-<MODEL>/llm_quests_chunk7of15.md  # one chunk
+rm artifacts/8.00H4-9.00B6-<MODEL>/llm_quests_aggregated.md  # one rule
 rm output/8.00H4-9.00B6-<MODEL>.md                           # just the top merge
 ```
 
