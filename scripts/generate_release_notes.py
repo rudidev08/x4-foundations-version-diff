@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 """End-to-end release-notes generator.
 
-Runs four stages for a version pair:
+Runs four stages for a version pair. Intermediates live in a per-model
+artifact folder at `artifacts/<old>-<new>-<MODEL>/` so parallel runs on
+different models never collide. Deliverables (raw + final markdown)
+land under `output/`.
 
-  1. scripts/run_rules.py            — produce rule JSON under artifacts/<pair>/
-  2. scripts/raw_release_notes.py    — deterministic raw notes (no LLM)
+  1. scripts/run_rules.py            — rule JSON under the pair dir
+  2. scripts/raw_release_notes.py    — deterministic raw notes
+                                       (output/<old>-<new>-<MODEL>-raw.md)
   3. scripts/release_notes_llm.py    — one LLM pass per rule, one file per
-                                       chunk under artifacts/<pair>/
+                                       chunk under the pair dir
   4. scripts/aggregate_release_notes.py — tree-reduce merge per rule, then
-                                       top-level <old>-<new>-<MODEL>.md
-                                       under output/
+                                       top-level final notes at
+                                       output/<old>-<new>-<MODEL>.md
 
 Every stage is idempotent: outputs that already exist on disk are
 skipped. A failed run can be resumed just by rerunning the same command.
@@ -45,7 +49,7 @@ def _run(argv: list[str]) -> None:
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
     parser.add_argument('old_version', help='e.g. 8.00H4')
     parser.add_argument('new_version', help='e.g. 9.00B6')
     parser.add_argument('--model', required=True,
@@ -76,7 +80,8 @@ def main():
     tag = profile['MODEL_NAME']
     budget = resolve_max_tokens(args.max_tokens, profile)
 
-    pair_dir = Path(args.artifacts) / f'{args.old_version}_{args.new_version}'
+    pair_dir = (Path(args.artifacts) /
+                f'{args.old_version}-{args.new_version}-{tag}')
     pair_dir.mkdir(parents=True, exist_ok=True)
 
     print(f'=== release notes: {args.old_version} -> {args.new_version} '
@@ -88,7 +93,7 @@ def main():
         'python3', 'scripts/run_rules.py',
         args.old_version, args.new_version,
         '--game-data', str(game_data),
-        '--out', args.artifacts,
+        '--out', str(pair_dir),
     ]
     summary = pair_dir / 'summary.json'
     if summary.exists():
@@ -98,7 +103,8 @@ def main():
 
     # --- Stage 2: deterministic raw notes (no LLM) ---
     print(f'\n[2/4] raw release notes (deterministic, always regenerated)')
-    _run(['python3', 'scripts/raw_release_notes.py', str(pair_dir)])
+    _run(['python3', 'scripts/raw_release_notes.py',
+          str(pair_dir), '--model', tag])
 
     # --- Stage 3: LLM per-rule chunks ---
     print(f'\n[3/4] LLM per-rule pass (skips existing chunk files)')

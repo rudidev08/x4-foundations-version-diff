@@ -7,8 +7,10 @@ Usage:
 Example:
     python3 scripts/run_rules.py 8.00H4 9.00B6
 
-Writes one JSON file per rule under <out>/<old>_<new>/<rule>.json plus a
-summary.json with counts. Input versions are resolved against x4-data/.
+Writes one JSON file per rule under `<out>/<rule>.json` plus a
+summary.json with counts. `--out` is the pair directory (created if
+missing); default is `./artifacts/<old>_<new>/`. Input versions are
+resolved against x4-data/.
 
 Each output JSON is an array of records:
     {"tag": "<rule>", "text": "...", "extras": {<serializable subset>}}
@@ -32,19 +34,15 @@ from scripts.release_notes_llm import resolve_game_data  # noqa: E402
 from src import change_map  # noqa: E402
 
 
-# Rules in a stable order. Pre-existing (shields, missiles) first for
-# continuity, then the waves in plan order.
+# Rules in a stable order. Drives rule execution, per-rule aggregation,
+# and the order sections are fed to the top-level release-notes merge.
 RULES = [
-    'shields', 'missiles',
-    # Wave 1: ware-driven
-    'engines', 'weapons', 'turrets', 'equipment', 'wares',
-    # Wave 2: macro-driven
-    'ships', 'storage', 'sectors',
-    # Wave 3: library entity-diff
-    'factions', 'stations', 'jobs', 'loadouts',
-    'gamestarts', 'unlocks', 'drops', 'cosmetics',
-    # Wave 4: file-level
     'quests', 'gamelogic',
+    'factions', 'stations', 'jobs', 'gamestarts', 'unlocks',
+    'ships', 'storage', 'sectors', 'loadouts',
+    'drops', 'cosmetics',
+    'shields', 'missiles',
+    'engines', 'weapons', 'turrets', 'equipment', 'wares',
 ]
 
 
@@ -83,16 +81,16 @@ def run_rule(name: str, old_root: Path, new_root: Path, changes):
 
 
 def main():
-    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
     ap.add_argument('old_version', help='e.g., 8.00H4')
     ap.add_argument('new_version', help='e.g., 9.00B6')
     ap.add_argument('--game-data', default=None,
                     help='Directory containing the extracted X4 version '
                          'folders. Defaults to SOURCE_PATH_PREFIX from .env, '
                          'else ./x4-data.')
-    ap.add_argument('--out', default=str(ROOT / 'artifacts'),
-                    help='Output directory (default: ./artifacts). Each '
-                         'pair creates a <old>_<new>/ subdirectory.')
+    ap.add_argument('--out', default=None,
+                    help='Pair directory (created if missing). Default: '
+                         './artifacts/<old>_<new>/.')
     ap.add_argument('--only', help='Comma-separated list of rules to run')
     args = ap.parse_args()
 
@@ -109,7 +107,8 @@ def main():
         if r not in RULES:
             sys.exit(f'unknown rule: {r} (valid: {", ".join(RULES)})')
 
-    out_dir = Path(args.out) / f'{args.old_version}_{args.new_version}'
+    out_dir = (Path(args.out) if args.out else
+               ROOT / 'artifacts' / f'{args.old_version}_{args.new_version}')
     out_dir.mkdir(parents=True, exist_ok=True)
 
     print(f'{args.old_version} -> {args.new_version}  (writing to {out_dir})')

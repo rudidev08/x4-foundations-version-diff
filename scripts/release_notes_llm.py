@@ -10,7 +10,10 @@ Example:
         --model opus-4.7-max
 
 Writes one file per chunk:
-    <pair_dir>/llm_<rule>[_compact]_chunkNofM_<MODEL_NAME>.md
+    <pair_dir>/llm_<rule>[_compact][_chunkNofM].md
+
+The pair_dir path encodes the model (versions + model name), so
+per-chunk files don't repeat the model tag.
 
 The model is run via the LLM_CMD shell command associated with the
 profile in `.env`.
@@ -131,6 +134,21 @@ Guidelines:
   "small guided mk1" not `["small", "guided", "mk1"]`.
 - Surface patterns and callouts. If 15 missiles had their damage bumped and
   2 had speed changed, say that.
+- When a record carries a before/after numeric value (e.g. `stat_diff`,
+  `changes`, a "X→Y" in the `text`), QUOTE THE NUMBERS. Prefer "hull
+  24000→48000" over "much tougher"; prefer "price cut 120502→12502"
+  over "significant price drop". Vague words like "significantly",
+  "slightly", "much", "broadly" should not replace numbers you already
+  have.
+- If a change adds a cue, listener, trigger, or system with a feature
+  gate (e.g. `check_value value="false"`, a TODO/"keep disabled"
+  comment, or similar), describe it as ADDED BUT DISABLED — do NOT
+  present it as live gameplay. Quote the gating evidence briefly if the
+  diff makes it clear.
+- Script properties (gamelogic records with `kind=NEW` or `REMOVED` on
+  `scriptproperty` entries) are modding API changes, not internal
+  jargon. Call them out in a short "Under the Hood" (or equivalent)
+  section so mod authors see what's new or gone.
 - End with a one-sentence summary.
 - Do NOT invent numbers or facts. If the JSON doesn't say something, don't
   claim it.
@@ -263,7 +281,7 @@ def run_llm(prompt: str, *, profile: dict) -> str:
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
     parser.add_argument('pair_dir')
     parser.add_argument('rule')
     parser.add_argument('--model', required=True,
@@ -298,8 +316,7 @@ def main():
 
     for i, prompt in enumerate(prompts):
         chunk_tag = f'_chunk{i+1}of{len(prompts)}' if len(prompts) > 1 else ''
-        out_path = (pair_dir /
-                    f'llm_{args.rule}{suffix}{chunk_tag}_{tag}.md')
+        out_path = pair_dir / f'llm_{args.rule}{suffix}{chunk_tag}.md'
         print(f'Chunk {i+1}/{len(prompts)}: {len(prompt)} chars '
               f'(~{len(prompt) // 4} tokens)')
         if args.dry_run:

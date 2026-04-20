@@ -2,7 +2,7 @@
 
 Replaces the per-rule RuleOutput redefinitions for all rules.
 """
-import re
+import json
 from dataclasses import dataclass, field
 from hashlib import sha256
 from typing import Iterable, Optional
@@ -38,11 +38,12 @@ def render_sources(old: Optional[Iterable[str]], new: Optional[Iterable[str]]) -
 
 
 def parse_versions(pair_dir) -> tuple[str, str]:
-    """Split `pair_dir.name` (e.g. `8.00H4_9.00B6`) into `(old, new)`."""
-    m = re.match(r'^([^_]+)_(.+)$', pair_dir.name)
-    if not m:
-        raise ValueError(f'cannot parse versions from {pair_dir.name!r}')
-    return m.group(1), m.group(2)
+    """Read `(old_version, new_version)` from `<pair_dir>/summary.json`.
+    summary.json is written by run_rules.py at stage 1; every later
+    stage in the pipeline runs after it, so the file is always present.
+    """
+    summary = json.loads((pair_dir / 'summary.json').read_text())
+    return summary['old_version'], summary['new_version']
 
 
 def format_row(tag: str, name: str, classifications: list[str],

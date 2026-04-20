@@ -8,10 +8,14 @@ detailed change list — useful as a sanity check against the LLM-written
 release notes and as a fallback when LLM output is unsatisfying.
 
 Usage:
-    python3 scripts/raw_release_notes.py <pair_dir>
+    python3 scripts/raw_release_notes.py <pair_dir> --model NAME
 
 Writes:
-    output/<old>-<new>-raw.md
+    output/<old>-<new>-<MODEL>-raw.md
+
+The `--model` tag makes the filename unique per pipeline run so
+parallel runs on different models never share files, even though the
+raw content itself is model-independent.
 """
 from __future__ import annotations
 
@@ -72,8 +76,11 @@ def render(pair_dir: Path) -> str:
 
 
 def main():
-    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument('pair_dir', help='e.g. artifacts/8.00H4_9.00B6')
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
+    ap.add_argument('pair_dir', help='e.g. artifacts/8.00H4-9.00B6-<model>')
+    ap.add_argument('--model', required=True,
+                    help='Model tag (matches a *_MODEL_NAME in .env). '
+                         'Used only for the output filename.')
     args = ap.parse_args()
 
     pair_dir = Path(args.pair_dir)
@@ -83,7 +90,7 @@ def main():
 
     output_dir = ROOT / 'output'
     output_dir.mkdir(parents=True, exist_ok=True)
-    out_path = output_dir / f'{old_v}-{new_v}-raw.md'
+    out_path = output_dir / f'{old_v}-{new_v}-{args.model}-raw.md'
     out_path.write_text(render(pair_dir))
     print(f'wrote {out_path}')
 

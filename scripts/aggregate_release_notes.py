@@ -4,8 +4,8 @@
 Two-stage aggregation:
 
 1. Per-rule: for each rule, combine its per-chunk markdown files
-   (e.g. llm_quests_chunk1of15_xhigh.md ... chunk15of15_xhigh.md) into
-   one rule-level markdown.
+   (e.g. llm_quests_chunk1of15.md ... chunk15of15.md) into one
+   rule-level markdown.
 
 2. Top-level: combine all per-rule markdowns into one themed
    release-notes document.
@@ -17,12 +17,11 @@ aggregated recursively. That means this works with weaker LLMs too —
 the chunk budget controls what fits in one call regardless of input size.
 
 Usage:
-    python3 scripts/aggregate_release_notes.py artifacts/8.00H4_9.00B6 xhigh
-    python3 scripts/aggregate_release_notes.py <pair_dir> <level> \\
+    python3 scripts/aggregate_release_notes.py <pair_dir> --model NAME \\
         [--max-tokens 24000] [--dry-run]
 
-The per-rule aggregates stay under <pair_dir>/; the top-level
-<old>-<new>-<level>.md is written to output/.
+Per-rule aggregates stay under `<pair_dir>/`; the top-level
+`<old>-<new>-<MODEL>.md` is written to `output/` as a deliverable.
 """
 from __future__ import annotations
 
@@ -56,6 +55,9 @@ rule. Guidelines:
 - Drop duplicates (same point mentioned in multiple parts).
 - Keep the writeup tight. Don't add flourish the parts didn't have.
 - Plain English. No internal field names like RuleOutput or DiffReport.
+- Keep any "added but disabled" / feature-gated language intact — do
+  not sand it down to "new feature" when the source part flagged a
+  gate. Same for modding API / "Under the Hood" callouts.
 - End with a one-sentence summary of what this rule shows overall.
 
 PARTS ({count}):
@@ -82,6 +84,11 @@ Combine them into ONE player-facing release-notes document. Guidelines:
 - Short section intros, dense bullet-like prose inside each section.
 - Plain English. No rule tag jargon ("weapons rule says..." — just
   write what changed).
+- If sections cite before/after numbers, keep them in the merged
+  output. Don't replace "hull 24000→48000" with "much tougher".
+- If any section flagged a feature as added-but-disabled or gated,
+  preserve that framing. Also keep any "Under the Hood" / modding API
+  callouts as a dedicated section so mod authors see them.
 - Don't invent facts. If a section didn't say something, don't add it.
 - Open with a one-paragraph overview that frames the release.
 - Close with a one-sentence takeaway.
@@ -109,6 +116,9 @@ PARTS ({count}):
 
 Write the merged partial now.
 """
+
+
+_FALLBACKS: list[str] = []  # labels where tree_reduce hit the no-shrinkage guard
 
 
 def _render_parts(parts: list[str]) -> str:
@@ -165,7 +175,7 @@ def tree_reduce(parts: list[str], template: str, budget: int,
     if len(batches) == 1:
         print(f'  {label}: 1 oversized call  ({est_tokens(single)} tokens)')
         if dry_run:
-            return f'<dry-run oversized merge>'
+            return '<dry-run oversized merge>'
         return _call_or_cache(single, profile, cache_dir, label)
     print(f'  {label}: tree-reduce  ({len(parts)} parts -> '
           f'{len(batches)} batches)')
@@ -189,12 +199,25 @@ def tree_reduce(parts: list[str], template: str, budget: int,
                 batch_outputs.append(
                     _call_or_cache(sub_prompt, profile, cache_dir,
                                    sub_label))
+    # Progress guard. If the LLM preserved everything (batch outputs as big
+    # as inputs), recursing won't converge — pack_into_batches will keep
+    # producing the same shape and we loop until the stack blows. Detect
+    # no-shrinkage and fall back to one oversized call under the original
+    # template; the LLM may truncate, but that beats hanging. Fallbacks are
+    # recorded for a single end-of-run summary instead of alarming mid-run.
+    parts_tokens = sum(est_tokens(p) for p in parts)
+    output_tokens = sum(est_tokens(b) for b in batch_outputs)
+    if not dry_run and output_tokens >= parts_tokens:
+        final_prompt = _build_prompt(template, batch_outputs, **ctx)
+        _FALLBACKS.append(label)
+        return _call_or_cache(final_prompt, profile, cache_dir,
+                              f'{label} final')
     # Final merge over batch outputs using the original template.
     return tree_reduce(batch_outputs, template, budget, profile,
                        dry_run, ctx, cache_dir, label=f'{label} final')
 
 
-def collect_rule_chunks(pair_dir: Path, rule: str, level: str) -> list[Path]:
+def collect_rule_chunks(pair_dir: Path, rule: str) -> list[Path]:
     """Return this rule's per-chunk markdown files (or the single file if
     no chunking happened). Excludes the _aggregated.md output if re-run.
 
@@ -202,9 +225,9 @@ def collect_rule_chunks(pair_dir: Path, rule: str, level: str) -> list[Path]:
     exist in the same directory, raises — caller must clean up the stale set.
     """
     normal_re = re.compile(
-        rf'^llm_{re.escape(rule)}_chunk\d+of\d+_{re.escape(level)}\.md$')
+        rf'^llm_{re.escape(rule)}_chunk\d+of\d+\.md$')
     compact_re = re.compile(
-        rf'^llm_{re.escape(rule)}_compact_chunk\d+of\d+_{re.escape(level)}\.md$')
+        rf'^llm_{re.escape(rule)}_compact_chunk\d+of\d+\.md$')
     normal = sorted(p for p in pair_dir.iterdir() if normal_re.match(p.name))
     compact = sorted(p for p in pair_dir.iterdir() if compact_re.match(p.name))
     if normal and compact:
@@ -214,8 +237,8 @@ def collect_rule_chunks(pair_dir: Path, rule: str, level: str) -> list[Path]:
     chunks = normal or compact
     if chunks:
         return chunks
-    single_normal = pair_dir / f'llm_{rule}_{level}.md'
-    single_compact = pair_dir / f'llm_{rule}_compact_{level}.md'
+    single_normal = pair_dir / f'llm_{rule}.md'
+    single_compact = pair_dir / f'llm_{rule}_compact.md'
     if single_normal.exists() and single_compact.exists():
         raise RuntimeError(
             f'rule {rule}: both compact and non-compact single-file outputs '
@@ -227,7 +250,7 @@ def collect_rule_chunks(pair_dir: Path, rule: str, level: str) -> list[Path]:
     return []
 
 
-def aggregate_rule(pair_dir: Path, rule: str, tag: str, budget: int,
+def aggregate_rule(pair_dir: Path, rule: str, budget: int,
                    profile: dict, dry_run: bool,
                    versions: tuple[str, str]
                    ) -> tuple[Path, str] | None:
@@ -237,13 +260,13 @@ def aggregate_rule(pair_dir: Path, rule: str, tag: str, budget: int,
     Resumable: if the aggregated file already exists on disk, return it
     without making any LLM calls.
     """
-    chunks = collect_rule_chunks(pair_dir, rule, tag)
+    chunks = collect_rule_chunks(pair_dir, rule)
     if not chunks:
         return None
     if len(chunks) == 1:
         # Nothing to aggregate; use existing single file as-is.
         return chunks[0], chunks[0].read_text()
-    out_path = pair_dir / f'llm_{rule}_aggregated_{tag}.md'
+    out_path = pair_dir / f'llm_{rule}_aggregated.md'
     if out_path.exists() and out_path.stat().st_size > 0 and not dry_run:
         print(f'rule {rule}: skip (cached {out_path.name})')
         return out_path, out_path.read_text()
@@ -251,7 +274,7 @@ def aggregate_rule(pair_dir: Path, rule: str, tag: str, budget: int,
     print(f'rule {rule}: aggregating {len(chunks)} chunks')
     parts = [p.read_text() for p in chunks]
     ctx = {'rule': rule, 'old_version': old_v, 'new_version': new_v}
-    cache_dir = pair_dir / '.treereduce' / f'rule_{rule}_{tag}'
+    cache_dir = pair_dir / '.treereduce' / f'rule_{rule}'
     merged = tree_reduce(parts, RULE_AGGREGATE_PROMPT, budget,
                          profile, dry_run, ctx, cache_dir, label=rule)
     if dry_run:
@@ -267,8 +290,8 @@ def aggregate_rule(pair_dir: Path, rule: str, tag: str, budget: int,
 def aggregate_top(pair_dir: Path, rule_outputs: list[tuple[Path, str]],
                   tag: str, budget: int, profile: dict, dry_run: bool,
                   versions: tuple[str, str]) -> Path:
-    # Final release notes land under <project_root>/output/ so the
-    # deliverable is separated from the regeneratable artifacts/ tree.
+    # Final release notes land under <project_root>/output/ as a
+    # deliverable, separated from the regeneratable artifacts/ tree.
     old_v, new_v = versions
     output_dir = ROOT / 'output'
     out_path = output_dir / f'{old_v}-{new_v}-{tag}.md'
@@ -278,7 +301,7 @@ def aggregate_top(pair_dir: Path, rule_outputs: list[tuple[Path, str]],
     parts = [content for _, content in rule_outputs]
     ctx = {'old_version': old_v, 'new_version': new_v}
     print(f'top-level: combining {len(rule_outputs)} rule sections')
-    cache_dir = pair_dir / '.treereduce' / f'top_{tag}'
+    cache_dir = pair_dir / '.treereduce' / 'top'
     merged = tree_reduce(parts, FINAL_AGGREGATE_PROMPT, budget,
                          profile, dry_run, ctx, cache_dir, label='top')
     if not dry_run:
@@ -289,12 +312,11 @@ def aggregate_top(pair_dir: Path, rule_outputs: list[tuple[Path, str]],
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
     parser.add_argument('pair_dir', help='e.g. artifacts/8.00H4_9.00B6')
     parser.add_argument('--model', required=True,
                         help='Active LLM profile (matches a *_MODEL_NAME '
-                             'entry in .env). Doubles as the input/output '
-                             'filename tag.')
+                             'entry in .env).')
     advanced = parser.add_argument_group(
         'advanced (rarely needed — defaults are usually correct)')
     advanced.add_argument('--max-tokens', type=int, default=None,
@@ -316,16 +338,21 @@ def main():
 
     rule_outputs: list[tuple[Path, str]] = []
     for rule in RULES:
-        result = aggregate_rule(pair_dir, rule, tag, max_tokens,
+        result = aggregate_rule(pair_dir, rule, max_tokens,
                                 profile, args.dry_run, versions)
         if result is not None:
             rule_outputs.append(result)
 
     if not rule_outputs:
-        sys.exit(f'no per-rule markdowns found for tag={tag}')
+        sys.exit(f'no per-rule markdowns found in {pair_dir}')
 
     aggregate_top(pair_dir, rule_outputs, tag, max_tokens,
                   profile, args.dry_run, versions)
+
+    if _FALLBACKS:
+        print(f'\nnote: {len(_FALLBACKS)} merge(s) fell back to a single '
+              f'oversized call (model preserved detail faster than the '
+              f'budget could compress it): {", ".join(_FALLBACKS)}')
 
 
 if __name__ == '__main__':
