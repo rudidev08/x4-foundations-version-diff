@@ -5,7 +5,7 @@
 #   ./run.sh <old_version> <new_version> --model <PROFILE>
 #
 # Example:
-#   ./run.sh 8.00H4 9.00B6 --model gpt-5.4-mini-low
+#   ./run.sh 8.00h4 9.00b6 --model gpt-5.5-mini-low
 #
 # `--model` must match a *_MODEL_NAME entry in .env. Run
 # `./run.sh --help` for the full option list. Intermediate files go to

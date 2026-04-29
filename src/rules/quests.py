@@ -27,7 +27,7 @@ from src.lib.rule_output import RuleOutput
 TAG = 'quests'
 
 # Prefix → classification token. Prefix is the chars before the first `_`.
-# Extended from real-data inventory of 9.00B6 md/ trees (core + all DLCs).
+# Extended from real-data inventory of 9.00b6 md/ trees (core + all DLCs).
 # Prefixes seen ≥5 times are mapped; rarer ones fall through to empty list.
 _CLASS_MAP = {
     'gm': 'generic_mission',

@@ -524,7 +524,7 @@ def _is_guided_turret(turret_macro: Optional[ElementTree.Element],
     - Any element under the turret macro has a `tags` attribute containing
       `missilelauncher`.
     - The ware's own `tags` contain `missilelauncher` (as observed on real
-      9.00B6 `turret_*_guided_*` wares).
+      9.00b6 `turret_*_guided_*` wares).
     """
     if ware is not None:
         tags = (ware.get('tags') or '').split()

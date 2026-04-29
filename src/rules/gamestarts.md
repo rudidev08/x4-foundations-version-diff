@@ -22,7 +22,7 @@ Single-source, single-tag. Output tag is `gamestarts`; no sub-sources.
 
 Whitespace-split `@tags`, generic `gamestart` filtered.
 
-Examples observed in real 9.00B6 data:
+Examples observed in real 9.00b6 data:
 
 - `tutorial nosave` — tutorial scenarios that can't save.
 - `nosave timelineshub` — timelines hub entry.

@@ -306,7 +306,7 @@ def _licence_key(lic: ElementTree.Element) -> tuple:
     `<licence @type="capitalequipment">` entries per faction, distinguished
     by `@factions` (the whitelist of factions the licence is granted
     toward). Composite key `(type, factions)` is unique across every
-    faction's licences block in both 8.00H4 and 9.00B6. The rule treats
+    faction's licences block in both 8.00h4 and 9.00b6. The rule treats
     that composite as the primary key; the uniqueness assertion fires when
     the composite duplicates.
     """

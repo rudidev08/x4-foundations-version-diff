@@ -55,8 +55,8 @@ Initial spec enumeration (bootstrap set for classification + lifecycle):
   appears as a child, diff its attrs.
 - `<location>` — `@class`, `@macro`, `@faction`, `@relation`, …
 
-Real-data extensions (all verified singleton per job in the 8.00H4 and
-9.00B6 corpora):
+Real-data extensions (all verified singleton per job in the 8.00h4 and
+9.00b6 corpora):
 
 - `<basket>` — cargo-selection block for trader / miner jobs.
 - `<subordinates>` — escort spec (`@size`, `@tags`).
@@ -133,7 +133,7 @@ whole rule). Unaffected job rows stay complete.
 
 Adding a new singleton child requires extending `SINGLETON_CHILDREN` in
 `src/rules/jobs.py` AND this document. The initial enumeration covers
-every direct-child tag observed in X4 8.00H4 + 9.00B6 jobs.xml +
+every direct-child tag observed in X4 8.00h4 + 9.00b6 jobs.xml +
 corresponding DLC overlays, each verified singleton per materialized
 job. Future X4 releases that introduce a new direct child will trigger
 `unhandled_child_tag` on affected jobs; decide whether to extend the

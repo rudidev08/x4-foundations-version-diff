@@ -142,7 +142,7 @@ effective trees. Unresolved refs surface via
 Real X4 data: both modulegroup `<select @macro>` and plan `<entry @macro>`
 reference on-disk macro files directly — NOT module library `@id`s or
 modulegroup `@name`s. Verified 100% match across all 166 modulegroup selects
-and 138 plan entries in 9.00B6.
+and 138 plan entries in 9.00b6.
 
 Resolution uses `DiffReport.effective_new_root` / `effective_old_root`; the
 rule never reaches into the private `_materialize` helper. The on-disk
@@ -210,6 +210,6 @@ classification token sources uniformly.
 - `<production>` entries in modules.xml live under `<compatibilities>`,
   NOT directly under `<module>` like ware-driven rules. The module diff
   accounts for this.
-- `@chance` is rarely set on real-data `<select>` entries (none in 9.00B6
+- `@chance` is rarely set on real-data `<select>` entries (none in 9.00b6
   stationgroups or modulegroups). The diff still emits chance changes when
   they happen — not dead code, just rare.

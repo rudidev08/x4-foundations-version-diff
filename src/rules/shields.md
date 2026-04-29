@@ -69,14 +69,14 @@ The source label in output is derived from `extensions/ego_dlc_<name>/` → `<na
 
 Multiple distinct macros can resolve to the same display name. Examples:
 
-- `shield_arg_m_standard_01_mk1_macro` and `shield_arg_m_standard_02_mk1_macro` both display as "ARG M Shield Generator Mk1" but are distinct shields with different components. In 9.00B6 the `_01` variant is `advanced`, the `_02` variant is still `standard`.
+- `shield_arg_m_standard_01_mk1_macro` and `shield_arg_m_standard_02_mk1_macro` both display as "ARG M Shield Generator Mk1" but are distinct shields with different components. In 9.00b6 the `_01` variant is `advanced`, the `_02` variant is still `standard`.
 - `shield_par_s_standard_01_mk1` (core) and `shield_par_s_racer_01_mk1` (Timelines DLC) both display as "PAR S Shield Generator Mk1". Different stats, different slots.
 
 The output text uses `(type) [source]` to disambiguate; `extras.macro` carries the unambiguous macro name for the LLM.
 
 ## 9.00 slot rework (real-data pattern)
 
-Observed in 8.00H4 → 9.00B6:
+Observed in 8.00h4 → 9.00b6:
 
 - **All core M/S shield components** retagged `standard` → `advanced`. Ship shield slots were updated in parallel, so the "advanced"-tagged shields became the effective default for most ships.
 - **L/XL shields were NOT retagged** — they stayed `standard`. The slot rework only touched S/M ship classes.
@@ -118,5 +118,5 @@ Text format: `[shields] <name> (<type>) [<source>]: <comma-separated changes>`, 
 
 - `<icon>` element additions in `wares.xml` (cosmetic metadata)
 - Ware-level changes (prices, production recipes, faction ownership) — a separate concern, probably a future `wares` rule
-- DLC-only locale pages — the rule reads only the core `t/0001-l044.xml`. DLC shields that reference DLC-only text IDs would fall back to the raw macro name. In practice none observed in 8.00H4 → 9.00B6.
+- DLC-only locale pages — the rule reads only the core `t/0001-l044.xml`. DLC shields that reference DLC-only text IDs would fall back to the raw macro name. In practice none observed in 8.00h4 → 9.00b6.
 - Additional shield properties beyond `recharge max/rate/delay` and `hull max` (e.g., `disruptionstability`) — extend the diff loop if new attributes become relevant.

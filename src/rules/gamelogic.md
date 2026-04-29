@@ -110,7 +110,7 @@ child with a different tag flags the row incomplete with reason
 structure. Extending the whitelist is a conscious change that extends
 `_diff_behaviour_children` too.
 
-Real 9.00B6 behaviours.xml has no children on any `<behaviour>` — the
+Real 9.00b6 behaviours.xml has no children on any `<behaviour>` — the
 whitelist + diff logic is present for structural robustness and to match
 the spec.
 
@@ -153,7 +153,7 @@ Fields diffed:
 different tag flags the row incomplete with reason `unhandled_child_tag`,
 same policy as the behaviour sub-source.
 
-Real 9.00B6 scriptproperties.xml has no children on any `<property>` — the
+Real 9.00b6 scriptproperties.xml has no children on any `<property>` — the
 whitelist + diff logic is present for structural robustness and to match
 the spec.
 
@@ -208,7 +208,7 @@ precisely; the specific row is flagged incomplete, siblings stay clean.
   which applies `<diff>` ops across DLC extensions before entity keying.
 - Aiscripts materialize manually via `apply_patch` in the rule — see the
   "Aiscript (file-level hybrid)" section above.
-- Real 9.00B6 has no DLC files for `libraries/behaviours.xml` or
+- Real 9.00b6 has no DLC files for `libraries/behaviours.xml` or
   `libraries/scriptproperties.xml`; the DLC path is fully exercised only
   by aiscripts (pirate DLC patches several scripts).
 

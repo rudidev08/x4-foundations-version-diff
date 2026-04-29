@@ -1,7 +1,7 @@
 # X4 release-notes generator
 
 Turns the raw game-data diff between two X4 Foundations versions
-(e.g. 8.00H4 → 9.00B6) into player-facing release notes, via a
+(e.g. 8.00h4 → 9.00b6) into player-facing release notes, via a
 four-stage pipeline: focused rules extract structured changes, a
 deterministic raw doc concatenates them, then an LLM stage writes
 themed notes and a tree-reduce stage merges everything.
@@ -9,7 +9,7 @@ themed notes and a tree-reduce stage merges everything.
 ## Quick start
 
 ```bash
-./run.sh 8.00H4 9.00B6 --model gpt-5.4-mini-low
+./run.sh 8.00h4 9.00b6 --model gpt-5.5-mini-low
 ```
 
 `--model` is required and must match a `*_MODEL_NAME` entry in `.env`
@@ -19,11 +19,11 @@ The pipeline takes a pair of extracted game versions under `x4-data/`
 (override with `SOURCE_PATH_PREFIX` in `.env` or `--game-data`) and
 writes two files into `output/`:
 
-- `8.00H4-9.00B6-<MODEL>-raw.md` — deterministic, exhaustive change list (no LLM)
-- `8.00H4-9.00B6-<MODEL>.md` — LLM-written, player-facing release notes
+- `8.00h4-9.00b6-<MODEL>-raw.md` — deterministic, exhaustive change list (no LLM)
+- `8.00h4-9.00b6-<MODEL>.md` — LLM-written, player-facing release notes
 
 Intermediate per-rule and per-chunk files live under
-`artifacts/8.00H4-9.00B6-<MODEL>/`. Parallel runs on different models
+`artifacts/8.00h4-9.00b6-<MODEL>/`. Parallel runs on different models
 never share any files.
 
 The run is **fully resumable at LLM-call granularity**: per-chunk LLM
@@ -35,9 +35,9 @@ previous run failed.
 More examples:
 
 ```bash
-./run.sh 9.00B5 9.00B6 --model haiku                   # smaller pair, cheaper model
-./run.sh 8.00H4 9.00B6 --model opus-4.7-max            # higher-quality run
-./run.sh 8.00H4 9.00B6 --model haiku --max-tokens 8000 # shrink per-call budget
+./run.sh 9.00b5 9.00b6 --model haiku-4.5                   # smaller pair, cheaper model
+./run.sh 8.00h4 9.00b6 --model opus-4.7-max                # higher-quality run
+./run.sh 8.00h4 9.00b6 --model haiku-4.5 --max-tokens 8000 # shrink per-call budget
 ```
 
 ## How it works
@@ -98,7 +98,7 @@ Recommended `CHUNK_KB` starting points (KB of input chars per LLM call):
 - 32k context (GPT-4-32k, Mixtral 8x7B) → 80
 - 128k context (GPT-4-turbo, GPT-4o, Llama 3 70B) → 300
 - 200k context (Claude 3/3.5 family) → 600
-- 400k context (GPT-5.4 / o-series full) → 1000
+- 400k context (GPT-5.5 / o-series full) → 1000
 - 1M+ context (Gemini 1.5+) → 2000
 
 These are starting suggestions; drop them lower when a model loses
@@ -173,9 +173,9 @@ completed chunks are detected and skipped.
 If you want to force a rebuild, delete the relevant file:
 
 ```bash
-rm artifacts/8.00H4-9.00B6-<MODEL>/llm_quests_chunk7of15.md  # one chunk
-rm artifacts/8.00H4-9.00B6-<MODEL>/llm_quests_aggregated.md  # one rule
-rm output/8.00H4-9.00B6-<MODEL>.md                           # just the top merge
+rm artifacts/8.00h4-9.00b6-<MODEL>/llm_quests_chunk7of15.md  # one chunk
+rm artifacts/8.00h4-9.00b6-<MODEL>/llm_quests_aggregated.md  # one rule
+rm output/8.00h4-9.00b6-<MODEL>.md                           # just the top merge
 ```
 
 The next `./run.sh` run rebuilds only what's missing.

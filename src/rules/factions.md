@@ -80,7 +80,7 @@ generic filter. Missing attrs are omitted. Example: `['argon', 'default']`.
   `@factions` (the whitelist of recipient factions — e.g., `type=
   "capitalequipment"` once for the owning faction and once for a list of
   allied factions). The composite key is unique across every licences
-  block in both 8.00H4 and 9.00B6; single-key `@type` would silently
+  block in both 8.00h4 and 9.00b6; single-key `@type` would silently
   mispair. Each licence contributes one label per changed attribute. Add
   and remove surface as `licence[type=<T>] added|removed` (or
   `licence[type=<T>,factions=<F>] ...` when `@factions` is set).

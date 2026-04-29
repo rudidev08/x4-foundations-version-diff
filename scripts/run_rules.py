@@ -5,7 +5,7 @@ Usage:
     python3 scripts/run_rules.py <old_version> <new_version> [--out DIR]
 
 Example:
-    python3 scripts/run_rules.py 8.00H4 9.00B6
+    python3 scripts/run_rules.py 8.00h4 9.00b6
 
 Writes one JSON file per rule under `<out>/<rule>.json` plus a
 summary.json with counts. `--out` is the pair directory (created if
@@ -56,7 +56,7 @@ def _jsonable(value):
     if isinstance(value, (list, tuple)):
         return [_jsonable(v) for v in value]
     if isinstance(value, set):
-        return sorted(_jsonable(v) for v in value)
+        return sorted((_jsonable(v) for v in value), key=str)
     if isinstance(value, dict):
         return {str(k): _jsonable(v) for k, v in value.items()}
     # ElementTree Element, Path, anything else — drop to repr.
@@ -82,8 +82,8 @@ def run_rule(name: str, old_root: Path, new_root: Path, changes):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
-    ap.add_argument('old_version', help='e.g., 8.00H4')
-    ap.add_argument('new_version', help='e.g., 9.00B6')
+    ap.add_argument('old_version', help='e.g., 8.00h4')
+    ap.add_argument('new_version', help='e.g., 9.00b6')
     ap.add_argument('--game-data', default=None,
                     help='Directory containing the extracted X4 version '
                          'folders. Defaults to SOURCE_PATH_PREFIX from .env, '

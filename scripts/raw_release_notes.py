@@ -77,7 +77,7 @@ def render(pair_dir: Path) -> str:
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
-    ap.add_argument('pair_dir', help='e.g. artifacts/8.00H4-9.00B6-<model>')
+    ap.add_argument('pair_dir', help='e.g. artifacts/8.00h4-9.00b6-<model>')
     ap.add_argument('--model', required=True,
                     help='Model tag (matches a *_MODEL_NAME in .env). '
                          'Used only for the output filename.')

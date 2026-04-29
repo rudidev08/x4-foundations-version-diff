@@ -21,7 +21,7 @@ Cross-entity ref graph (validated every hop):
   `<entry @macro>`). Real X4 data: plan entries and modulegroup selects both
   reference on-disk macro files directly, NOT module library ids or
   modulegroup names. Verified 100% match across all 166 modulegroup selects
-  and 138 plan entries in 9.00B6.
+  and 138 plan entries in 9.00b6.
 
 Unresolved refs surface as `forward_warnings` with reason `'ref_target_unresolved'`.
 
@@ -467,7 +467,7 @@ def _selects_by_key(parent: ElementTree.Element, key_attr: str) -> dict[str, Ele
     """Index `<select>` children by the given attribute. Missing keys skipped.
 
     If the same key appears twice the last one wins; this is a rare corner in
-    real data (not present in 9.00B6), but we diff by attribute key so
+    real data (not present in 9.00b6), but we diff by attribute key so
     ordering changes alone don't emit rows.
     """
     out: dict[str, ElementTree.Element] = {}

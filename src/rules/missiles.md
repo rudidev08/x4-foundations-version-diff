@@ -74,7 +74,7 @@ The rule globs both `libraries/wares.xml` (core) and `extensions/*/libraries/war
 
 ## 9.00 missile-line replacement (real-data pattern)
 
-Observed in 8.00H4 → 9.00B6:
+Observed in 8.00h4 → 9.00b6:
 
 - **21 legacy missiles deprecated** — every pre-9.00 missile (both core and Split DLC) was marked `tags="deprecated"`
 - **16 new `missile_gen_*` missiles added** — a fresh size-standardized lineup with `smallX`, `mediumX`, `largeX` class tags

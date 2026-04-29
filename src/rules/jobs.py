@@ -40,7 +40,7 @@ LOCALE_PAGE = 20204
 # masstraffic (spawn density), expirationtime (TTL), and the rare <order>
 # stray (dummy-job-only remnant — kept as singleton to stay permissive
 # rather than force-contaminate that one job). All verified singletons per
-# materialized side via a full 9.00B6 + 8.00H4 sweep.
+# materialized side via a full 9.00b6 + 8.00h4 sweep.
 SINGLETON_CHILDREN = frozenset({
     # Initial spec enumeration.
     'category', 'environment', 'modifiers', 'ship', 'pilot',

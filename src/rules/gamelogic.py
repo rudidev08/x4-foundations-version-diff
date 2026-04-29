@@ -20,7 +20,7 @@ Three sub-sources share the `gamelogic` tag, distinguished by `extras.subsource`
   ancestor alone disambiguates. Fields: full attribute set of `<behaviour>`.
   Any unexpected child tag under `<behaviour>` flags the row incomplete with
   reason `unhandled_child_tag` (child tag whitelist is
-  `{param, precondition, script}`; real 9.00B6 data has no children).
+  `{param, precondition, script}`; real 9.00b6 data has no children).
 - **`scriptproperty`** — entity-diff on `libraries/scriptproperties.xml`. Key:
   `(subsource, (datatype_name, property_name))`. Fields: full attribute set
   of `<property>`. Same child-whitelist rule applies (`param` keyed by `@name`,
@@ -590,7 +590,7 @@ def _index_properties(tree_root: Optional[ElementTree.Element]
 
     Duplicates within a single tree overwrite (last-wins) — duplicate
     property names within one datatype are a data bug the rule does not
-    defend against. Real 9.00B6 data has none.
+    defend against. Real 9.00b6 data has none.
     """
     out: dict[tuple, ElementTree.Element] = {}
     if tree_root is None:

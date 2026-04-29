@@ -71,7 +71,7 @@ Bullet macro (sub-source `"bullet"`, under `<properties>`):
 - `'guided'` — appended when the turret launches guided missiles. Triggered by any of:
   - the turret macro's `<bullet @class>` matches `bullet_*missilelauncher*` (a ref id starting with `bullet_` and containing `missilelauncher`),
   - any nested element under the turret macro carries `missilelauncher` in its `tags` attribute,
-  - the ware itself carries `missilelauncher` in its top-level `tags` (as observed on every real 9.00B6 `turret_*_guided_*` / `turret_*_dumbfire_*` / `turret_*_torpedo_*` ware).
+  - the ware itself carries `missilelauncher` in its top-level `tags` (as observed on every real 9.00b6 `turret_*_guided_*` / `turret_*_dumbfire_*` / `turret_*_torpedo_*` ware).
 
 Classifications are lossy on purpose — they surface the most useful labels for the LLM. Raw macro/component refs stay in `extras` for downstream reasoning.
 
@@ -93,7 +93,7 @@ A turret whose ware entry ALSO diffed in wares.xml gets its bullet row emitted o
 ## DLC handling
 
 - Wares.xml is merged via `entity_diff.diff_library` — core + every `extensions/*/libraries/wares.xml` overlaid in alphabetical order, with `_classify_conflicts` catching cross-DLC write/write collisions.
-- Macro/component files live under the same `assets/props/WeaponSystems/` subdir structure in every package. The rule consults `ref_sources` to know which package last wrote the `<component ref>` attribute on a ware; that package is tried first when resolving the macro, then core as fallback. If the attributed DLC directory isn't on disk, the resolver falls back to core (a warning is left as a TODO — real 9.00B6 data doesn't exhibit missing attributed DLCs for turrets).
+- Macro/component files live under the same `assets/props/WeaponSystems/` subdir structure in every package. The rule consults `ref_sources` to know which package last wrote the `<component ref>` attribute on a ware; that package is tried first when resolving the macro, then core as fallback. If the attributed DLC directory isn't on disk, the resolver falls back to core (a warning is left as a TODO — real 9.00b6 data doesn't exhibit missing attributed DLCs for turrets).
 - Bullet refs resolve via `src.lib.paths.resolve_macro_path(..., kind='bullet')`, which indexes every `assets/fx/weaponFx/macros/*.xml` across core + extensions.
 
 ## Output shape

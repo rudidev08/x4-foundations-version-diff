@@ -15,7 +15,7 @@ Ships (`transport=ship` / `tags=ship` / `group=drones`) and shields/missiles are
 
 ## Display name
 
-`resolve_attr_ref(ware, locale, attribute='name')` — **no heuristic dispatch**. The ware's `@name` attribute is a `{page,id}` ref that already names the correct locale page per-ware. Real 9.00B6 counterexamples where a heuristic `group→page` mapping would mispage:
+`resolve_attr_ref(ware, locale, attribute='name')` — **no heuristic dispatch**. The ware's `@name` attribute is a `{page,id}` ref that already names the correct locale page per-ware. Real 9.00b6 counterexamples where a heuristic `group→page` mapping would mispage:
 
 - `bomb_player_limpet_emp_01_mk1` — `personalupgrade`, but the name lives on page 20201 (satellites/bombs), not 20113 (spacesuit gear).
 - `software_scannerobjectmk3` — `personalupgrade + software`, but the name lives on page 20108 (software), not 20113.

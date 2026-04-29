@@ -45,7 +45,7 @@ from src.lib.rule_output import RuleOutput, diagnostic_entity_key, format_row, r
 TAG = 'cosmetics'
 
 # Paint-element attributes diffed directly (HSV + pattern fields). Pulled from
-# real 9.00B6 paintmods.xml; any future attribute would silently get ignored,
+# real 9.00b6 paintmods.xml; any future attribute would silently get ignored,
 # but the attribute set covers the known-used fields.
 PAINT_ATTRS = (
     'quality',
@@ -63,7 +63,7 @@ PAINT_ATTRS = (
 ADSIGN_ATTRS = ('macro',)
 
 # Equipmod leaf-mod-entry attributes diffed directly (besides ware + quality,
-# which are part of the entity key). Real 9.00B6 leaf mods carry `@min`
+# which are part of the entity key). Real 9.00b6 leaf mods carry `@min`
 # and `@max`.
 EQUIPMOD_LEAF_ATTRS = ('min', 'max')
 
@@ -666,7 +666,7 @@ def _equipmod_bonus_fields(leaf: ElementTree.Element) -> dict[str, str]:
 
     We key each bonus sub-child by its tag name ("bonus type" per plan).
     Bonus-level attributes (`@chance`, `@max`) attach to each sub-child under
-    that bonus. Bonus sub-tags are unique per leaf mod in real 9.00B6
+    that bonus. Bonus sub-tags are unique per leaf mod in real 9.00b6
     data (verified during rule design) so one flat dict suffices.
 
     Output keys (for `<cooling min="X" max="Y"/>` under

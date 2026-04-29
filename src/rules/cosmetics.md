@@ -100,7 +100,7 @@ libraries/equipmentmods.xml
   </equipmentmods>
 ```
 
-- Families discovered in 9.00B6 (reference only, NOT hardcoded):
+- Families discovered in 9.00b6 (reference only, NOT hardcoded):
   `engine`, `shield`, `ship`, `weapon`. If a future version adds
   `scanner` / `armor` / `ammo`, the runtime-discovery path catches it
   automatically.
@@ -114,7 +114,7 @@ libraries/equipmentmods.xml
 - **Bonus children**: each `<bonus>` wraps `@chance` + `@max` and
   contains one or more typed sub-children (tag name IS the bonus type
   per plan semantics). Bonus sub-tags are unique per leaf mod in real
-  9.00B6 data, so the rule flattens them into `bonus[type=<tag>].*`
+  9.00b6 data, so the rule flattens them into `bonus[type=<tag>].*`
   dotted keys:
   - `bonus[type=cooling].chance`        — enclosing `<bonus @chance>`
   - `bonus[type=cooling].max_enclosing` — enclosing `<bonus @max>`
@@ -188,7 +188,7 @@ contract.
 ## DLC handling
 
 Each library is materialized via `diff_library`, which applies `<diff>`
-ops across DLC extensions before entity keying. Real 9.00B6 has:
+ops across DLC extensions before entity keying. Real 9.00b6 has:
 
 - `ego_dlc_split/libraries/adsigns.xml`
 - `ego_dlc_terran/libraries/adsigns.xml`

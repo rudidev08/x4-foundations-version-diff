@@ -12,7 +12,7 @@ how it interprets X4's ware data.
   satellite + software/hardware/countermeasures branches) have claimed their
   wares via the shared ownership predicate.
 - **Locale** — `t/0001-l044.xml`, page `20201` (economy ware names), via
-  `Locale.build(root)` so DLC overrides merge on top of core. Real 9.00B6
+  `Locale.build(root)` so DLC overrides merge on top of core. Real 9.00b6
   wares carry embedded `@name="{20201,...}"` refs; `resolve_attr_ref` walks
   them directly — no heuristic page dispatch needed.
 

@@ -6,7 +6,7 @@
 # and rely on --output-last-message to capture the clean reply.
 #
 # All args are forwarded to `codex exec`. Example:
-#   ./src/codex-wrap.sh -m gpt-5.4 -s read-only --skip-git-repo-check --color never
+#   ./src/codex-wrap.sh -m gpt-5.5 -s read-only --skip-git-repo-check --color never
 
 set -euo pipefail
 
