@@ -30,12 +30,13 @@ import argparse
 import subprocess
 import sys
 from pathlib import Path
+from typing import NoReturn
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from scripts.release_notes_llm import (  # noqa: E402
-    resolve_profile, resolve_max_tokens, resolve_game_data,
+    available_models, resolve_profile, resolve_max_tokens, resolve_game_data,
 )
 from scripts.run_rules import RULES as ALL_RULES  # noqa: E402
 
@@ -48,14 +49,85 @@ def _run(argv: list[str]) -> None:
         sys.exit(f'\nCommand failed: {" ".join(argv)} (exit {result.returncode})')
 
 
+def _available_versions(game_data: Path) -> list[str]:
+    if not game_data.is_dir():
+        return []
+    return sorted(p.name for p in game_data.iterdir() if p.is_dir())
+
+
+def _versions_line(game_data: Path) -> str:
+    versions = _available_versions(game_data)
+    body = ', '.join(versions) if versions else f'(none found in {game_data})'
+    return f'available versions: {body}'
+
+
+def _models_line() -> str:
+    models = available_models()
+    body = ', '.join(models) if models else '(none — no *_MODEL_NAME entries in .env)'
+    return f'available models:   {body}'
+
+
+def _format_hints(game_data: Path) -> str:
+    """Both hint lines, joined. Reused for argparse errors and the `--help`
+    epilog so the two sources can never drift.
+    """
+    return f'{_versions_line(game_data)}\n{_models_line()}'
+
+
+class _HintingParser(argparse.ArgumentParser):
+    """argparse parser that appends the list of valid versions and models
+    to every error message, so the user never has to guess what's allowed.
+    """
+
+    def __init__(self, *args, hint_game_data: Path, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._hint_game_data = hint_game_data
+
+    def error(self, message: str) -> NoReturn:
+        super().error(message + '\n' + _format_hints(self._hint_game_data))
+
+
+def _preflight(game_data: Path, old_version: str, new_version: str,
+               model: str) -> dict:
+    """Validate versions and model before any subprocess runs.
+
+    Exits listing only the option set relevant to what's wrong. On
+    success, returns the resolved profile so the caller skips a second
+    lookup.
+    """
+    bad_versions = [v for v in (old_version, new_version)
+                    if not (game_data / v).is_dir()]
+    try:
+        profile = resolve_profile(model)
+    except ValueError:
+        profile = None
+
+    if not bad_versions and profile is not None:
+        return profile
+
+    lines = [f'unknown version {v!r}' for v in bad_versions]
+    if profile is None:
+        lines.append(f'unknown model {model!r}')
+    if bad_versions:
+        lines.append(_versions_line(game_data))
+    if profile is None:
+        lines.append(_models_line())
+    sys.exit('\n'.join(lines))
+
+
 def main():
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
-    parser.add_argument('old_version', help='e.g. 8.00h4')
-    parser.add_argument('new_version', help='e.g. 9.00b6')
+    default_game_data = resolve_game_data(None)
+    parser = _HintingParser(
+        description=__doc__.splitlines()[0] if __doc__ else None,
+        epilog=_format_hints(default_game_data),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        hint_game_data=default_game_data,
+    )
+    parser.add_argument('old_version', help='e.g. 8.00h4 (see "available versions" below)')
+    parser.add_argument('new_version', help='e.g. 9.00b6 (see "available versions" below)')
     parser.add_argument('--model', required=True,
-                        help='Active LLM profile (matches a *_MODEL_NAME '
-                             'entry in .env). E.g. gpt-5.5-mini-low, '
-                             'opus-4.7-max, haiku-4.5.')
+                        help='Active LLM profile. Must match a *_MODEL_NAME '
+                             'entry in .env (see "available models" below).')
     advanced = parser.add_argument_group(
         'advanced (rarely needed — defaults are usually correct)')
     advanced.add_argument('--game-data', default=None,
@@ -72,11 +144,7 @@ def main():
     args = parser.parse_args()
 
     game_data = resolve_game_data(args.game_data)
-    for v in (args.old_version, args.new_version):
-        if not (game_data / v).is_dir():
-            sys.exit(f'missing game-data version folder: {game_data / v}')
-
-    profile = resolve_profile(args.model)
+    profile = _preflight(game_data, args.old_version, args.new_version, args.model)
     tag = profile['MODEL_NAME']
     budget = resolve_max_tokens(args.max_tokens, profile)
 

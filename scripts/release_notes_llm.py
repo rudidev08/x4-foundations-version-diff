@@ -74,6 +74,12 @@ def resolve_game_data(cli_override: str | None) -> Path:
     return p if p.is_absolute() else (project_root / p).resolve()
 
 
+def available_models() -> list[str]:
+    """All model names declared via `<PREFIX>_MODEL_NAME` in env, sorted."""
+    return sorted(v for k, v in os.environ.items()
+                  if k.endswith('_MODEL_NAME') and v)
+
+
 def resolve_profile(model_name: str) -> dict:
     """Look up the LLM profile in env by matching `<PREFIX>_MODEL_NAME` to
     `model_name`. Returns the dict of MODEL_NAME / LLM_CMD / CHUNK_KB.
@@ -89,11 +95,9 @@ def resolve_profile(model_name: str) -> dict:
                 'LLM_CMD': os.environ.get(f'{prefix}_LLM_CMD') or '',
                 'CHUNK_KB': os.environ.get(f'{prefix}_CHUNK_KB') or '',
             }
-    known = sorted(v for k, v in os.environ.items()
-                   if k.endswith('_MODEL_NAME') and v)
     raise ValueError(
         f'--model={model_name!r} does not match any *_MODEL_NAME in env. '
-        f'Known: {known}')
+        f'Known: {available_models()}')
 
 
 def resolve_max_tokens(cli_override: int | None,
