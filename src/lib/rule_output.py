@@ -5,6 +5,7 @@ Replaces the per-rule RuleOutput redefinitions for all rules.
 import json
 from dataclasses import dataclass, field
 from hashlib import sha256
+from pathlib import Path
 from typing import Iterable, Optional
 
 
@@ -44,6 +45,13 @@ def parse_versions(pair_dir) -> tuple[str, str]:
     """
     summary = json.loads((pair_dir / 'summary.json').read_text())
     return summary['old_version'], summary['new_version']
+
+
+def final_notes_path(root: Path, old: str, new: str, tag: str) -> Path:
+    """Path to the top-level deliverable for a (versions, model) tuple.
+    Driver and aggregator both build this; keep them in lockstep.
+    """
+    return root / 'output' / f'{old}-{new}-{tag}.md'
 
 
 def format_row(tag: str, name: str, classifications: list[str],

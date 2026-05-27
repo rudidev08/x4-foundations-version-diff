@@ -39,7 +39,7 @@ from scripts.release_notes_llm import (  # noqa: E402
 )
 from scripts.run_rules import RULES  # noqa: E402
 from src.lib.llm_budget import est_tokens, pack_into_batches  # noqa: E402
-from src.lib.rule_output import parse_versions  # noqa: E402
+from src.lib.rule_output import final_notes_path, parse_versions  # noqa: E402
 
 
 RULE_AGGREGATE_PROMPT = """\
@@ -293,8 +293,7 @@ def aggregate_top(pair_dir: Path, rule_outputs: list[tuple[Path, str]],
     # Final release notes land under <project_root>/output/ as a
     # deliverable, separated from the regeneratable artifacts/ tree.
     old_v, new_v = versions
-    output_dir = ROOT / 'output'
-    out_path = output_dir / f'{old_v}-{new_v}-{tag}.md'
+    out_path = final_notes_path(ROOT, old_v, new_v, tag)
     if out_path.exists() and out_path.stat().st_size > 0 and not dry_run:
         print(f'top-level: skip (cached {out_path})')
         return out_path
@@ -305,7 +304,7 @@ def aggregate_top(pair_dir: Path, rule_outputs: list[tuple[Path, str]],
     merged = tree_reduce(parts, FINAL_AGGREGATE_PROMPT, budget,
                          profile, dry_run, ctx, cache_dir, label='top')
     if not dry_run:
-        output_dir.mkdir(parents=True, exist_ok=True)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(merged)
         print(f'  wrote {out_path} ({len(merged)} chars)')
     return out_path
@@ -315,12 +314,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
     parser.add_argument('pair_dir',
                         help='e.g. artifacts/8.00h4-9.00b6-opus-4.7-max')
-    parser.add_argument('--model', required=True,
+    parser.add_argument('-m', '--model', required=True,
                         help='Active LLM profile (matches a *_MODEL_NAME '
                              'entry in .env).')
     advanced = parser.add_argument_group(
         'advanced (rarely needed — defaults are usually correct)')
-    advanced.add_argument('--max-tokens', type=int, default=None,
+    advanced.add_argument('-b', '--max-tokens', type=int, default=None,
                           help='Per-LLM-call token budget. Overrides the '
                                '.env profile\'s CHUNK_KB and '
                                'X4_LLM_MAX_TOKENS.')

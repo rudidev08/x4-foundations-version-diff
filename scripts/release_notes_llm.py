@@ -288,7 +288,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
     parser.add_argument('pair_dir')
     parser.add_argument('rule')
-    parser.add_argument('--model', required=True,
+    parser.add_argument('-m', '--model', required=True,
                         help='Active LLM profile (matches a *_MODEL_NAME '
                              'entry in .env).')
     advanced = parser.add_argument_group(
@@ -297,7 +297,7 @@ def main():
                           help='Trim extras.diff to a short head excerpt '
                                '(for rules with large embedded diffs like '
                                'quests/gamelogic).')
-    advanced.add_argument('--max-tokens', type=int, default=None,
+    advanced.add_argument('-b', '--max-tokens', type=int, default=None,
                           help='Split the prompt into chunks each under this '
                                'many tokens. Overrides .env CHUNK_KB and '
                                'X4_LLM_MAX_TOKENS.')

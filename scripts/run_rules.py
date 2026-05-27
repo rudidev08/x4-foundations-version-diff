@@ -84,7 +84,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
     ap.add_argument('old_version', help='e.g., 8.00h4')
     ap.add_argument('new_version', help='e.g., 9.00b6')
-    ap.add_argument('--game-data', default=None,
+    ap.add_argument('-g', '--game-data', default=None,
                     help='Directory containing the extracted X4 version '
                          'folders. Defaults to SOURCE_PATH_PREFIX from .env, '
                          'else ./x4-data.')

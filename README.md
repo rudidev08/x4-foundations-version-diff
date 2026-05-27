@@ -2,9 +2,9 @@
 
 Turns the raw game-data diff between two X4 Foundations versions
 (e.g. 8.00h4 → 9.00b6) into player-facing release notes, via a
-four-stage pipeline: focused rules extract structured changes, a
-deterministic raw doc concatenates them, then an LLM stage writes
-themed notes and a tree-reduce stage merges everything.
+three-stage pipeline: focused rules extract structured changes, an
+LLM stage writes themed notes per rule, and a tree-reduce stage merges
+everything.
 
 ## Quick start
 
@@ -17,20 +17,20 @@ themed notes and a tree-reduce stage merges everything.
 
 The pipeline takes a pair of extracted game versions under `x4-data/`
 (override with `SOURCE_PATH_PREFIX` in `.env` or `--game-data`) and
-writes two files into `output/`:
+writes one file into `output/`:
 
-- `8.00h4-9.00b6-<MODEL>-raw.md` — deterministic, exhaustive change list (no LLM)
 - `8.00h4-9.00b6-<MODEL>.md` — LLM-written, player-facing release notes
 
 Intermediate per-rule and per-chunk files live under
-`artifacts/8.00h4-9.00b6-<MODEL>/`. Parallel runs on different models
-never share any files.
+`artifacts/8.00h4-9.00b6-<MODEL>/` while the run is in progress, and
+are deleted automatically once the final output is written. Parallel
+runs on different models never share any files.
 
 The run is **fully resumable at LLM-call granularity**: per-chunk LLM
 outputs, per-rule aggregated files, and every intermediate tree-reduce
-batch are persisted on disk before being used. A rerun picks up from
-the last successful call, regardless of where in the pipeline the
-previous run failed.
+batch are persisted on disk before being used. If a run fails, the
+artifacts folder is kept and a rerun picks up from the last successful
+call, regardless of where in the pipeline the previous run failed.
 
 More examples:
 
@@ -42,11 +42,13 @@ More examples:
 
 ## How it works
 
-Four stages run under the hood:
+Three stages run under the hood:
 
 Every run owns a per-model artifact folder at
-`artifacts/<old>-<new>-<MODEL>/`. Parallel runs on different models
-share nothing; all deliverables in `output/` are model-tagged.
+`artifacts/<old>-<new>-<MODEL>/` for the duration of the run. Parallel
+runs on different models share nothing; all deliverables in `output/`
+are model-tagged. The artifact folder is deleted on success and kept on
+failure so a rerun can resume.
 
 1. **Rule pass.** 20 rules walk the two game-data trees and emit
    structured change records to
@@ -55,24 +57,17 @@ share nothing; all deliverables in `output/` are model-tagged.
    classifications, source DLCs, attribute diffs. ~30 seconds for the
    canonical pair.
 
-2. **Raw release notes (deterministic).**
-   `scripts/raw_release_notes.py` concatenates every rule's `text`
-   fields into `output/<old>-<new>-<MODEL>-raw.md`, grouped by primary
-   classification. No LLM. This is the unfiltered, exhaustive change
-   list — handy as a sanity check against the LLM-written notes and as
-   a fallback when the LLM output drops detail.
-
-3. **LLM per-rule pass.** Each non-empty rule JSON is turned into one
+2. **LLM per-rule pass.** Each non-empty rule JSON is turned into one
    or more markdown files by `scripts/release_notes_llm.py`. Large
    rules (quests, gamelogic, weapons, etc.) get split into size-limited
    chunks; each chunk is one LLM call. Outputs:
    `artifacts/<old>-<new>-<MODEL>/llm_<rule>.md` or
    `...llm_<rule>_chunk<N>of<M>.md`.
 
-4. **Aggregation.** `scripts/aggregate_release_notes.py` runs a
+3. **Aggregation.** `scripts/aggregate_release_notes.py` runs a
    tree-reduce merge: multi-chunk rules get collapsed into one
    `artifacts/<old>-<new>-<MODEL>/llm_<rule>_aggregated.md`, then all
-   15+ per-rule summaries get combined into the top-level
+   per-rule summaries get combined into the top-level
    `output/<old>-<new>-<MODEL>.md`. The tree-reduce is size-aware — if
    too many summaries to fit in one LLM call, inputs are packed into
    batches, each batch is merged with a partial-merge prompt, and the
@@ -119,13 +114,13 @@ Budget resolution order, highest precedence first:
   content under `extensions/ego_dlc_*/` ends up in the tree the
   pipeline expects.
 - `scripts/`
-  - `generate_release_notes.py` — driver; chains the four stages
-    with resumable, skip-existing behavior.
+  - `generate_release_notes.py` — driver; chains the three stages
+    with resumable, skip-existing behavior, and deletes the artifact
+    folder once the final output is written.
   - `run_rules.py` — stage 1: run all 20 rules against a version pair.
-  - `raw_release_notes.py` — stage 2: deterministic raw notes (no LLM).
-  - `release_notes_llm.py` — stage 3: per-rule LLM summaries with
+  - `release_notes_llm.py` — stage 2: per-rule LLM summaries with
     chunking.
-  - `aggregate_release_notes.py` — stage 4: tree-reduce merge into a
+  - `aggregate_release_notes.py` — stage 3: tree-reduce merge into a
     top-level release-notes document.
 - `src/lib/` — shared machinery. Core piece is `entity_diff.py`: an
   XPath subset evaluator, the DLC patch-engine that replays `<diff>`
@@ -141,12 +136,11 @@ Budget resolution order, highest precedence first:
 - `.env.example` — LLM profile catalog. Copy to `.env` and edit.
 - `x4-data/` — extracted game versions you provide. Not committed.
 - `artifacts/` — intermediate pipeline outputs (rule JSON, per-chunk
-  LLM summaries, per-rule aggregates). Not committed; safe to delete
-  if you want a clean regeneration, but the pipeline's resume logic
-  means you usually don't need to.
-- `output/` — release-notes documents. Two files per pair: the
-  LLM-written `<old>-<new>-<MODEL>.md` and the deterministic
-  `<old>-<new>-raw.md`. Not committed.
+  LLM summaries, per-rule aggregates). Not committed. The driver
+  deletes the per-pair folder once the final output is written; folders
+  remain only for runs that failed partway, so a rerun can resume.
+- `output/` — release-notes documents. One LLM-written
+  `<old>-<new>-<MODEL>.md` per pair. Not committed.
 - `docs/` — design docs (plan + spec). Not required at runtime.
 
 ## The 20 rules
@@ -167,10 +161,14 @@ route to `equipment` regardless of their `@group`.
 
 Any LLM call that returns a non-zero exit code or empty output stops
 the pipeline with the full stderr/stdout from that call. Nothing is
-written for the failing chunk. Rerun the same command to resume —
-completed chunks are detected and skipped.
+written for the failing chunk. The artifact folder is preserved on
+failure, so rerunning the same command resumes from the last successful
+call — completed chunks are detected and skipped.
 
-If you want to force a rebuild, delete the relevant file:
+After a successful run the artifact folder is removed; a forced rebuild
+deletes `output/<old>-<new>-<MODEL>.md` and reruns the whole pipeline
+from scratch. While a run is still in flight (or after a failure), you
+can target one stage by deleting its file:
 
 ```bash
 rm artifacts/8.00h4-9.00b6-<MODEL>/llm_quests_chunk7of15.md  # one chunk
