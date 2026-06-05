@@ -6,7 +6,22 @@ three-stage pipeline: focused rules extract structured changes, an
 LLM stage writes themed notes per rule, and a tree-reduce stage merges
 everything.
 
-## Quick start
+Two ways to run the same pipeline:
+
+- **Batch, any model** — `./run.sh` drives all three stages non-interactively
+  against any LLM you can call from a shell (an API, a local model, codex, or
+  `claude --print`), configured in `.env`. Best when you already have a model
+  wired up and just want the file.
+- **Interactive, Claude Code** — the `/x4-diff` skill runs the same stages in a
+  Claude Code session, doing the LLM work with in-session subagents. No `.env`,
+  no API key — just your Claude subscription. Best for non-developers who only
+  have Claude Code, and for watching progress and fielding a question or two as
+  it runs.
+
+Stage 1 (the deterministic rules) and every prompt are shared; the modes differ
+only in how the LLM stages are executed.
+
+## Quick start — batch
 
 ```bash
 ./run.sh 8.00h4 9.00b6 --model gpt-5.5-mini-low
@@ -32,6 +47,10 @@ batch are persisted on disk before being used. If a run fails, the
 artifacts folder is kept and a rerun picks up from the last successful
 call, regardless of where in the pipeline the previous run failed.
 
+By default the report covers all 20 categories; pass `--categories`
+with a comma-separated subset of the rule names to scope it, e.g.
+`--categories ships,weapons,quests`.
+
 More examples:
 
 ```bash
@@ -39,6 +58,43 @@ More examples:
 ./run.sh 8.00h4 9.00b6 --model opus-4.7-max                # higher-quality run
 ./run.sh 8.00h4 9.00b6 --model haiku-4.5 --max-tokens 8000 # shrink per-call budget
 ```
+
+## Interactive mode (Claude Code)
+
+`/x4-diff` runs the whole pipeline inside a Claude Code session. Stage 1 runs
+as before; the LLM stages — per-rule notes and the tree-reduce merge — are done
+by **in-session subagents** instead of an external `LLM_CMD`. No `.env`, no API
+key, no `--model`: subagents run on whatever model and effort the session has
+active, and the output is tagged with that model's name.
+
+```
+/x4-diff
+```
+
+It asks once for the version pair and the tone (concise patch notes vs. a
+narrative recap), then runs unattended — streaming progress per category and
+stopping only if a subagent fails or returns nothing. Every generated file is
+verified non-empty, and a coverage gate refuses to write the final document
+unless every changed, non-diagnostic category produced notes, so a run never
+silently drops a section. Output lands at `output/<old>-<new>-<model>.md`, same
+as batch.
+
+Built for players who have Claude Code but no API key or local model. Needs
+Python 3 on PATH; both versions must already be extracted under `x4-data/` (use
+`cat_extract.py`). Two pieces back it: a harness-agnostic engine
+(`scripts/interactive_plan.py` — plain Python that reads/writes files and prints
+JSON) and the orchestrating skill (`.claude/skills/x4-diff/SKILL.md`).
+
+### Other harnesses
+
+Technically portable, not yet tested elsewhere. The engine drives from any agent
+that can run a shell and dispatch an LLM to turn a prompt file into an output
+file. The `SKILL.md` format (frontmatter + instructions) is auto-discovered by
+other skill-aware CLIs (Copilot, Gemini), but its instructions assume Claude
+Code primitives — parallel in-session subagents, a user-question prompt, a
+shell. Elsewhere it degrades rather than breaks: no parallel subagents → do the
+chunks one at a time; no question prompt → pass the version pair and tone as
+arguments.
 
 ## How it works
 
@@ -80,6 +136,9 @@ failure so a rerun can resume.
 
 ## LLM configuration
 
+Batch mode only — interactive `/x4-diff` reads no `.env` and runs on your
+session's model.
+
 Copy `.env.example` to `.env`. Each profile is three keys:
 `<PREFIX>_MODEL_NAME` (the value you pass to `--model`), `<PREFIX>_LLM_CMD`
 (shell command run with the prompt on stdin), and `<PREFIX>_CHUNK_KB`
@@ -108,7 +167,9 @@ Budget resolution order, highest precedence first:
 
 ## Repository layout
 
-- `run.sh` — one-shot entry point.
+- `run.sh` — one-shot entry point for batch mode.
+- `.claude/skills/x4-diff/SKILL.md` — the `/x4-diff` interactive skill for
+  Claude Code; drives the same pipeline with in-session subagents.
 - `cat_extract.py` — standalone helper to extract X4's `.cat`/`.dat`
   archives into `x4-data/<version>/`. Run with `--all-folders` so DLC
   content under `extensions/ego_dlc_*/` ends up in the tree the
@@ -122,6 +183,9 @@ Budget resolution order, highest precedence first:
     chunking.
   - `aggregate_release_notes.py` — stage 3: tree-reduce merge into a
     top-level release-notes document.
+  - `interactive_plan.py` — interactive-mode engine: a pure planner that
+    renders the stage-2/3 prompts and reports each round as JSON for the
+    `/x4-diff` skill to drive with subagents. No LLM calls.
 - `src/lib/` — shared machinery. Core piece is `entity_diff.py`: an
   XPath subset evaluator, the DLC patch-engine that replays `<diff>`
   ops, the `diff_library` function the rules call, three-tier conflict
@@ -141,7 +205,6 @@ Budget resolution order, highest precedence first:
   remain only for runs that failed partway, so a rerun can resume.
 - `output/` — release-notes documents. One LLM-written
   `<old>-<new>-<MODEL>.md` per pair. Not committed.
-- `docs/` — design docs (plan + spec). Not required at runtime.
 
 ## The 20 rules
 
@@ -180,8 +243,7 @@ The next `./run.sh` run rebuilds only what's missing.
 
 ## Adding a new rule
 
-1. Pick a skeleton from the docs (`docs/superpowers/plans/…` if that
-   folder is still present) or copy an existing rule in `src/rules/`.
+1. Copy an existing rule in `src/rules/` as a skeleton.
 2. Create `src/rules/<name>.py` + `<name>.md`.
 3. Add `'<name>'` to the `RULES` list in `scripts/run_rules.py`.
 4. If the rule claims wares (Wave 1 pattern), extend `ware_owner` in
